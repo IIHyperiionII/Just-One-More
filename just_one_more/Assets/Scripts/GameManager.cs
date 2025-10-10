@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -5,6 +6,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public PlayerData basePlayerData;
     public PlayerData runtimePlayerData;
+
+    public GameObject[] EnemiesPrefabs;
 
     void Awake()
     {
@@ -19,6 +22,33 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void Update()
+    {
+        if (runtimePlayerData.isDead)
+        {
+            EditorApplication.isPlaying = false;
+            // Application.Quit(); // Uncomment this line to make it work in a build
+
+        }
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
+        {
+            SpawnEnemies();
+        }
+    }
+
+    void SpawnEnemies()
+    {
+        foreach (GameObject enemyPrefab in EnemiesPrefabs)
+        {
+            int enemyCount = Random.Range(0, 5);
+            for (int i = 0; i < enemyCount; i++)
+            {
+                GameObject enemy = Instantiate(enemyPrefab);
+                enemy.transform.position = new Vector2(Random.Range(-8f, 8f), Random.Range(-4f, 4f));
+            }
         }
     }
 }

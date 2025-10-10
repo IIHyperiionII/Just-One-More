@@ -21,25 +21,25 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Movement need to be in FixedUpdate when using Rigidbody to work with physics correctly
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
-        Vector2 movement = new Vector2(moveX, moveY) * Time.deltaTime * PlayerData.moveSpeed;
-        Rigidbody.MovePosition(Rigidbody.position + movement);
+        Vector2 input = new Vector2(0, 0);
+        input.x = Input.GetAxis("Horizontal");
+        input.y = Input.GetAxis("Vertical");
+        if (input.magnitude > 1) input.Normalize();
+        Vector2 movement = input * Time.fixedDeltaTime * PlayerData.moveSpeed;
+        Debug.Log("Player Movement: " + movement);
+        Rigidbody.MovePosition(Rigidbody.position + movement / 2);
     }
-    
-    void takeDamage(int damage)
+
+    public void takeDamage(int damage)
     {
         PlayerData.hp -= damage;
-        if (PlayerData.hp < 0)
-        {
-            Die();
-        }
+        if (PlayerData.hp <= 0) Die();
     }
 
     void Die()
     {
         //TODO: add death amechanics
+        PlayerData.isDead = true;
         Destroy(gameObject);
     }
 }
