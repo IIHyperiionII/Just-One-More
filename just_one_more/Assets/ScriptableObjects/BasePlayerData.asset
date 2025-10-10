@@ -15,3 +15,4 @@ MonoBehaviour:
   hp: 100
   moveSpeed: 5
   damage: 10
+  money: 1000
