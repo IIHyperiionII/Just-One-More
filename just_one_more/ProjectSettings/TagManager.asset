@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Bucket
   - Peg
   - Wall
   - Ball
+  - Bucket
   layers:
   - Default
   - TransparentFX
