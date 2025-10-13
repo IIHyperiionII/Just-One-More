@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerData PlayerData;
     private Rigidbody2D Rigidbody;
+    private Vector2 input;
 
     void Start()
     {
@@ -15,19 +16,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        
+        input = new Vector2(0, 0);
+        input.x = Input.GetAxis("Horizontal");
+        input.y = Input.GetAxis("Vertical");
+        if (input.magnitude > 1) input.Normalize();
     }
 
     void FixedUpdate()
     {
-        Vector2 input = new Vector2(0, 0);
-        input.x = Input.GetAxis("Horizontal");
-        input.y = Input.GetAxis("Vertical");
-        if (input.magnitude > 1) input.Normalize();
-        Vector2 movement = input * Time.fixedDeltaTime * PlayerData.moveSpeed;
-        Debug.Log("Player Movement: " + movement);
-        Rigidbody.MovePosition(Rigidbody.position + movement / 2);
+        Vector2 movement = input * Time.deltaTime * PlayerData.moveSpeed;
+        Rigidbody.MovePosition(Rigidbody.position + movement);
     }
 
     public void takeDamage(int damage)

@@ -46,3 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   basePlayerData: {fileID: 11400000, guid: 090639ed8209b4818b3aa880d3efd296, type: 2}
   runtimePlayerData: {fileID: 11400000, guid: 090639ed8209b4818b3aa880d3efd296, type: 2}
+  EnemiesPrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}

@@ -25,8 +25,7 @@ public class EnemiesController : MonoBehaviour
             playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
             enemyPosition = transform.position;
             direction = (playerPosition - enemyPosition).normalized;
-            Vector2 movement = direction * Time.fixedDeltaTime * runtimeEnemiesData.moveSpeed;
-            Debug.Log("Enemy Movement: " + movement);
+            Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
             Rigidbody.MovePosition(Rigidbody.position + movement);
         }
 
