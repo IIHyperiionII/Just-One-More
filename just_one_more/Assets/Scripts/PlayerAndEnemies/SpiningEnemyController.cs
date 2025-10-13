@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityEngine.Scripting.APIUpdating;
 
-public class RangedEnemyControllerTest : MonoBehaviour
+public class SpiningEnemyController : MonoBehaviour
 {
+    
 
     private Vector2 playerPosition;
     
@@ -19,6 +19,14 @@ public class RangedEnemyControllerTest : MonoBehaviour
     public GameObject bulletPrefab;
 
     private float nextAttackTime = 0f;
+
+    private float shootingAngle = 0f;
+    private int spinDirection = 0;
+
+    void Awake()
+    {
+        spinDirection = Random.Range(0, 2) * 2 - 1; // Randomly set to -1 or 1
+    }
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData);
@@ -64,12 +72,14 @@ public class RangedEnemyControllerTest : MonoBehaviour
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            nextAttackTime = Time.time + 1/runtimeEnemiesData.attackSpeed;
+            shootingAngle += 15f * spinDirection;
+            if (shootingAngle >= 360f) shootingAngle = 0f;
+            if (shootingAngle <= -360f) shootingAngle = 0f;
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle));
             // 10 is placeholder for bullet speed, change later if needed
-            bullet.GetComponent<BulletControllerTest>().Initialize(5f, runtimeEnemiesData.damage);
+            bullet.GetComponent<BulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
 
         }
     }
-
 }

@@ -7,4 +7,5 @@ public class EnemiesData : ScriptableObject
     public float moveSpeed = 5f;
     public int damage = 10;
     public float attackSpeed = 1f;
+    public float bulletSpeed = 5f;
 }

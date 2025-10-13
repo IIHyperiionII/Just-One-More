@@ -15,4 +15,5 @@ MonoBehaviour:
   hp: 10
   moveSpeed: 2.5
   damage: 10
-  attackSpeed: 1
+  attackSpeed: 5
+  bulletSpeed: 5

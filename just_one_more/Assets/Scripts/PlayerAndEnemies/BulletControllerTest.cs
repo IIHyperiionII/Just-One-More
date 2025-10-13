@@ -15,9 +15,7 @@ public class BulletControllerTest : MonoBehaviour
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
-        playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
-        bulletPosition = transform.position;
-        direction = (playerPosition - bulletPosition).normalized;
+        direction = transform.right;
     }
 
     public void Initialize( float bulletSpeed, int bulletDamage)
@@ -32,8 +30,7 @@ public class BulletControllerTest : MonoBehaviour
         if (playerPosition != null)
         {
             // Move the bullet towards the player's position
-            Vector2 movement = direction * Time.deltaTime * speed;
-            Rigidbody.MovePosition(Rigidbody.position + movement);
+            Rigidbody.MovePosition(Rigidbody.position + (Vector2)direction * speed * Time.fixedDeltaTime);
         }
     }
 
