@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
-public class RangedEnemyController : MonoBehaviour
+public class RangedScallingEnemyController : MonoBehaviour
 {
-
     private Vector2 playerPosition;
     
     private Vector2 lastPlayerPosition;
@@ -91,7 +89,7 @@ public class RangedEnemyController : MonoBehaviour
     void SpawnBullet(Quaternion rotation)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-        bullet.GetComponent<EnemyBulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+        bullet.GetComponent<ScalingBulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
     }
     void OnDestroy()
     {

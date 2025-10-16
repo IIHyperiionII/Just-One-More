@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SpiningEnemyController : MonoBehaviour
@@ -9,8 +10,8 @@ public class SpiningEnemyController : MonoBehaviour
     private Vector2 lastPlayerPosition;
     private Vector2 enemyPosition;
     private Vector2 direction;
-
-    private Vector2 playerDirection;
+    private Vector2 rotatedDirection;
+    private bool isRunning = false;
     public EnemiesData EnemiesData;
     private EnemiesData runtimeEnemiesData;
 
@@ -22,6 +23,8 @@ public class SpiningEnemyController : MonoBehaviour
 
     private float shootingAngle = 0f;
     private int spinDirection = 0;
+    private float shootingAngle2 = 180f;
+    public GameObject coinPrefab;
 
     void Awake()
     {
@@ -53,33 +56,74 @@ public class SpiningEnemyController : MonoBehaviour
 
     void Move()
     {
-        // Move away from the player if they are moving towards the enemy, TODO: add a safe distance
-        direction = (playerPosition - enemyPosition).normalized;
-        playerDirection = (playerPosition - lastPlayerPosition).normalized;
-        float dotProduct = Vector2.Dot(playerDirection, -direction);
-        if (dotProduct > 0.5f)
-        {
-            Vector2 movement = -direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
-            Rigidbody.MovePosition(Rigidbody.position + movement);
-        } else if (dotProduct < -0.5f)
-        {
-            Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
-            Rigidbody.MovePosition(Rigidbody.position + movement);
-        }
+        GetDirection();
+        UpdatePosition(1);
     }
-    
+    void UpdatePosition(int sign)
+    {
+        Vector2 movement = sign * rotatedDirection * Time.deltaTime * runtimeEnemiesData.moveSpeed;
+        Rigidbody.MovePosition(Rigidbody.position + movement);
+    }
+
+    void GetDirection()
+    {
+        direction = (playerPosition - enemyPosition).normalized;
+        if (!isRunning)
+            StartCoroutine(UpdateMovementAngle());
+    }
+
     void Attack()
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1/runtimeEnemiesData.attackSpeed;
-            shootingAngle += 15f * spinDirection;
-            if (shootingAngle >= 360f) shootingAngle = 0f;
-            if (shootingAngle <= -360f) shootingAngle = 0f;
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle));
-            // 10 is placeholder for bullet speed, change later if needed
-            bullet.GetComponent<BulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
-
+            nextAttackTime = Time.time + 1 / runtimeEnemiesData.attackSpeed;
+            shootingAngle = UpdateAngle(shootingAngle);
+            shootingAngle2 = UpdateAngle(shootingAngle2);
+            SpawnBullet();
         }
+    }
+
+    IEnumerator UpdateMovementAngle()
+    {
+        isRunning = true;
+        float randomAngle = Random.Range(-180f, 180f);
+        rotatedDirection = RotateVector(direction, randomAngle);
+        yield return new WaitForSeconds(Random.Range(0.1f, 1f));
+        isRunning = false;
+        yield return null;
+    }
+
+    Vector2 RotateVector(Vector2 v, float degrees)
+    {
+        float radians = degrees * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
+
+        return new Vector2(
+            v.x * cos - v.y * sin,
+            v.x * sin + v.y * cos
+        );
+    }
+
+
+    float UpdateAngle(float angle)
+    {
+        angle += 15f * spinDirection;
+        if (angle >= 360f) angle = 0f;
+        if (angle <= -360f) angle = 0f;
+        return angle;
+    }
+    void SpawnBullet()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle));
+        bullet.GetComponent<EnemyBulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+
+        GameObject bullet2 = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle2));
+        bullet2.GetComponent<EnemyBulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+    }
+    void OnDestroy()
+    {
+        if (!gameObject.scene.isLoaded) return;
+        Instantiate(coinPrefab, transform.position, Quaternion.identity);
     }
 }

@@ -1,29 +1,37 @@
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class RangedEnemyController : MonoBehaviour
+public class SpawningEnemyController : MonoBehaviour
 {
 
     private Vector2 playerPosition;
-    
     private Vector2 lastPlayerPosition;
     private Vector2 enemyPosition;
     private Vector2 direction;
-
     private Vector2 playerDirection;
     public EnemiesData EnemiesData;
     private EnemiesData runtimeEnemiesData;
-
     private Rigidbody2D Rigidbody;
-
-    public GameObject bulletPrefab;
     public GameObject coinPrefab;
+    public GameObject childEnemyPrefab;
+    private Vector2 spawnPos;
+    private float radius;
 
     private float nextAttackTime = 0f;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData);
         Rigidbody = GetComponent<Rigidbody2D>();
+        GetSpawningRadius();
+    }
+
+    void GetSpawningRadius()
+    {
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        float width = col.size.x * transform.localScale.x;
+        float height = col.size.y * transform.localScale.y;
+        radius = Mathf.Sqrt(Mathf.Pow(width / 2, 2) + Mathf.Pow(height / 2, 2));
+
     }
 
     void FixedUpdate()
@@ -74,28 +82,25 @@ public class RangedEnemyController : MonoBehaviour
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1 / runtimeEnemiesData.attackSpeed;
-            Quaternion rotation = UpdateAngle();
-            SpawnBullet(rotation);
+            nextAttackTime = Time.time + 1 / 0.5f;
+            SpawnChild();
 
         }
     }
-
-    Quaternion UpdateAngle()
+    void SpawnChild()
     {
         Vector2 aimDirection = (playerPosition - enemyPosition).normalized;
-        float tmpAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-        Quaternion angle = Quaternion.Euler(0f, 0f, tmpAngle);
-        return angle;
-    }
-    void SpawnBullet(Quaternion rotation)
-    {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-        bullet.GetComponent<EnemyBulletControllerTest>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+        spawnPos = enemyPosition + aimDirection * (radius + 0.2f);
+        Collider2D hit = Physics2D.OverlapCircle(spawnPos, radius - 1.0f);
+        if (hit == null)
+        {
+            Instantiate(childEnemyPrefab, spawnPos, Quaternion.identity);
+        }
     }
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return;
         Instantiate(coinPrefab, transform.position, Quaternion.identity);
     }
+
 }

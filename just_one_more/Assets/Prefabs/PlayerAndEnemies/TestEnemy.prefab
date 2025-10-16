@@ -180,3 +180,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemiesController
   EnemiesData: {fileID: 11400000, guid: 25244fe84183c4041aa4e40b7b6c906f, type: 2}
+  coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
+    type: 3}

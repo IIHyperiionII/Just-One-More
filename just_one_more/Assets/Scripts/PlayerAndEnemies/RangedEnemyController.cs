@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class RangedEnemyController : MonoBehaviour
+public class RangedEnemyControllerTest : MonoBehaviour
 {
 
     private Vector2 playerPosition;

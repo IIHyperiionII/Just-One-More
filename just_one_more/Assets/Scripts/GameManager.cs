@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public PlayerData basePlayerData;
     public PlayerData runtimePlayerData;
-
+    private int wave = 0;
     public GameObject[] EnemiesPrefabs;
 
     void Awake()
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
         if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
         {
             SpawnEnemies();
+            wave += 1;
         }
     }
 
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject enemyPrefab in EnemiesPrefabs)
         {
-            int enemyCount = Random.Range(0, 5);
+            int enemyCount = Random.Range(0, 2);
             for (int i = 0; i < enemyCount; i++)
             {
                 GameObject enemy = Instantiate(enemyPrefab);

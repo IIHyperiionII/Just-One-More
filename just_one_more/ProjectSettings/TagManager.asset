@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Edge
   - Cursore
+  - EnemyBullet
+  - PlayerBullet
+  - Coin
   layers:
   - Default
   - TransparentFX
