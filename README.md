@@ -8,8 +8,8 @@ Watch him struggle, fail, and desperately chase the jackpot he believes will red
 
 * **Jan Brabec** <brabej16@cvut.cz> - Team leader, programátor
 * Tomáš Adamec <adamet12@cvut.cz> - programátor
-* Julie Dvořáková <dvoraju1@cvut.cz> - programátor
-* Jan Červenka <cervej44@cvut.cz> - grafik
+* Julie Dvořáková <dvoraju1@cvut.cz> - grafik
+* Jan Červenka <cervej44@cvut.cz> - programátor
 
 ## Základní info
 
