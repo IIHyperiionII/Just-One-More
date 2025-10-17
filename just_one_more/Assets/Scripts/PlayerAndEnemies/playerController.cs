@@ -13,28 +13,33 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        PlayerData = GameManager.Instance.runtimePlayerData;
+        PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
         Rigidbody = GetComponent<Rigidbody2D>();
     }
-
-    // Update is called once per frame
     void Update()
     {
         GetMovementInput();
         GetAttackInput(); // Just for testing will be removed after weapons are implemented
-        Attack();
+        Attack(); // Just for testing will be removed after weapons are implemented
+    }
+
+    void FixedUpdate()
+    {
+        Vector2 movement = input * Time.deltaTime * PlayerData.moveSpeed;
+        Rigidbody.MovePosition(Rigidbody.position + movement);
     }
 
     void GetMovementInput()
     {
         input = new Vector2(0, 0);
-        input.x = Input.GetAxis("Horizontal");
-        input.y = Input.GetAxis("Vertical");
-        if (input.magnitude > 1) input.Normalize();
+        input.x = Input.GetAxis("Horizontal"); // Get horizontal input (A/D or Left/Right arrows)
+        input.y = Input.GetAxis("Vertical"); // Get vertical input (W/S or Up/Down arrows)
+        if (input.magnitude > 1) input.Normalize(); // Normalize to prevent faster diagonal movement
     }
 
     void GetAttackInput()
     {
+        // Switch for when mouse button is held down
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             MouseKeyHoldDown = true;
@@ -51,24 +56,18 @@ public class PlayerController : MonoBehaviour
             nextAttackTime = Time.time + 1f / PlayerData.attackSpeed;
 
             Quaternion rotation = UpdateAngle();
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, PlayerData.damage);
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
+            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, PlayerData.damage); // Initialize bullet with player stats
         }
     }
     Quaternion UpdateAngle()
     {
-        float distanceZ = Mathf.Abs(Camera.main.transform.position.z);
-            mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceZ));
-        Vector2 aimDirection = (mousePosition - transform.position).normalized;
-        float tmpAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-        Quaternion angle = Quaternion.Euler(0f, 0f, tmpAngle);
+        float distanceZ = Mathf.Abs(Camera.main.transform.position.z); // Distance from camera to player on Z axis
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceZ)); // Convert mouse position to world position
+        Vector2 aimDirection = (mousePosition - transform.position).normalized; // Get normalized direction vector from player to mouse position
+        float tmpAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg; // Calculate angle in degrees from radians
+        Quaternion angle = Quaternion.Euler(0f, 0f, tmpAngle); // Create rotation quaternion from angle
         return angle;
-    }
-    
-    void FixedUpdate()
-    {
-        Vector2 movement = input * Time.deltaTime * PlayerData.moveSpeed;
-        Rigidbody.MovePosition(Rigidbody.position + movement);
     }
 
     public void takeDamage(int damage)
@@ -85,6 +84,5 @@ public class PlayerController : MonoBehaviour
     public void GetCoin(int amount)
     {
         PlayerData.coins += amount;
-        Debug.Log("Coins: " + PlayerData.coins);
     }
 }

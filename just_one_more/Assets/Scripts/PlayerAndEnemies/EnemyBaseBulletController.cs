@@ -1,20 +1,15 @@
 using UnityEngine;
 
-public class EnemyBulletControllerTest : MonoBehaviour
+public class EnemyBaseBulletController : MonoBehaviour
 {
-    private Vector2 playerPosition;
-
-    private Vector2 bulletPosition;
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
     private float speed;
-
     private int damage;
-
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
-        direction = transform.right;
+        direction = transform.right; // applying given rotation to world x axis
     }
 
     public void Initialize( float bulletSpeed, int bulletDamage)
@@ -25,10 +20,8 @@ public class EnemyBulletControllerTest : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (playerPosition != null)
-        {
-            Rigidbody.MovePosition(Rigidbody.position + (Vector2)direction * speed * Time.fixedDeltaTime);
-        }
+        // Move the bullet in the set direction
+        Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -38,9 +31,9 @@ public class EnemyBulletControllerTest : MonoBehaviour
         if (other.gameObject.CompareTag("Coin")) return;
         if (other.gameObject.CompareTag("Player"))
         {
-
-            other.gameObject.GetComponent<PlayerController>().takeDamage(10);
+            other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
             Destroy(gameObject);
+            return;
         }
         if (other.gameObject.CompareTag("Edge"))
         {

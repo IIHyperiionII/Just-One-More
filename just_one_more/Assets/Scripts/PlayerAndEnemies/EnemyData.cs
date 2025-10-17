@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BaseEnemiesData", menuName = "Scriptable Objects/BaseEnemiesData")]
-public class EnemiesData : ScriptableObject
+[CreateAssetMenu(fileName = "BaseEnemyData", menuName = "Scriptable Objects/BaseEnemyData")]
+public class EnemyData : ScriptableObject
 {
     public int hp = 10;
     public float moveSpeed = 5f;
