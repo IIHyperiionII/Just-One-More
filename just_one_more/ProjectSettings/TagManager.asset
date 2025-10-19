@@ -10,6 +10,7 @@ TagManager:
   - EnemyBullet
   - PlayerBullet
   - Coin
+  - Background
   layers:
   - Default
   - TransparentFX
