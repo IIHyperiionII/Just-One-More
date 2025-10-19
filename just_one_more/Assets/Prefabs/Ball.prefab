@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5139164594275884675}
   - component: {fileID: 5064975885073536644}
   - component: {fileID: 2446834971527091658}
+  - component: {fileID: 2738644238322330059}
   m_Layer: 5
   m_Name: Ball
   m_TagString: Ball
@@ -140,3 +141,15 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 15
+--- !u!114 &2738644238322330059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3818408155311329950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de196c33478e24b44a6ca500a3599146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Ball

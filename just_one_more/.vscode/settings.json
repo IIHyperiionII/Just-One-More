@@ -60,12 +60,18 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
-        "*.unity": "yaml",
+        "*.unity": "yaml"
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "just_one_more.slnx"
+    "dotnet.defaultSolution": "just_one_more.slnx",
+
+    "omnisharp.useModernNet": false,
+    "omnisharp.useGlobalMono": "always",
+    "omnisharp.path": "latest",
+    "omnisharp.projectLoadTimeout": 120000,
+    "csharp.suppressDotnetRestoreNotification": true
 }

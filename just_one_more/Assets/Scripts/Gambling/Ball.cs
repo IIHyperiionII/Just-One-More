@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    private float lifetime = 15f;
-    private float destroyDelay = 0.5f;
-
-    private BallSpawner spawner;
+    private float lifetime = 10f;
+    private float destroyDelay = 0.2f;
     private bool scoreRegistered = false;
 
     void Start()
     {
-        spawner = FindAnyObjectByType<BallSpawner>();
         Destroy(gameObject, lifetime);
     }
 
@@ -28,10 +25,5 @@ public class Ball : MonoBehaviour
 
             Destroy(gameObject, destroyDelay);
         }
-    }
-
-    void OnDestroy()
-    {
-        if (spawner != null) spawner.NotifyBallDestroyed(gameObject);
     }
 }
