@@ -335,7 +335,7 @@ Transform:
   m_GameObject: {fileID: 814074864}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.68, y: 0.63, z: 0}
+  m_LocalPosition: {x: 0.267, y: 0.266, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -413,10 +413,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandFollowCursor
   rotationSpeed: 15
   rotationOffset: 90
-  offsetUp: {x: -0.8, y: 0.63, z: 0}
-  offsetLeft: {x: 0, y: 0.1, z: 0}
-  offsetDown: {x: 0.68, y: 0.63, z: 0}
-  offsetRight: {x: 0, y: 0.4, z: 0}
+  offsetUp: {x: -0.35, y: 0.267, z: 0}
+  offsetLeft: {x: 0, y: 0.05, z: 0}
+  offsetDown: {x: 0.267, y: 0.267, z: 0}
+  offsetRight: {x: 0, y: 0.2, z: 0}
   bodyRenderer: {fileID: 962664068}
   frontOffsetOrder: 1
   backOffsetOrder: -1
@@ -508,12 +508,12 @@ PrefabInstance:
     - target: {fileID: 772545561132822601, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 772545561132822601, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 772545561132822601, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
@@ -573,12 +573,12 @@ PrefabInstance:
     - target: {fileID: 2548206082781343315, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 10.24
+      value: 4.096
       objectReference: {fileID: 0}
     - target: {fileID: 2548206082781343315, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 10.24
+      value: 4.096
       objectReference: {fileID: 0}
     - target: {fileID: 4084593617875584895, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
