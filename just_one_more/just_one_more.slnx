@@ -12,6 +12,7 @@
   <Project Path="UnityEditor.TestRunner.csproj" />
   <Project Path="Unity.PerformanceTesting.Editor.csproj" />
   <Project Path="PsdPlugin.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.Burst.csproj" />
   <Project Path="Unity.2D.SpriteShape.Editor.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
@@ -36,6 +37,5 @@
   <Project Path="Unity.Multiplayer.Center.Common.csproj" />
   <Project Path="Unity.Collections.CodeGen.csproj" />
   <Project Path="Unity.Mathematics.Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.Collections.Editor.csproj" />
 </Solution>

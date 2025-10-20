@@ -4,8 +4,11 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     public int hp = 100;
-    public float moveSpeed = 5;
+    public int moveSpeed = 5;
+    public int attackSpeed = 1;
     public int damage = 10;
     public int money = 0;
+    public int bulletSpeed = 10;
+    public bool isDead = false;
 
 }
