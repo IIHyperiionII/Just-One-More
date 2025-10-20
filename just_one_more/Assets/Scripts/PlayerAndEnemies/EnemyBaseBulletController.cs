@@ -4,7 +4,7 @@ public class EnemyBaseBulletController : MonoBehaviour
 {
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private float speed;
+    private int speed;
     private int damage;
     void Awake()
     {
@@ -12,7 +12,7 @@ public class EnemyBaseBulletController : MonoBehaviour
         direction = transform.right; // applying given rotation to world x axis
     }
 
-    public void Initialize( float bulletSpeed, int bulletDamage)
+    public void Initialize( int bulletSpeed, int bulletDamage)
     {
         speed = bulletSpeed;
         damage = bulletDamage;

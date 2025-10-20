@@ -5,14 +5,14 @@ public class PlayerBulletControllerTest : MonoBehaviour
     private Vector2 bulletPosition;
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private float speed;
+    private int speed;
     private int damage;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         direction = transform.right; // applying given rotation to world x axis
     }
-    public void Initialize( float bulletSpeed, int bulletDamage)
+    public void Initialize( int bulletSpeed, int bulletDamage)
     {
         speed = bulletSpeed;
         damage = bulletDamage;

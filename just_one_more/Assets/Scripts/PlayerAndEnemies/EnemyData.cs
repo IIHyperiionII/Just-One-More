@@ -4,8 +4,8 @@ using UnityEngine;
 public class EnemyData : ScriptableObject
 {
     public int hp = 10;
-    public float moveSpeed = 5f;
+    public int moveSpeed = 5;
     public int damage = 10;
-    public float attackSpeed = 10f;
-    public float bulletSpeed = 5f;
+    public int attackSpeed = 10;
+    public int bulletSpeed = 5;
 }

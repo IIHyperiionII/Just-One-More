@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityRandom = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -14,11 +14,11 @@ public class GameManager : MonoBehaviour
     private Bounds cameraBounds;
     private int wave = 0;
     private int map = 0;
-    public GameObject[] OfficeEnemyPrefabs;
-    public GameObject[] ToiletsEnemyPrefabs;
-    public GameObject[] BossOfficeEnemyPrefabs;
     private GameObject[][] EnemiesPrefabs;
-    private ArrayList enemiesToSpawn = new ArrayList();
+    public GameObject[] officePrefabs;
+    public GameObject[] toiletPrefabs;
+    public GameObject[] bossOfficePrefabs;
+    private List<GameObject> enemiesToSpawn = new List<GameObject>();
     private Vector2 spawnPosition;
     private bool WavesIsSpawning = false;
     void Awake()
@@ -35,16 +35,18 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        EnemiesPrefabs = new GameObject[][]
+        {
+            officePrefabs,
+            toiletPrefabs,
+            bossOfficePrefabs
+        };
     }
     void Start()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
         GetBackgroundSize();
         GetCamera();
-        EnemiesPrefabs = new GameObject[3][];
-        EnemiesPrefabs[0] = OfficeEnemyPrefabs;
-        EnemiesPrefabs[1] = ToiletsEnemyPrefabs;
-        EnemiesPrefabs[2] = BossOfficeEnemyPrefabs;
     }
     void GetBackgroundSize()
     {
@@ -139,7 +141,6 @@ public class GameManager : MonoBehaviour
             int randomIndex = UnityRandom.Range(0, enemiesToSpawn.Count);
             (enemiesToSpawn[i], enemiesToSpawn[randomIndex]) = (enemiesToSpawn[randomIndex], enemiesToSpawn[i]); // Swap elements to shuffle the list
         }
-        
         foreach (GameObject enemyPrefab in enemiesToSpawn)
         {
             GetSpawnposition(enemyPrefab); // Get a valid spawn position

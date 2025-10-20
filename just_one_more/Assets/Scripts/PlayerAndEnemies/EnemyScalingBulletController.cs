@@ -4,7 +4,7 @@ public class EnemyScalingBulletController : MonoBehaviour
 {
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private float speed;
+    private int speed;
     private float growth;
     private int damage;
     public Transform spriteTransform;
@@ -15,7 +15,7 @@ public class EnemyScalingBulletController : MonoBehaviour
         direction = transform.right; // applying given rotation to world x axis
     }
 
-    public void Initialize(float bulletSpeed, int bulletDamage)
+    public void Initialize(int bulletSpeed, int bulletDamage)
     {
         speed = bulletSpeed;
         damage = bulletDamage;

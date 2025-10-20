@@ -83,6 +83,6 @@ public class PlayerController : MonoBehaviour
     }
     public void GetCoin(int amount)
     {
-        PlayerData.coins += amount;
+        PlayerData.money += amount;
     }
 }

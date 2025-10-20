@@ -9,7 +9,7 @@ public class EnemyWaveBulletController : MonoBehaviour
     private Vector2 startPosition;
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private float speed;
+    private int speed;
     private int damage;
     private float timeAlive = 0f;
     private int sign;
@@ -25,7 +25,7 @@ public class EnemyWaveBulletController : MonoBehaviour
         amplitude = UnityEngine.Random.Range(0.5f, 5f); // random amplitude for wave motion
     }
 
-    public void Initialize(float bulletSpeed, int bulletDamage, int bulletSign)
+    public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign)
     {
         speed = bulletSpeed;
         damage = bulletDamage;

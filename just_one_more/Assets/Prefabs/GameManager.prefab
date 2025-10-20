@@ -46,15 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   basePlayerData: {fileID: 11400000, guid: 090639ed8209b4818b3aa880d3efd296, type: 2}
   runtimePlayerData: {fileID: 0}
-  OfficeEnemyPrefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  ToiletsEnemyPrefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  BossOfficeEnemyPrefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  officePrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}
+  - {fileID: 6980090010355112472, guid: dc80e2ab923dd4c408c5c0a924dd398d, type: 3}
+  toiletPrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 3026029418750680626, guid: 8f950bf6ad7e244ad93eae5c72bac6fd, type: 3}
+  - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}
+  bossOfficePrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 3026029418750680626, guid: 653203549b32240868d466e7432603bd, type: 3}
+  - {fileID: 762159802268367773, guid: 1dc17f6c77c8a469da37687099b9f28c, type: 3}
