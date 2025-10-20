@@ -1,24 +1,34 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.PlayerLoop;
 
 public class PlayerStatsPanel : MonoBehaviour
 {
-    [Header("Data Reference")]
-    [SerializeField] private PlayerData playerData;
-
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI dmgText;
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TextMeshProUGUI moneyText;
+    [SerializeField] private TextMeshProUGUI attackSpeedText;
+    [SerializeField] private TextMeshProUGUI bulletSpeedText;
 
+    private PlayerData playerData;
     void Start()
     {
+        if (playerData != null)
+            UpdateUI();
+    }
+
+    public void SetPlayerData(PlayerData pd)
+    {
+        playerData = pd;
         UpdateUI();
     }
 
+    public PlayerData GetPlayerData() => playerData;
+
     // ========== MONEY METHODS ==========
-    
+
     public int GetMoney()
     {
         if (playerData != null)
@@ -71,10 +81,26 @@ public class PlayerStatsPanel : MonoBehaviour
         return 0;
     }
 
-    public float GetSpeed()
+    // renamed to GetMoveSpeed and returns float
+    public float GetMoveSpeed()
     {
         if (playerData != null)
             return playerData.moveSpeed;
+        return 0;
+    }
+
+    // attackSpeed / bulletSpeed getters
+    public int GetAttackSpeed()
+    {
+        if (playerData != null)
+            return playerData.attackSpeed;
+        return 0;
+    }
+
+    public int GetBulletSpeed()
+    {
+        if (playerData != null)
+            return playerData.bulletSpeed;
         return 0;
     }
 
@@ -96,11 +122,29 @@ public class PlayerStatsPanel : MonoBehaviour
         }
     }
 
-    public void SetSpeed(float value)
+    public void SetMoveSpeed(int value)
     {
         if (playerData != null)
         {
             playerData.moveSpeed = value;
+            UpdateUI();
+        }
+    }
+
+    public void SetAttackSpeed(int value)
+    {
+        if (playerData != null)
+        {
+            playerData.attackSpeed = value;
+            UpdateUI();
+        }
+    }
+
+    public void SetBulletSpeed(int value)
+    {
+        if (playerData != null)
+        {
+            playerData.bulletSpeed = value;
             UpdateUI();
         }
     }
@@ -122,13 +166,15 @@ public class PlayerStatsPanel : MonoBehaviour
             dmgText.text = $"DMG: {playerData.damage}";
         
         if (speedText != null)
-            speedText.text = $"Speed: {playerData.moveSpeed:F1}";
+            speedText.text = $"Move Speed: {playerData.moveSpeed}";
         
         if (moneyText != null)
             moneyText.text = $"Money: {playerData.money}";
-    }
 
-    // ========== PUBLIC GETTER ==========
-    
-    public PlayerData GetPlayerData() => playerData;
+        if (attackSpeedText != null)
+            attackSpeedText.text = $"Attack Speed: {playerData.attackSpeed}";
+
+        if (bulletSpeedText != null)
+            bulletSpeedText.text = $"Bullet Speed: {playerData.bulletSpeed}";
+    }
 }

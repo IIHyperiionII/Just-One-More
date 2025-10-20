@@ -8,7 +8,9 @@ public enum StatType
     Money,
     HP,
     Dmg,
-    Speed
+    MoveSpeed,
+    AttackSpeed,
+    BulletSpeed
 }
 
 public class CasinoManager : MonoBehaviour
@@ -22,43 +24,49 @@ public class CasinoManager : MonoBehaviour
     [SerializeField] private Button moneyButton;
     [SerializeField] private Button hpButton;
     [SerializeField] private Button damageButton;
-    [SerializeField] private Button speedButton;
+    [SerializeField] private Button moveSpeedButton;
+    [SerializeField] private Button attackSpeedButton;
+    [SerializeField] private Button bulletSpeedButton;
 
     [Header("Panels")]
     [SerializeField] private GameObject casinoPanel;
     [SerializeField] private GameObject gamblingPanel;
 
     [Header("Data")]
-    [SerializeField] private PlayerData playerData;
     [SerializeField] private PlayerStatsPanel playerStatsPanel;
 
     [Header("Game References")]
     [SerializeField] private GamblingManager gamblingManager;
 
-    [Header("Settings")]
-    [SerializeField] private int minBet = 1;
-    [SerializeField] private int betIncrement = 10;
-    [SerializeField] private Color selectedColor = Color.yellow;
-    [SerializeField] private Color normalColor = Color.white;
-
-    // private int currentStat;
+    private int minBet = 1;
+    private PlayerData playerData;
     private int currentBet;
     private StatType currentStatType = StatType.Money;
     private bool gameInProgress = false;
+    private Color selectedColor = Color.green;
+    private Color normalColor = Color.white;
 
     void Start()
-    {   
-        // RESET FOR TESTING
-        if (playerData != null)
-        {
-            playerData.money = 1000;
-            playerData.hp = 100;
-            playerData.damage = 40;
-            playerData.moveSpeed = 20;
-            Debug.Log("PlayerData reset for testing!");
-        }
+    {
+        /*
+            ONLY FOR TESTING
+
+            REMOVE BEFORE MERGE
+            
+            +
+
+            REMOVE RESOURCES FROM UNITY ASSETS IN PROJECT
+        */
+        EnsureGameManagerForTesting();
+
+        if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null)
+            playerData = GameManager.Instance.runtimePlayerData;
+
+        if (playerStatsPanel != null && playerData != null)
+            playerStatsPanel.SetPlayerData(playerData);
 
         currentBet = minBet;
+
         SetupSlider();
 
         if (gamblingPanel != null)
@@ -69,6 +77,28 @@ public class CasinoManager : MonoBehaviour
         UpdateStatButtonColors();
         UpdateUI();
     }
+
+    // Create a minimal GameManager and runtime PlayerData when none exists (testing only).
+    // Remove this helper for production builds.
+    private void EnsureGameManagerForTesting()
+{
+    if (GameManager.Instance != null) return;
+
+    var existing = FindFirstObjectByType<GameManager>();
+    if (existing != null) return;
+
+    // načti prefab z Resources/GameManager.prefab
+    var prefab = Resources.Load<GameObject>("GameManager");
+    if (prefab != null)
+    {
+        Instantiate(prefab); // Awake se zavolá automaticky, basePlayerData už je přiřazeno
+        Debug.Log("GameManager prefab instantiated from Resources.");
+    }
+    else
+    {
+        Debug.LogError("GameManager prefab not found in Resources folder!");
+    }
+}
 
     // ========== SETUP ==========
     
@@ -100,9 +130,19 @@ public class CasinoManager : MonoBehaviour
         SelectStat(StatType.Dmg);
     }
 
-    public void SelectSpeed()
+    public void SelectMoveSpeed()
     {
-        SelectStat(StatType.Speed);
+        SelectStat(StatType.MoveSpeed);
+    }
+
+    public void SelectAttackSpeed()
+    {
+        SelectStat(StatType.AttackSpeed);
+    }
+
+    public void SelectBulletSpeed()
+    {
+        SelectStat(StatType.BulletSpeed);
     }
     
     private void SelectStat(StatType statType)
@@ -128,7 +168,9 @@ public class CasinoManager : MonoBehaviour
         SetButtonColor(moneyButton, currentStatType == StatType.Money);
         SetButtonColor(hpButton, currentStatType == StatType.HP);
         SetButtonColor(damageButton, currentStatType == StatType.Dmg);
-        SetButtonColor(speedButton, currentStatType == StatType.Speed);
+        SetButtonColor(moveSpeedButton, currentStatType == StatType.MoveSpeed);
+        SetButtonColor(attackSpeedButton, currentStatType == StatType.AttackSpeed);
+        SetButtonColor(bulletSpeedButton, currentStatType == StatType.BulletSpeed);
     }
 
     // Weird implementation idk
@@ -155,13 +197,17 @@ public class CasinoManager : MonoBehaviour
                 return playerData.hp;
             case StatType.Dmg:
                 return playerData.damage;
-            case StatType.Speed:
-                return Mathf.FloorToInt(playerData.moveSpeed);
+            case StatType.MoveSpeed:
+                return playerData.moveSpeed;
+            case StatType.AttackSpeed:
+                return playerData.attackSpeed;
+            case StatType.BulletSpeed:
+                return playerData.bulletSpeed;
             default:
                 return minBet;
         }
     }
-    
+
     // ========== BETTING ==========
 
     private void OnSliderChanged(float value)
@@ -169,37 +215,6 @@ public class CasinoManager : MonoBehaviour
         if (!gameInProgress)
         {
             currentBet = Mathf.RoundToInt(value);
-            UpdateUI();
-        }
-    }
-
-    public void IncreaseBet()
-    {
-        if (!gameInProgress)
-        {
-            currentBet += betIncrement;
-            int maxBet = GetMaxBetForCurrentStat();
-
-            if (currentBet > maxBet)
-            {
-                currentBet = maxBet;
-            }
-
-            UpdateUI();
-        }
-    }
-
-    public void DecreaseBet()
-    {
-        if (!gameInProgress)
-        {
-            currentBet -= betIncrement;
-
-            if (currentBet < minBet)
-            {
-                currentBet = minBet;
-            }
-
             UpdateUI();
         }
     }
@@ -249,16 +264,23 @@ public class CasinoManager : MonoBehaviour
     {
         if (playerData == null) return false;
 
+        // int maxBet = GetMaxBetForCurrentStat();
+
+        // return maxBet >= minBet && currentBet >= minBet && currentBet <= maxBet;
         switch (currentStatType)
         {
             case StatType.Money:
-                return playerData.money >= currentBet;
+                return playerData.money > 0 && playerData.money >= currentBet;
             case StatType.HP:
-                return playerData.hp >= currentBet;
+                return playerData.hp > 0 && playerData.hp >= currentBet;
             case StatType.Dmg:
-                return playerData.damage >= currentBet;
-            case StatType.Speed:
-                return playerData.moveSpeed >= currentBet;
+                return playerData.damage > 0 && playerData.damage >= currentBet;
+            case StatType.MoveSpeed:
+                return playerData.moveSpeed > 0 && playerData.moveSpeed >= currentBet;
+            case StatType.AttackSpeed:
+                return playerData.attackSpeed > 0 && playerData.attackSpeed >= currentBet;
+            case StatType.BulletSpeed:
+                return playerData.bulletSpeed > 0 && playerData.bulletSpeed >= currentBet;
             default:
                 return false;
         }
@@ -279,8 +301,14 @@ public class CasinoManager : MonoBehaviour
             case StatType.Dmg:
                 playerData.damage -= currentBet;
                 return true;
-            case StatType.Speed:
+            case StatType.MoveSpeed:
                 playerData.moveSpeed -= currentBet;
+                return true;
+            case StatType.AttackSpeed:
+                playerData.attackSpeed -= currentBet;
+                return true;
+            case StatType.BulletSpeed:
+                playerData.bulletSpeed -= currentBet;
                 return true;
             default:
                 return false;
@@ -297,7 +325,6 @@ public class CasinoManager : MonoBehaviour
         Debug.Log($"=== GAME RESULT ===");
         Debug.Log($"Bet: {currentBet}");
         Debug.Log($"Multiplier: {multiplier}x");
-        Debug.Log($"Win: {winAmount}");
         Debug.Log($"Profit: {profit}");
         Debug.Log($"===================");
 
@@ -315,16 +342,22 @@ public class CasinoManager : MonoBehaviour
         switch (currentStatType)
         {
             case StatType.Money:
-                playerData.money += amount;
+                playerData.money = Mathf.Max(0, playerData.money + amount);
                 break;
             case StatType.HP:
-                playerData.hp += amount;
+                playerData.hp = Mathf.Max(0, playerData.hp + amount); // HP nesmí být 0
                 break;
             case StatType.Dmg:
-                playerData.damage += amount;
+                playerData.damage = Mathf.Max(1, playerData.damage + amount);
                 break;
-            case StatType.Speed:
-                playerData.moveSpeed += amount;
+            case StatType.MoveSpeed:
+                playerData.moveSpeed = Mathf.Max(1, playerData.moveSpeed + amount);
+                break;
+            case StatType.AttackSpeed:
+                playerData.attackSpeed = Mathf.Max(1, playerData.attackSpeed + amount);
+                break;
+            case StatType.BulletSpeed:
+                playerData.bulletSpeed = Mathf.Max(1, playerData.bulletSpeed + amount);
                 break;
         }
     }
@@ -348,13 +381,25 @@ public class CasinoManager : MonoBehaviour
 
         if (betSlider != null)
         {
-            betSlider.maxValue = maxBet;
-
-            if (!gameInProgress)
+            if (maxBet < minBet)
             {
-                currentBet = Mathf.Clamp(currentBet, minBet, maxBet);
-                if (!Mathf.Approximately(betSlider.value, currentBet))
-                    betSlider.SetValueWithoutNotify(currentBet);
+                betSlider.minValue = 0;
+                betSlider.maxValue = 0;
+                betSlider.interactable = false;
+                betSlider.SetValueWithoutNotify(0);
+            }
+            else
+            {
+                betSlider.minValue = minBet;
+                betSlider.maxValue = maxBet;
+                betSlider.interactable = !gameInProgress;
+
+                if (!gameInProgress)
+                {
+                    currentBet = Mathf.Clamp(currentBet, minBet, maxBet);
+                    if (!Mathf.Approximately(betSlider.value, currentBet))
+                        betSlider.SetValueWithoutNotify(currentBet);
+                }
             }
         }
     }
