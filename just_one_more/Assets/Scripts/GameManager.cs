@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public PlayerData basePlayerData;
     public PlayerData runtimePlayerData;
     private GameObject background;
+    private GameObject background2;
     private Bounds backgroundBounds;
     private GameObject cameraObject;
     private Bounds cameraBounds;
@@ -21,6 +22,10 @@ public class GameManager : MonoBehaviour
     private List<GameObject> enemiesToSpawn = new List<GameObject>();
     private Vector2 spawnPosition;
     private bool WavesIsSpawning = false;
+    private bool isTeleporting = false;
+    public bool doorsEntered = false;
+    private Collider2D doorsCollider;
+    private Collider2D playerCollider;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -47,6 +52,22 @@ public class GameManager : MonoBehaviour
         if (!Application.isPlaying) return; // Skip initialization in edit mode
         GetBackgroundSize();
         GetCamera();
+        if (GameObject.FindGameObjectWithTag("BoundsCheckDoors").GetComponent<Collider2D>() == null)
+        {
+            Debug.LogError("Doors GameObject does not exist!");
+        }
+        else
+        {
+            doorsCollider = GameObject.FindGameObjectWithTag("BoundsCheckDoors").GetComponent<Collider2D>();
+        }
+        if (GameObject.FindGameObjectWithTag("BoundsCheckPlayer").GetComponent<Collider2D>() == null)
+        {
+            Debug.LogError("Player bounds GameObject does not exist!");
+        }
+        else
+        {
+            playerCollider = GameObject.FindGameObjectWithTag("BoundsCheckPlayer").GetComponent<Collider2D>();
+        }
     }
     void GetBackgroundSize()
     {
@@ -57,6 +78,8 @@ public class GameManager : MonoBehaviour
         else
         {
             background = GameObject.FindGameObjectWithTag("Background"); // Find the background object in the scene
+            background2 = GameObject.FindGameObjectWithTag("Background2"); // Find the second background object in the scene
+            background2.SetActive(false); // Disable the second background at start
             SpriteRenderer backgroundRenderer = background.GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
             if (backgroundRenderer == null)
             {
@@ -93,11 +116,21 @@ public class GameManager : MonoBehaviour
         // Check if the player is dead
         if (runtimePlayerData.isDead)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the editor
-            #else
-            //Application.Quit(); // Uncomment this line to quit the application in a build
-            #endif
+#else
+                //Application.Quit(); // Uncomment this line to quit the application in a build
+#endif
+        }
+        if (playerCollider.bounds.Intersects(doorsCollider.bounds) && doorsEntered == true)
+        {
+            Debug.Log("Teleporting...");
+            StartCoroutine(Teleport());
+
+        }
+        else
+        {
+            isTeleporting = false;
         }
         if (cameraObject == null)
         {
@@ -113,6 +146,17 @@ public class GameManager : MonoBehaviour
             StartCoroutine(SpawnWave()); // Wait for sync
             wave++;
         }
+    }
+    IEnumerator Teleport()
+    {
+        isTeleporting = true;
+        doorsEntered = false;
+        Time.timeScale = 0f; // Pause the game
+        yield return new WaitForSecondsRealtime(1f); // Wait a moment before teleporting for sync of coroutines
+        background.SetActive(false);
+        background2.SetActive(true);
+        Time.timeScale = 1f; // Resume the game
+        isTeleporting = false;
     }
     IEnumerator SpawnWave()
     {
