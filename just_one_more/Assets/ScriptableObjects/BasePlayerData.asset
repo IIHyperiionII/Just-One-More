@@ -17,5 +17,6 @@ MonoBehaviour:
   attackSpeed: 30
   damage: 40
   money: 1000
-  bulletSpeed: 20
+  attackModifier: 10
   isDead: 0
+  isMelee: 0

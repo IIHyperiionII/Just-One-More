@@ -3,19 +3,20 @@ using UnityEngine;
 public class BallSpawner : MonoBehaviour 
 {
     [Header("Ball Setup")]
-    public GameObject ballPrefab;           // Drag Ball prefab sem
-    public Transform ballSpawnPoint;        // Spawn pozice
-    
+    public GameObject ballPrefab;
+    public Transform ballSpawnPoint;
+
     [Header("Physics Settings")]
-    public float initialRandomForce = 50f;  // Random sideways push
-    
-    [Header("Auto Cleanup")]
-    public float destroyAfterSeconds = 10f;
+    // Random sideways push
+    public float initialRandomForce = 2f;
 
     private GameObject currentBall;
 
     public void DropBall()
     {
+        if (currentBall != null)
+            DestroyCurrentBall();
+        
         // Spawn new ball
         Vector3 spawnPos = ballSpawnPoint != null
             ? ballSpawnPoint.position
@@ -27,14 +28,21 @@ public class BallSpawner : MonoBehaviour
         Rigidbody2D rb = currentBall.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.linearVelocity = Vector2.zero; // Reset velocity
+            // Reset velocity
+            rb.linearVelocity = Vector2.zero;
 
             // Random sideways force (variety)
             float randomX = Random.Range(-initialRandomForce, initialRandomForce);
             rb.AddForce(new Vector2(randomX, 0));
         }
+    }
 
-        // Auto cleanup
-        Destroy(currentBall, destroyAfterSeconds);
+    public void DestroyCurrentBall()
+    {
+        if (currentBall != null)
+        {
+            Destroy(currentBall);
+            currentBall = null;
+        }
     }
 }

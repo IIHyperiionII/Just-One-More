@@ -927,7 +927,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play gamble
+  m_text: Gamble!!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2121,8 +2121,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: -25}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: -75, y: -25}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.6250747}
 --- !u!1 &410577465
 GameObject:
@@ -2133,7 +2133,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 410577466}
-  - component: {fileID: 410577467}
   - component: {fileID: 410577468}
   m_Layer: 5
   m_Name: PlinkoBoard
@@ -2165,26 +2164,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 75}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &410577467
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410577465}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a0588375bba5214683a202f42b6a74a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlinkoBoardGenerator
-  rows: 8
-  horizontalSpacing: 60
-  verticalSpacing: 60
-  pegSize: 20
-  pegColor: {r: 0.30588236, g: 0, b: 1, a: 1}
-  pegPrefab: {fileID: 3525567446365314860, guid: 9892928e38cf257429109cc96634400f,
-    type: 3}
-  pegsContainer: {fileID: 818547205}
 --- !u!114 &410577468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2201,7 +2180,6 @@ MonoBehaviour:
     type: 3}
   ballSpawnPoint: {fileID: 17678765}
   initialRandomForce: 2
-  destroyAfterSeconds: 10
 --- !u!1 &418824836
 GameObject:
   m_ObjectHideFlags: 0
@@ -2333,7 +2311,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 40, y: 40}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.6250747}
 --- !u!1 &437057565
 GameObject:
@@ -3560,12 +3538,12 @@ PrefabInstance:
     - target: {fileID: 1538016802544032955, guid: 2f5b1e9ecf4155d44aeb9dc81ca91b4d,
         type: 3}
       propertyPath: m_text
-      value: 'Bullet Speed: 100'
+      value: 'Attack Modifier: 100'
       objectReference: {fileID: 0}
     - target: {fileID: 3065692990802210666, guid: 2f5b1e9ecf4155d44aeb9dc81ca91b4d,
         type: 3}
       propertyPath: m_Name
-      value: BulletSpeedStat
+      value: AttackModifierStat
       objectReference: {fileID: 0}
     - target: {fileID: 3257035357804836717, guid: 2f5b1e9ecf4155d44aeb9dc81ca91b4d,
         type: 3}
@@ -3960,13 +3938,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -4168,7 +4146,8 @@ MonoBehaviour:
   damageButton: {fileID: 912467131}
   moveSpeedButton: {fileID: 375463266}
   attackSpeedButton: {fileID: 418824837}
-  bulletSpeedButton: {fileID: 1973379261}
+  attackModifierButton: {fileID: 1973379261}
+  attackModifierButtonText: {fileID: 824890987}
   casinoPanel: {fileID: 802805719}
   gamblingPanel: {fileID: 1709840458}
   playerStatsPanel: {fileID: 1564840797}
@@ -4289,7 +4268,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 0.3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -4438,7 +4417,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 1.5
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -4615,7 +4594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bullet Speed
+  m_text: Attack Modifier
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4642,13 +4621,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -4824,8 +4803,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 35}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: 0, y: 50}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.6250747}
 --- !u!1001 &838742483
 PrefabInstance:
@@ -5193,8 +5172,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 60, y: 35}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: 75, y: 50}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.6250747}
 --- !u!1 &927806227
 GameObject:
@@ -6161,8 +6140,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: 35}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: -75, y: 50}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.6250747}
 --- !u!224 &1116592703 stripped
 RectTransform:
@@ -6255,7 +6234,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 802805724}
         m_TargetAssemblyTypeName: CasinoManager, Assembly-CSharp
-        m_MethodName: CloseGamblingPanel
+        m_MethodName: ForceCloseGamblingPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7307,8 +7286,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1094959198}
-  - {fileID: 912467134}
   - {fileID: 827721931}
+  - {fileID: 912467134}
   - {fileID: 375463269}
   - {fileID: 418824840}
   - {fileID: 1973379260}
@@ -7316,8 +7295,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -380, y: -10}
-  m_SizeDelta: {x: 180, y: 120}
+  m_AnchoredPosition: {x: -380, y: -40}
+  m_SizeDelta: {x: 240, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1256247352
 PrefabInstance:
@@ -8142,7 +8121,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 0.3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -8848,7 +8827,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: -0.2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -9036,7 +9015,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -380, y: 160}
-  m_SizeDelta: {x: 190, y: 50}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1528262323
 MonoBehaviour:
@@ -9084,7 +9063,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 802805724}
         m_TargetAssemblyTypeName: CasinoManager, Assembly-CSharp
-        m_MethodName: PlayGamble
+        m_MethodName: StartGambleGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9349,7 +9328,7 @@ MonoBehaviour:
   speedText: {fileID: 1809028086}
   moneyText: {fileID: 2075753922}
   attackSpeedText: {fileID: 234930976}
-  bulletSpeedText: {fileID: 682314899}
+  attackModifierText: {fileID: 682314899}
 --- !u!1 &1588605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -9434,13 +9413,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -10105,13 +10084,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -10924,7 +10903,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 1.5
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -11277,13 +11256,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -11451,7 +11430,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 4
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -11893,7 +11872,7 @@ GameObject:
   - component: {fileID: 1973379262}
   - component: {fileID: 1973379261}
   m_Layer: 5
-  m_Name: BulletSpeedButton
+  m_Name: AttackModifierButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11916,8 +11895,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 60, y: -25}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: 75, y: -25}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.6250747}
 --- !u!114 &1973379261
 MonoBehaviour:
@@ -11965,7 +11944,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 802805724}
         m_TargetAssemblyTypeName: CasinoManager, Assembly-CSharp
-        m_MethodName: SelectBulletSpeed
+        m_MethodName: SelectAttackModifier
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12247,7 +12226,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: -0.2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -12606,13 +12585,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontSizeMax: 71.84
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -12695,7 +12674,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -380, y: 80}
-  m_SizeDelta: {x: 200, y: 20}
+  m_SizeDelta: {x: 250, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2060084215
 MonoBehaviour:

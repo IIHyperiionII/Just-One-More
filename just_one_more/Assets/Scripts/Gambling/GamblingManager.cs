@@ -7,9 +7,11 @@ public class GamblingManager : MonoBehaviour
     [SerializeField] private BallSpawner ballSpawner;
 
     private Action<float> onGameComplete;
+    // gameActive prepared for future use (e.g. multiple balls)
     private bool gameActive = false;
     private bool resultSent = false;
 
+    // Receives onGameComplete callback from casinoManager to be invoked when game ends
     public void StartNewGame(Action<float> onComplete)
     {
         gameActive = true;
@@ -22,7 +24,7 @@ public class GamblingManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("BallSpawner not assigned!");
+            Debug.LogWarning("BallSpawner not assigned!");
         }
     }
 
@@ -33,15 +35,16 @@ public class GamblingManager : MonoBehaviour
             resultSent = true;
             gameActive = false;
 
-            Debug.Log($"Multiplier: {multiplier}x");
-
+            // onGameComplete != null => Invoke (call) onGameComplete with multiplier
             onGameComplete?.Invoke(multiplier);
         }
     }
 
-    public void ResetGame()
+    public void ResetGame() 
     {
         gameActive = false;
         resultSent = false;
+        if (ballSpawner != null)
+            ballSpawner.DestroyCurrentBall();
     }
 }

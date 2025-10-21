@@ -10,13 +10,18 @@ public class PlayerStatsPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TextMeshProUGUI moneyText;
     [SerializeField] private TextMeshProUGUI attackSpeedText;
-    [SerializeField] private TextMeshProUGUI bulletSpeedText;
+    [SerializeField] private TextMeshProUGUI attackModifierText;
 
     private PlayerData playerData;
+    // Changes based on whether the player is melee or ranged
+    private string attackModifierName;
+
     void Start()
     {
-        if (playerData != null)
+        if (playerData != null) {
+            attackModifierName = GetAttackModifierName();
             UpdateUI();
+        }
     }
 
     public void SetPlayerData(PlayerData pd)
@@ -28,12 +33,20 @@ public class PlayerStatsPanel : MonoBehaviour
     public PlayerData GetPlayerData() => playerData;
 
     // ========== MONEY METHODS ==========
-
     public int GetMoney()
     {
         if (playerData != null)
             return playerData.money;
         return 0;
+    }
+
+    public void SetMoney(int amount)
+    {
+        if (playerData != null)
+        {
+            playerData.money = amount;
+            UpdateUI();
+        }
     }
 
     public bool SpendMoney(int amount)
@@ -56,16 +69,7 @@ public class PlayerStatsPanel : MonoBehaviour
         }
     }
 
-    public void SetMoney(int amount)
-    {
-        if (playerData != null)
-        {
-            playerData.money = amount;
-            UpdateUI();
-        }
-    }
-
-    // ========== OTHER STATS METHODS ==========
+    // ========== GETTERS ==========
     
     public int GetHP()
     {
@@ -81,15 +85,13 @@ public class PlayerStatsPanel : MonoBehaviour
         return 0;
     }
 
-    // renamed to GetMoveSpeed and returns float
-    public float GetMoveSpeed()
+    public int GetMoveSpeed()
     {
         if (playerData != null)
             return playerData.moveSpeed;
         return 0;
     }
 
-    // attackSpeed / bulletSpeed getters
     public int GetAttackSpeed()
     {
         if (playerData != null)
@@ -97,13 +99,23 @@ public class PlayerStatsPanel : MonoBehaviour
         return 0;
     }
 
-    public int GetBulletSpeed()
+    public int GetAttackModifier()
     {
         if (playerData != null)
-            return playerData.bulletSpeed;
+            return playerData.attackModifier;
         return 0;
     }
 
+    public string GetAttackModifierName()
+    {
+        if (playerData != null)
+        {
+            return playerData.isMelee ? "Knockback" : "Bullet Speed";
+        }
+        return "Attack Modifier";
+    }
+
+    // ========== SETTERS ==========
     public void SetHP(int value)
     {
         if (playerData != null)
@@ -140,41 +152,38 @@ public class PlayerStatsPanel : MonoBehaviour
         }
     }
 
-    public void SetBulletSpeed(int value)
+    public void SetAttackModifier(int value)
     {
         if (playerData != null)
         {
-            playerData.bulletSpeed = value;
+            playerData.attackModifier = value;
             UpdateUI();
         }
     }
 
     // ========== UI UPDATE ==========
-    
+
+    private void UpdateTextField(TextMeshProUGUI textField, string label, int value)
+    {
+        if (textField)
+        {
+            textField.text = $"{label}: {value}";
+        }
+    }
+
     public void UpdateUI()
     {
         if (playerData == null)
         {
-            Debug.Log("PlayerData not assigned to PlayerStatsPanel!");
+            Debug.LogError("PlayerData not assigned to PlayerStatsPanel!");
             return;
         }
 
-        if (hpText != null)
-            hpText.text = $"HP: {playerData.hp}";
-        
-        if (dmgText != null)
-            dmgText.text = $"DMG: {playerData.damage}";
-        
-        if (speedText != null)
-            speedText.text = $"Move Speed: {playerData.moveSpeed}";
-        
-        if (moneyText != null)
-            moneyText.text = $"Money: {playerData.money}";
-
-        if (attackSpeedText != null)
-            attackSpeedText.text = $"Attack Speed: {playerData.attackSpeed}";
-
-        if (bulletSpeedText != null)
-            bulletSpeedText.text = $"Bullet Speed: {playerData.bulletSpeed}";
+        UpdateTextField(hpText, "HP", playerData.hp);
+        UpdateTextField(dmgText, "Damage", playerData.damage);
+        UpdateTextField(speedText, "Speed", playerData.moveSpeed);
+        UpdateTextField(moneyText, "Money", playerData.money);
+        UpdateTextField(attackSpeedText, "Attack Speed", playerData.attackSpeed);
+        UpdateTextField(attackModifierText, attackModifierName, playerData.attackModifier);
     }
 }

@@ -9,10 +9,9 @@ public class Bucket : MonoBehaviour
         return multiplier;
     }
 
-    public void OnBallEntered(Ball ball)
+    public void OnBallEntered()
     {
-        Debug.Log($"BALL IN {multiplier} BUCKET");
-
+        // Send the bucket's multiplier to the GamblingManager when a ball enters
         GamblingManager gamblingManager = FindAnyObjectByType<GamblingManager>();
         if (gamblingManager != null)
         {

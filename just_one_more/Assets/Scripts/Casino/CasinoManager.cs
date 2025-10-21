@@ -1,20 +1,11 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
-
-public enum StatType
-{
-    Money,
-    HP,
-    Dmg,
-    MoveSpeed,
-    AttackSpeed,
-    BulletSpeed
-}
 
 public class CasinoManager : MonoBehaviour
 {
+    // ========== FIELDS ==========
+
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI betAmountText;
     [SerializeField] private TextMeshProUGUI selectedStatText;
@@ -26,7 +17,8 @@ public class CasinoManager : MonoBehaviour
     [SerializeField] private Button damageButton;
     [SerializeField] private Button moveSpeedButton;
     [SerializeField] private Button attackSpeedButton;
-    [SerializeField] private Button bulletSpeedButton;
+    [SerializeField] private Button attackModifierButton;
+    [SerializeField] private TextMeshProUGUI attackModifierButtonText;
 
     [Header("Panels")]
     [SerializeField] private GameObject casinoPanel;
@@ -42,69 +34,80 @@ public class CasinoManager : MonoBehaviour
     private PlayerData playerData;
     private int currentBet;
     private StatType currentStatType = StatType.Money;
-    private bool gameInProgress = false;
+    private bool gambleGameInProgress = false;
     private Color selectedColor = Color.green;
     private Color normalColor = Color.white;
+    private string attackModifierName;
 
     void Start()
     {
+#if UNITY_EDITOR
         /*
+            EnsureGameManagerForTesting:
             ONLY FOR TESTING
-
             REMOVE BEFORE MERGE
-            
             +
-
             REMOVE RESOURCES FROM UNITY ASSETS IN PROJECT
         */
         EnsureGameManagerForTesting();
+#endif
 
         if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null)
+            // Get the runtime PlayerData from GameManager
             playerData = GameManager.Instance.runtimePlayerData;
 
-        if (playerStatsPanel != null && playerData != null)
+        if (playerStatsPanel && playerData != null)
+        {
             playerStatsPanel.SetPlayerData(playerData);
+            attackModifierName = playerStatsPanel.GetAttackModifierName();
 
-        currentBet = minBet;
+            if (attackModifierButtonText)
+            {
+                attackModifierButtonText.text = attackModifierName;
+            }
+        }
 
-        SetupSlider();
-
-        if (gamblingPanel != null)
+        if (gamblingPanel)
         {
             gamblingPanel.SetActive(false);
         }
 
-        UpdateStatButtonColors();
+        currentBet = minBet;
+
+        SetupSlider();
+        UpdateStatButtons();
         UpdateUI();
     }
 
+    // ========== INITIALIZATION ==========
+
+#if UNITY_EDITOR
     // Create a minimal GameManager and runtime PlayerData when none exists (testing only).
     // Remove this helper for production builds.
     private void EnsureGameManagerForTesting()
-{
-    if (GameManager.Instance != null) return;
-
-    var existing = FindFirstObjectByType<GameManager>();
-    if (existing != null) return;
-
-    // načti prefab z Resources/GameManager.prefab
-    var prefab = Resources.Load<GameObject>("GameManager");
-    if (prefab != null)
     {
-        Instantiate(prefab); // Awake se zavolá automaticky, basePlayerData už je přiřazeno
-        Debug.Log("GameManager prefab instantiated from Resources.");
-    }
-    else
-    {
-        Debug.LogError("GameManager prefab not found in Resources folder!");
-    }
-}
+        if (GameManager.Instance != null) return;
 
-    // ========== SETUP ==========
+        var existing = FindFirstObjectByType<GameManager>();
+        if (existing != null) return;
+
+        // načti prefab z Resources/GameManager.prefab
+        var prefab = Resources.Load<GameObject>("GameManager");
+        if (prefab != null)
+        {
+            Instantiate(prefab); // Awake se zavolá automaticky, basePlayerData už je přiřazeno
+            Debug.Log("GameManager prefab instantiated from Resources.");
+        }
+        else
+        {
+            Debug.LogWarning("GameManager prefab not found in Resources folder!");
+        }
+    }
+#endif
     
     private void SetupSlider()
     {
-        if (betSlider != null)
+        if (betSlider)
         {
             betSlider.wholeNumbers = true;
             betSlider.minValue = minBet;
@@ -140,54 +143,34 @@ public class CasinoManager : MonoBehaviour
         SelectStat(StatType.AttackSpeed);
     }
 
-    public void SelectBulletSpeed()
+    public void SelectAttackModifier()
     {
-        SelectStat(StatType.BulletSpeed);
+        SelectStat(StatType.AttackModifier);
     }
     
     private void SelectStat(StatType statType)
     {
-        if (!gameInProgress)
+        if (!gambleGameInProgress)
         {
             currentStatType = statType;
             currentBet = minBet;
             
-            if (betSlider != null)
+            if (betSlider)
             {
                 betSlider.maxValue = GetMaxBetForCurrentStat();
                 betSlider.SetValueWithoutNotify(currentBet);
             }
             
-            UpdateStatButtonColors();
+            UpdateStatButtons();
             UpdateUI();
         }
     }
 
-    private void UpdateStatButtonColors()
-    {
-        SetButtonColor(moneyButton, currentStatType == StatType.Money);
-        SetButtonColor(hpButton, currentStatType == StatType.HP);
-        SetButtonColor(damageButton, currentStatType == StatType.Dmg);
-        SetButtonColor(moveSpeedButton, currentStatType == StatType.MoveSpeed);
-        SetButtonColor(attackSpeedButton, currentStatType == StatType.AttackSpeed);
-        SetButtonColor(bulletSpeedButton, currentStatType == StatType.BulletSpeed);
-    }
-
-    // Weird implementation idk
-    private void SetButtonColor(Button button, bool isSelected)
-    {
-        if (button != null)
-        {
-            ColorBlock colors = button.colors;
-            colors.normalColor = isSelected ? selectedColor : normalColor;
-            colors.selectedColor = isSelected ? selectedColor : normalColor;
-            button.colors = colors;
-        }
-    }
+    // ========== BETTING LOGIC ==========
 
     private int GetMaxBetForCurrentStat()
     {
-        if (playerData == null) return minBet;
+        if (!playerData) return minBet;
 
         switch (currentStatType)
         {
@@ -201,62 +184,10 @@ public class CasinoManager : MonoBehaviour
                 return playerData.moveSpeed;
             case StatType.AttackSpeed:
                 return playerData.attackSpeed;
-            case StatType.BulletSpeed:
-                return playerData.bulletSpeed;
+            case StatType.AttackModifier:
+                return playerData.attackModifier;
             default:
                 return minBet;
-        }
-    }
-
-    // ========== BETTING ==========
-
-    private void OnSliderChanged(float value)
-    {
-        if (!gameInProgress)
-        {
-            currentBet = Mathf.RoundToInt(value);
-            UpdateUI();
-        }
-    }
-
-    // ========== GAME CONTROL ==========
-
-    public void PlayGamble()
-    {
-        if (gameInProgress)
-        {
-            Debug.Log("Game already in progress!");
-            return;
-        }
-
-        if (!playerData)
-        {
-            Debug.Log("PlayerData not assigned!");
-            return;
-        }
-
-        if (CanAffordBet() && SpendStat())
-        {
-            gameInProgress = true;
-            UpdateUI();
-
-            if (gamblingPanel != null)
-            {
-                gamblingPanel.SetActive(true);
-            }
-
-            if (gamblingManager != null)
-            {
-                gamblingManager.StartNewGame(OnGameComplete);
-            }
-            else
-            {
-                Debug.LogError("GamblingManager not assigned!");
-            }
-        }
-        else
-        {
-            Debug.Log($"Not enough {currentStatType}!");
         }
     }
 
@@ -264,26 +195,9 @@ public class CasinoManager : MonoBehaviour
     {
         if (playerData == null) return false;
 
-        // int maxBet = GetMaxBetForCurrentStat();
+        int maxBet = GetMaxBetForCurrentStat();
 
-        // return maxBet >= minBet && currentBet >= minBet && currentBet <= maxBet;
-        switch (currentStatType)
-        {
-            case StatType.Money:
-                return playerData.money > 0 && playerData.money >= currentBet;
-            case StatType.HP:
-                return playerData.hp > 0 && playerData.hp >= currentBet;
-            case StatType.Dmg:
-                return playerData.damage > 0 && playerData.damage >= currentBet;
-            case StatType.MoveSpeed:
-                return playerData.moveSpeed > 0 && playerData.moveSpeed >= currentBet;
-            case StatType.AttackSpeed:
-                return playerData.attackSpeed > 0 && playerData.attackSpeed >= currentBet;
-            case StatType.BulletSpeed:
-                return playerData.bulletSpeed > 0 && playerData.bulletSpeed >= currentBet;
-            default:
-                return false;
-        }
+        return maxBet >= minBet && currentBet >= minBet && currentBet <= maxBet;
     }
 
     private bool SpendStat()
@@ -307,32 +221,12 @@ public class CasinoManager : MonoBehaviour
             case StatType.AttackSpeed:
                 playerData.attackSpeed -= currentBet;
                 return true;
-            case StatType.BulletSpeed:
-                playerData.bulletSpeed -= currentBet;
+            case StatType.AttackModifier:
+                playerData.attackModifier -= currentBet;
                 return true;
             default:
                 return false;
         }
-    }
-
-    private void OnGameComplete(float multiplier)
-    {
-        int winAmount = Mathf.CeilToInt(currentBet * multiplier);
-        AddWinToStat(winAmount);
-
-        int profit = winAmount - currentBet;
-
-        Debug.Log($"=== GAME RESULT ===");
-        Debug.Log($"Bet: {currentBet}");
-        Debug.Log($"Multiplier: {multiplier}x");
-        Debug.Log($"Profit: {profit}");
-        Debug.Log($"===================");
-
-        gameInProgress = false;
-        UpdateUI();
-        playerStatsPanel.UpdateUI();
-
-        Invoke(nameof(CloseGamblingPanel), 2f);
     }
 
     private void AddWinToStat(int amount)
@@ -342,10 +236,13 @@ public class CasinoManager : MonoBehaviour
         switch (currentStatType)
         {
             case StatType.Money:
+                // TODO: (playerData.money + amount) > max ? max : playerData.money + amount
                 playerData.money = Mathf.Max(0, playerData.money + amount);
                 break;
             case StatType.HP:
-                playerData.hp = Mathf.Max(0, playerData.hp + amount); // HP nesmí být 0
+                // HP == 0 means player's death (TODO: achievement)
+                playerData.hp = Mathf.Max(0, playerData.hp + amount);
+                if (playerData.hp <= 0) playerData.isDead = true;
                 break;
             case StatType.Dmg:
                 playerData.damage = Mathf.Max(1, playerData.damage + amount);
@@ -356,31 +253,144 @@ public class CasinoManager : MonoBehaviour
             case StatType.AttackSpeed:
                 playerData.attackSpeed = Mathf.Max(1, playerData.attackSpeed + amount);
                 break;
-            case StatType.BulletSpeed:
-                playerData.bulletSpeed = Mathf.Max(1, playerData.bulletSpeed + amount);
+            case StatType.AttackModifier:
+                playerData.attackModifier = Mathf.Max(1, playerData.attackModifier + amount);
                 break;
         }
     }
 
+    private void OnSliderChanged(float value)
+    {
+        if (!gambleGameInProgress)
+        {
+            currentBet = Mathf.RoundToInt(value);
+            UpdateUI();
+        }
+    }
+
+    // ========== GAME CONTROL ==========
+
+    public void StartGambleGame()
+    {
+        if (gambleGameInProgress)
+        {
+            Debug.LogWarning("Game already in progress!");
+            return;
+        }
+
+        if (!playerData)
+        {
+            Debug.LogError("PlayerData not assigned!");
+            return;
+        }
+
+        if (!CanAffordBet())
+        {
+            // Player doesn't have enough stats
+            // TODO: UI feedback
+            return;
+        }
+
+        if (SpendStat())
+        {
+            gambleGameInProgress = true;
+            UpdateUI();
+
+            if (gamblingPanel)
+                gamblingPanel.SetActive(true);
+
+            if (gamblingManager)
+            {
+                // Give callback function OnGameComplete to be called when game ends
+                gamblingManager.StartNewGame(OnGameComplete);
+            }
+            else
+            {
+                Debug.LogWarning("GamblingManager not assigned!");
+            }
+        }
+    }
+
+    private void OnGameComplete(float multiplier)
+    {
+        int winAmount = Mathf.CeilToInt(currentBet * multiplier);
+        AddWinToStat(winAmount);
+
+        int profit = winAmount - currentBet;
+
+#if UNITY_EDITOR
+        Debug.Log($"=== GAME RESULT ===");
+        Debug.Log($"Bet: {currentBet}");
+        Debug.Log($"Multiplier: {multiplier}x");
+        Debug.Log($"Profit: {profit}");
+        Debug.Log($"===================");
+#endif
+
+        gambleGameInProgress = false;
+        UpdateUI();
+        playerStatsPanel.UpdateUI();
+
+        // Close gambling panel after 2 seconds
+        Invoke(nameof(CloseGamblingPanel), 2f);
+    }
+
     public void CloseGamblingPanel()
     {
-        if (gamblingPanel != null) gamblingPanel.SetActive(false);
-        if (gamblingManager != null) gamblingManager.ResetGame();
+        if (!gambleGameInProgress)
+        {
+            if (gamblingPanel) gamblingPanel.SetActive(false);
+            if (gamblingManager) gamblingManager.ResetGame();
+        }
+    }
+
+    // Close for EXIT button in gambling panel
+    // PROBLEM - TODO: Player can now rig the game by exiting before a bad outcome
+    public void ForceCloseGamblingPanel()
+    {
+        // Return bet to player
+        if (gambleGameInProgress && playerData != null)
+        {
+            AddWinToStat(currentBet);
+            Debug.LogWarning("Game force closed - bet returned to player");
+        }
+
+        gambleGameInProgress = false;
+
+        if (gamblingPanel)
+            gamblingPanel.SetActive(false);
+
+        if (gamblingManager)
+            gamblingManager.ResetGame();
+
+        UpdateUI();
+        playerStatsPanel.UpdateUI();
     }
 
     // ========== UI ==========
+
     private void UpdateUI()
     {
         int maxBet = GetMaxBetForCurrentStat();
 
-        if (betAmountText != null)
+        if (betAmountText)
             betAmountText.text = $"Bet: {currentBet}";
-        
-        if (selectedStatText != null)
-            selectedStatText.text = $"Betting: {currentStatType}";
 
-        if (betSlider != null)
+        if (selectedStatText)
         {
+            if (currentStatType == StatType.AttackModifier)
+            {
+                selectedStatText.text = $"Betting: {attackModifierName}";
+            }
+            else
+            {
+                selectedStatText.text = $"Betting: {currentStatType}";
+            }
+
+        }
+
+        if (betSlider)
+        {
+            // If current value of statType is less than minBet (Only for money for now), disable the slider
             if (maxBet < minBet)
             {
                 betSlider.minValue = 0;
@@ -392,11 +402,13 @@ public class CasinoManager : MonoBehaviour
             {
                 betSlider.minValue = minBet;
                 betSlider.maxValue = maxBet;
-                betSlider.interactable = !gameInProgress;
+                betSlider.interactable = !gambleGameInProgress;
 
-                if (!gameInProgress)
+                if (!gambleGameInProgress)
                 {
+                    // Returns currentBet if its between min and max, else returns min or max
                     currentBet = Mathf.Clamp(currentBet, minBet, maxBet);
+                    // Update slider without invoking OnValueChanged event if slider value != current bet
                     if (!Mathf.Approximately(betSlider.value, currentBet))
                         betSlider.SetValueWithoutNotify(currentBet);
                 }
@@ -404,8 +416,30 @@ public class CasinoManager : MonoBehaviour
         }
     }
 
+    private void UpdateStatButtons()
+    {
+        SetButtonColor(moneyButton, currentStatType == StatType.Money);
+        SetButtonColor(hpButton, currentStatType == StatType.HP);
+        SetButtonColor(damageButton, currentStatType == StatType.Dmg);
+        SetButtonColor(moveSpeedButton, currentStatType == StatType.MoveSpeed);
+        SetButtonColor(attackSpeedButton, currentStatType == StatType.AttackSpeed);
+        SetButtonColor(attackModifierButton, currentStatType == StatType.AttackModifier);
+    }
+    
+     private void SetButtonColor(Button button, bool isSelected)
+    {
+        if (button)
+        {
+            // Selected button is green, others are white
+            ColorBlock colors = button.colors;
+            colors.normalColor = isSelected ? selectedColor : normalColor;
+            colors.selectedColor = isSelected ? selectedColor : normalColor;
+            button.colors = colors;
+        }
+    }
+
     // ========== GETTERS ==========
-    public StatType GetcurrentStatType() => currentStatType;
+    public StatType GetCurrentStatType() => currentStatType;
     public int GetCurrentBet() => currentBet;
-    public bool IsGameInProgress() => gameInProgress;
+    public bool IsGambleGameInProgress() => gambleGameInProgress;
 }

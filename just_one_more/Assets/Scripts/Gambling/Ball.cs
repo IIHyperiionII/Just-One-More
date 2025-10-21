@@ -8,6 +8,7 @@ public class Ball : MonoBehaviour
 
     void Start()
     {
+        // Schedule the ball for destruction after its lifetime expires
         Destroy(gameObject, lifetime);
     }
 
@@ -17,12 +18,14 @@ public class Ball : MonoBehaviour
         {
             scoreRegistered = true;
 
+            // Get the bucket it collided with and register the score
             Bucket bucket = collision.GetComponent<Bucket>();
             if (bucket != null)
             {
-                bucket.OnBallEntered(this);
+                bucket.OnBallEntered();
             }
 
+            // Destroy the ball shortly right after scoring
             Destroy(gameObject, destroyDelay);
         }
     }
