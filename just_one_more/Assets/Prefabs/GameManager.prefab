@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6342973518231793899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 144895765840026659}
+  - component: {fileID: 77029781131653991}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &144895765840026659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342973518231793899}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.75287, y: -3.12402, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &77029781131653991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342973518231793899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b05a986ca197c4491a273ce2102b4b2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  basePlayerData: {fileID: 11400000, guid: 090639ed8209b4818b3aa880d3efd296, type: 2}
+  runtimePlayerData: {fileID: 0}
+  officePrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}
+  - {fileID: 6980090010355112472, guid: dc80e2ab923dd4c408c5c0a924dd398d, type: 3}
+  toiletPrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 3026029418750680626, guid: 8f950bf6ad7e244ad93eae5c72bac6fd, type: 3}
+  - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}
+  bossOfficePrefabs:
+  - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
+  - {fileID: 3026029418750680626, guid: 653203549b32240868d466e7432603bd, type: 3}
+  - {fileID: 762159802268367773, guid: 1dc17f6c77c8a469da37687099b9f28c, type: 3}
