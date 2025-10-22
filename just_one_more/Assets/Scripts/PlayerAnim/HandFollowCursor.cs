@@ -7,9 +7,9 @@ public class HandFollowCursor : MonoBehaviour
     public float rotationOffset = 0f;
 
     [Header("Offsets (localSpace)")]
-    public Vector3 offsetUp = new Vector3(-0.35f, 0.267f, 0f);
+    public Vector3 offsetUp = new Vector3(-0.27f, 0.21f, 0f);
     public Vector3 offsetLeft = new Vector3(0f, 0.05f, 0f);
-    public Vector3 offsetDown = new Vector3(0.267f, 0.267f, 0f);
+    public Vector3 offsetDown = new Vector3(0.24f, 0.21f, 0f);
     public Vector3 offsetRight = new Vector3(0f, 0.2f, 0f);
 
     [Header("Sorting")]

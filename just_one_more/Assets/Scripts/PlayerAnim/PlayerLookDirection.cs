@@ -27,6 +27,7 @@ public class PlayerLookDirection : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         if (angle < 0) angle += 360f;
 
+        // Updates look direction value to change the animation
         float lookDirValue = 0f;
         if (angle >= 45f && angle < 135f)
             lookDirValue = 0f; 
