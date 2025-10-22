@@ -16,12 +16,14 @@ public class BallSpawner : MonoBehaviour
     {
         if (currentBall != null)
             DestroyCurrentBall();
-        
-        // Spawn new ball
+
+        // Spawn new ball in ball spawn point or at position 
+        // of the GO the BallSpawner is attached to
         Vector3 spawnPos = ballSpawnPoint != null
             ? ballSpawnPoint.position
             : transform.position;
 
+        // Instantiate ball, no rotation, parented to spawner
         currentBall = Instantiate(ballPrefab, spawnPos, Quaternion.identity, transform);
 
         // Setup physics

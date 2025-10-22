@@ -5,5 +5,6 @@ public enum StatType
     Dmg,
     MoveSpeed,
     AttackSpeed,
-    AttackModifier
+    BulletSpeed,
+    Knockback
 }

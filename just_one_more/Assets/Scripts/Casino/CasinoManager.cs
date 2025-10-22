@@ -38,6 +38,7 @@ public class CasinoManager : MonoBehaviour
     private Color selectedColor = Color.green;
     private Color normalColor = Color.white;
     private string attackModifierName;
+    private StatType attackModifierStatType = StatType.BulletSpeed;
 
     void Start()
     {
@@ -60,6 +61,7 @@ public class CasinoManager : MonoBehaviour
         {
             playerStatsPanel.SetPlayerData(playerData);
             attackModifierName = playerStatsPanel.GetAttackModifierName();
+            attackModifierStatType = playerStatsPanel.GetAttackModifierStatType();
 
             if (attackModifierButtonText)
             {
@@ -145,7 +147,7 @@ public class CasinoManager : MonoBehaviour
 
     public void SelectAttackModifier()
     {
-        SelectStat(StatType.AttackModifier);
+        SelectStat(attackModifierStatType);
     }
     
     private void SelectStat(StatType statType)
@@ -184,9 +186,12 @@ public class CasinoManager : MonoBehaviour
                 return playerData.moveSpeed;
             case StatType.AttackSpeed:
                 return playerData.attackSpeed;
-            case StatType.AttackModifier:
-                return playerData.attackModifier;
+            case StatType.Knockback:
+                return playerData.knockback;
+            case StatType.BulletSpeed:
+                return playerData.bulletSpeed;
             default:
+
                 return minBet;
         }
     }
@@ -221,8 +226,11 @@ public class CasinoManager : MonoBehaviour
             case StatType.AttackSpeed:
                 playerData.attackSpeed -= currentBet;
                 return true;
-            case StatType.AttackModifier:
-                playerData.attackModifier -= currentBet;
+            case StatType.BulletSpeed:
+                playerData.bulletSpeed -= currentBet;
+                return true;
+            case StatType.Knockback:
+                playerData.knockback -= currentBet;
                 return true;
             default:
                 return false;
@@ -253,8 +261,11 @@ public class CasinoManager : MonoBehaviour
             case StatType.AttackSpeed:
                 playerData.attackSpeed = Mathf.Max(1, playerData.attackSpeed + amount);
                 break;
-            case StatType.AttackModifier:
-                playerData.attackModifier = Mathf.Max(1, playerData.attackModifier + amount);
+            case StatType.BulletSpeed:
+                playerData.bulletSpeed = Mathf.Max(1, playerData.bulletSpeed + amount);
+                break;
+            case StatType.Knockback:
+                playerData.knockback = Mathf.Max(1, playerData.knockback + amount);
                 break;
         }
     }
@@ -377,7 +388,7 @@ public class CasinoManager : MonoBehaviour
 
         if (selectedStatText)
         {
-            if (currentStatType == StatType.AttackModifier)
+            if (currentStatType == attackModifierStatType)
             {
                 selectedStatText.text = $"Betting: {attackModifierName}";
             }
@@ -423,7 +434,7 @@ public class CasinoManager : MonoBehaviour
         SetButtonColor(damageButton, currentStatType == StatType.Dmg);
         SetButtonColor(moveSpeedButton, currentStatType == StatType.MoveSpeed);
         SetButtonColor(attackSpeedButton, currentStatType == StatType.AttackSpeed);
-        SetButtonColor(attackModifierButton, currentStatType == StatType.AttackModifier);
+        SetButtonColor(attackModifierButton, currentStatType == attackModifierStatType);
     }
     
      private void SetButtonColor(Button button, bool isSelected)

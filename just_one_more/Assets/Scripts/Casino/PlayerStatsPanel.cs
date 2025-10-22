@@ -102,7 +102,7 @@ public class PlayerStatsPanel : MonoBehaviour
     public int GetAttackModifier()
     {
         if (playerData != null)
-            return playerData.attackModifier;
+            return playerData.isMelee ? playerData.knockback : playerData.bulletSpeed;
         return 0;
     }
 
@@ -113,6 +113,15 @@ public class PlayerStatsPanel : MonoBehaviour
             return playerData.isMelee ? "Knockback" : "Bullet Speed";
         }
         return "Attack Modifier";
+    }
+
+    public StatType GetAttackModifierStatType()
+    {
+        if (playerData != null)
+        {
+            return playerData.isMelee ? StatType.Knockback : StatType.BulletSpeed;
+        }
+        return StatType.BulletSpeed; // Default
     }
 
     // ========== SETTERS ==========
@@ -156,7 +165,10 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         if (playerData != null)
         {
-            playerData.attackModifier = value;
+            if (playerData.isMelee)
+                playerData.knockback = value;
+            else
+                playerData.bulletSpeed = value;
             UpdateUI();
         }
     }
@@ -184,6 +196,7 @@ public class PlayerStatsPanel : MonoBehaviour
         UpdateTextField(speedText, "Speed", playerData.moveSpeed);
         UpdateTextField(moneyText, "Money", playerData.money);
         UpdateTextField(attackSpeedText, "Attack Speed", playerData.attackSpeed);
-        UpdateTextField(attackModifierText, attackModifierName, playerData.attackModifier);
+        int attackModifierValue = playerData.isMelee ? playerData.knockback : playerData.bulletSpeed;
+        UpdateTextField(attackModifierText, attackModifierName, attackModifierValue);
     }
 }
