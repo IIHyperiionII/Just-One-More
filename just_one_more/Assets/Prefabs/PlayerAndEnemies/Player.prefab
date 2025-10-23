@@ -90,7 +90,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &5956730326826557064
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87c042efeb43d4630af57b82889b3b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerController
+  MouseKeyHoldDown: 0
   bulletPrefab: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
     type: 3}
 --- !u!50 &5946437661379280412
