@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5629537422453634340}
   - component: {fileID: 4205318053506470516}
   - component: {fileID: 7293279234463011717}
+  - component: {fileID: -2149543244922151165}
   m_Layer: 0
   m_Name: MeleEnemy
   m_TagString: Enemy
@@ -182,3 +183,25 @@ MonoBehaviour:
   EnemiesData: {fileID: 11400000, guid: 25244fe84183c4041aa4e40b7b6c906f, type: 2}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
+--- !u!95 &-2149543244922151165
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540468372576299302}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
