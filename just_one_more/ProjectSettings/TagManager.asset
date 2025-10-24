@@ -11,6 +11,9 @@ TagManager:
   - PlayerBullet
   - Coin
   - Background
+  - BoundsCheckPlayer
+  - BoundsCheckDoors
+  - Background2
   layers:
   - Default
   - TransparentFX
