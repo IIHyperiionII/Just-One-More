@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Ball : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Ball : MonoBehaviour
         // Schedule the ball for destruction after its lifetime expires
         Destroy(gameObject, lifetime);
     }
+
 
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -26,7 +28,17 @@ public class Ball : MonoBehaviour
             }
 
             // Destroy the ball shortly right after scoring
-            Destroy(gameObject, destroyDelay);
+            StartCoroutine(DestroyAfterDelay(destroyDelay));
         }
+    }
+    IEnumerator DestroyAfterDelay(float delay)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;  // ignore timeScale
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }

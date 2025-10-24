@@ -20,9 +20,10 @@ public class GameManager : MonoBehaviour
     public GameObject[] toiletPrefabs;
     public GameObject[] bossOfficePrefabs;
     private List<GameObject> enemiesToSpawn = new List<GameObject>();
+    public Transform enemiesParent;
     private Vector2 spawnPosition;
     private bool WavesIsSpawning = false;
-    private bool isTeleporting = false;
+    //private bool isTeleporting = false;
     public bool doorsEntered = false;
     private Collider2D doorsCollider;
     private Collider2D playerCollider;
@@ -33,7 +34,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
             runtimePlayerData = Instantiate(basePlayerData); // Create a runtime copy of the player data, so we don't modify the base data
         }
         else
@@ -122,6 +123,10 @@ public class GameManager : MonoBehaviour
                 //Application.Quit(); // Uncomment this line to quit the application in a build
 #endif
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
         if (playerCollider.bounds.Intersects(doorsCollider.bounds) && doorsEntered == true)
         {
             Debug.Log("Teleporting...");
@@ -130,7 +135,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            isTeleporting = false;
+            //isTeleporting = false;
         }
         if (cameraObject == null)
         {
@@ -149,14 +154,14 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Teleport()
     {
-        isTeleporting = true;
+        //isTeleporting = true;
         doorsEntered = false;
         Time.timeScale = 0f; // Pause the game
         yield return new WaitForSecondsRealtime(1f); // Wait a moment before teleporting for sync of coroutines
         background.SetActive(false);
         background2.SetActive(true);
         Time.timeScale = 1f; // Resume the game
-        isTeleporting = false;
+        //isTeleporting = false;
     }
     IEnumerator SpawnWave()
     {
@@ -172,7 +177,7 @@ public class GameManager : MonoBehaviour
         // Spawn a random number (0, 1, or 2) of each enemy type at random positions
         foreach (GameObject enemyPrefab in EnemiesPrefabs[map])
         {
-            int enemyCount = UnityRandom.Range(0, 3); // Random number between 0 and 2
+            int enemyCount = UnityRandom.Range(0, 6); // Random number between 0 and 5
             for (int i = 0; i < enemyCount; i++)
             {
                 enemiesToSpawn.Add(enemyPrefab);
@@ -189,6 +194,8 @@ public class GameManager : MonoBehaviour
         {
             GetSpawnposition(enemyPrefab); // Get a valid spawn position
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity); // Spawn the enemy at the calculated position
+            if (enemiesParent != null)
+                enemy.transform.SetParent(enemiesParent); // Set the parent of the spawned enemy for better hierarchy organization
             yield return new WaitForSeconds(0.5f); // Wait before spawning the next enemy
         }
     }

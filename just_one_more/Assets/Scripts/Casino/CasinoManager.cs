@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class CasinoManager : MonoBehaviour
 {
@@ -342,8 +343,15 @@ public class CasinoManager : MonoBehaviour
         playerStatsPanel.UpdateUI();
 
         // Close gambling panel after 2 seconds
-        Invoke(nameof(CloseGamblingPanel), 2f);
+        StartCoroutine(CloseAfterDelay(2f));
     }
+
+    IEnumerator CloseAfterDelay(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay); // ignores Time.timeScale
+        CloseGamblingPanel();
+    }
+
 
     public void CloseGamblingPanel()
     {

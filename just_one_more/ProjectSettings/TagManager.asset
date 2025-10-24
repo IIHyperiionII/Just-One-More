@@ -14,6 +14,12 @@ TagManager:
   - BoundsCheckPlayer
   - BoundsCheckDoors
   - Background2
+  - Bucket
+  - Ball
+  - Peg
+  - Wall
+  - BulletParent
+  - BucketParent
   layers:
   - Default
   - TransparentFX
@@ -24,7 +30,7 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
+  - Forground
   - 
   - 
   - 
