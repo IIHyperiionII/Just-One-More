@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: BasePlayerData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   hp: 100
-  moveSpeed: 20
-  attackSpeed: 30
+  moveSpeed: 10
+  attackSpeed: 1
   damage: 40
   money: 1000
   bulletSpeed: 10
