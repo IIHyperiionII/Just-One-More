@@ -20,6 +20,7 @@ TagManager:
   - Wall
   - BulletParent
   - BucketParent
+  - EnemiesParent
   layers:
   - Default
   - TransparentFX

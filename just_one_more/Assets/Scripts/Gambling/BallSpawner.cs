@@ -9,7 +9,7 @@ public class BallSpawner : MonoBehaviour
 
     [Header("Physics Settings")]
     // Random sideways push
-    public float initialRandomForce = 2f;
+    public float initialRandomForce = 20f;
 
     private GameObject currentBall;
 
@@ -28,6 +28,7 @@ public class BallSpawner : MonoBehaviour
         currentBall = Instantiate(ballPrefab, spawnPos, Quaternion.identity);
         SceneManager.MoveGameObjectToScene(currentBall, SceneManager.GetSceneByName("MiniGamePhysicsScene"));
         currentBall.transform.SetParent(transform);
+        currentBall.transform.localScale = transform.localScale;
 
         // Setup physics
         Rigidbody2D rb = currentBall.GetComponent<Rigidbody2D>();
@@ -38,7 +39,8 @@ public class BallSpawner : MonoBehaviour
 
             // Random sideways force (variety)
             float randomX = Random.Range(-initialRandomForce, initialRandomForce);
-            rb.linearVelocity = new Vector2(randomX, 0);
+            //rb.linearVelocity = new Vector2(randomX, 0);
+            rb.AddForce(new Vector2(randomX, 0), ForceMode2D.Impulse);
         }
     }
 

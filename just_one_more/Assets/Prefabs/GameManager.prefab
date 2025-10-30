@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 77029781131653991}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,3 +58,4 @@ MonoBehaviour:
   - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
   - {fileID: 3026029418750680626, guid: 653203549b32240868d466e7432603bd, type: 3}
   - {fileID: 762159802268367773, guid: 1dc17f6c77c8a469da37687099b9f28c, type: 3}
+  doorsEntered: 0

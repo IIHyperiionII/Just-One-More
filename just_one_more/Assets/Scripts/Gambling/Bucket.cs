@@ -5,13 +5,6 @@ public class Bucket : MonoBehaviour
 {
     [SerializeField] private float multiplier = 1.0f;
 
-    public void Start()
-    {
-        this.transform.SetParent(null);
-        SceneManager.MoveGameObjectToScene(this.gameObject, SceneManager.GetSceneByName("MiniGamePhysicsScene"));
-        this.gameObject.transform.SetParent(GameObject.FindGameObjectWithTag("BucketParent").transform);
-    }
-
     public float getMultiplier()
     {
         return multiplier;

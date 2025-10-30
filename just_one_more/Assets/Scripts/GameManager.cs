@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] toiletPrefabs;
     public GameObject[] bossOfficePrefabs;
     private List<GameObject> enemiesToSpawn = new List<GameObject>();
-    public Transform enemiesParent;
+    public static Transform enemiesParent;
     private Vector2 spawnPosition;
     private bool WavesIsSpawning = false;
     //private bool isTeleporting = false;
@@ -47,6 +47,10 @@ public class GameManager : MonoBehaviour
             toiletPrefabs,
             bossOfficePrefabs
         };
+        if (GameObject.FindGameObjectWithTag("EnemiesParent") != null)
+        {
+            enemiesParent = GameObject.FindGameObjectWithTag("EnemiesParent").transform; // Create a new GameObject to hold enemies   
+        }
     }
     void Start()
     {
@@ -127,23 +131,14 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
-        if (playerCollider.bounds.Intersects(doorsCollider.bounds) && doorsEntered == true)
+        if (doorsEntered == true)
         {
             Debug.Log("Teleporting...");
             StartCoroutine(Teleport());
-
         }
         else
         {
             //isTeleporting = false;
-        }
-        if (cameraObject == null)
-        {
-            GetCamera();
-        }
-        else
-        {
-            GetCameraBounds();
         }
         // Check if there are no enemies left
         if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !WavesIsSpawning)
@@ -177,7 +172,7 @@ public class GameManager : MonoBehaviour
         // Spawn a random number (0, 1, or 2) of each enemy type at random positions
         foreach (GameObject enemyPrefab in EnemiesPrefabs[map])
         {
-            int enemyCount = UnityRandom.Range(0, 6); // Random number between 0 and 5
+            int enemyCount = UnityRandom.Range(1, 6); // Random number between 1 and 5
             for (int i = 0; i < enemyCount; i++)
             {
                 enemiesToSpawn.Add(enemyPrefab);
@@ -199,16 +194,16 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f); // Wait before spawning the next enemy
         }
     }
-    void GetCameraBounds()
-    {
-        float cameraHeight = cameraObject.GetComponent<Camera>().orthographicSize * 2f; // Calculate camera height based on orthographic size
-        float cameraWidth = cameraHeight * cameraObject.GetComponent<Camera>().aspect; // Calculate camera width based on aspect ratio
-        cameraHeight += 1f; // Add some padding
-        cameraWidth += 1f;  // Add some padding
-        cameraBounds = new Bounds(cameraObject.transform.position, new Vector3(cameraWidth, cameraHeight, 0)); // Set the camera bounds
-    }
     void GetSpawnposition(GameObject enemyPrefab, int recursionDepth = 0)
     {
+        if (cameraObject == null)
+        {
+            GetCamera();
+        }
+        else
+        {
+            GetCameraBounds();
+        }
         if (recursionDepth > 10)
         {
             Debug.LogWarning("Failed to find a valid spawn position after multiple attempts.");
@@ -237,6 +232,15 @@ public class GameManager : MonoBehaviour
             GetSpawnposition(enemyPrefab, recursionDepth + 1); // Recursively find a new position if out of bounds
         }
     }
+    void GetCameraBounds()
+    {
+        float cameraHeight = cameraObject.GetComponent<Camera>().orthographicSize * 2f; // Calculate camera height based on orthographic size
+        float cameraWidth = cameraHeight * cameraObject.GetComponent<Camera>().aspect; // Calculate camera width based on aspect ratio
+        cameraHeight += 1f; // Add some padding
+        cameraWidth += 1f;  // Add some padding
+        cameraBounds = new Bounds(cameraObject.transform.position, new Vector3(cameraWidth, cameraHeight, 0)); // Set the camera bounds
+    }
+    
     /*
     void OnDrawGizmos()
     {

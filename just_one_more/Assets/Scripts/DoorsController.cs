@@ -10,14 +10,14 @@ public class DoorsController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("BoundsCheckPlayer"))
         {
             gameManager.GetComponent<GameManager>().doorsEntered = true;
         }
     }
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("BoundsCheckPlayer"))
         {
             gameManager.GetComponent<GameManager>().doorsEntered = false;
         }

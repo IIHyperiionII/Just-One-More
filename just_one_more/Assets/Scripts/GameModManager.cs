@@ -30,7 +30,7 @@ public class GameModeManager : MonoBehaviour
     {
         if (miniPhysicsScene.IsValid())
         {
-            miniPhysicsScene.Simulate(Time.fixedDeltaTime);
+            miniPhysicsScene.Simulate(Time.unscaledDeltaTime);
         }
     }
 
