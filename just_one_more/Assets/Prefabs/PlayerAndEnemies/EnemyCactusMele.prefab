@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7293279234463011717}
   - component: {fileID: -2149543244922151165}
   m_Layer: 0
-  m_Name: MeleEnemy
+  m_Name: EnemyCactusMele
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

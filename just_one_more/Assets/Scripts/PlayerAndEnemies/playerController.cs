@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -74,9 +75,24 @@ public class PlayerController : MonoBehaviour
     {
         PlayerData.hp -= damage;
         if (PlayerData.hp <= 0) Die();
+        CameraController.ShakeCamera();
+        StartCoroutine(HitColor());
     }
 
-    void Die()
+    IEnumerator HitColor()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        GameObject hand = transform.Find("Hand").gameObject;
+        SpriteRenderer handSpriteRenderer = hand.GetComponent<SpriteRenderer>();
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = new Color(1f, 0.4f, 0.4f);
+        handSpriteRenderer.color = new Color(1f, 0.4f, 0.4f);
+        yield return new WaitForSeconds(0.2f); // Wait for 0.2 seconds
+        spriteRenderer.color = originalColor; // Revert to original color
+        handSpriteRenderer.color = originalColor; // Revert hand color to original
+    }
+
+        void Die()
     {
         PlayerData.isDead = true;
         Destroy(gameObject);

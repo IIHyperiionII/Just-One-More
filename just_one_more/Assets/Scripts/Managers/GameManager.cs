@@ -8,18 +8,19 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public PlayerData basePlayerData;
     public PlayerData runtimePlayerData;
-    private GameObject background;
-    private GameObject background2;
-    private Bounds backgroundBounds;
+    private GameObject[] background = new GameObject[3];
+    public Bounds backgroundBounds;
     private GameObject cameraObject;
     private Bounds cameraBounds;
-    private int wave = 0;
+    public int wave = 1;
     private int map = 0;
+    private bool mapCompleted = false;
     private GameObject[][] EnemiesPrefabs;
     public GameObject[] officePrefabs;
     public GameObject[] toiletPrefabs;
     public GameObject[] bossOfficePrefabs;
     private List<GameObject> enemiesToSpawn = new List<GameObject>();
+    private int[] KindMinCount = new int[] { 1, 1, 1 };
     public static Transform enemiesParent;
     private Vector2 spawnPosition;
     private bool WavesIsSpawning = false;
@@ -82,10 +83,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            background = GameObject.FindGameObjectWithTag("Background"); // Find the background object in the scene
-            background2 = GameObject.FindGameObjectWithTag("Background2"); // Find the second background object in the scene
-            background2.SetActive(false); // Disable the second background at start
-            SpriteRenderer backgroundRenderer = background.GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
+            background[0] = GameObject.FindGameObjectWithTag("Background"); // Find the background object in the scene
+            background[1] = GameObject.FindGameObjectWithTag("Background2"); // Find the second background object in the scene
+            background[2] = GameObject.FindGameObjectWithTag("Background3"); // Find the third background object in the scene
+            background[1].SetActive(false); // Disable the second background at start
+            background[2].SetActive(false); // Disable the third background at start
+            SpriteRenderer backgroundRenderer = background[map].GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
             if (backgroundRenderer == null)
             {
                 Debug.LogError("Background GameObject does not have a SpriteRenderer component!");
@@ -96,7 +99,7 @@ public class GameManager : MonoBehaviour
                 float backgroundHeight = backgroundRenderer.bounds.size.y;
                 backgroundWidth -= 1f; // Add some padding
                 backgroundHeight -= 1f; // Add some padding
-                backgroundBounds = new Bounds(background.transform.position, new Vector3(backgroundWidth, backgroundHeight, 0)); // Set the background bounds
+                backgroundBounds = new Bounds(background[map].transform.position, new Vector3(backgroundWidth, backgroundHeight, 0)); // Set the background bounds
             }
         }
     }
@@ -131,7 +134,7 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
-        if (doorsEntered == true)
+        if (doorsEntered == true && mapCompleted == true)
         {
             Debug.Log("Teleporting...");
             StartCoroutine(Teleport());
@@ -141,10 +144,12 @@ public class GameManager : MonoBehaviour
             //isTeleporting = false;
         }
         // Check if there are no enemies left
-        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !WavesIsSpawning)
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !WavesIsSpawning && wave < 10)
         {
-            StartCoroutine(SpawnWave()); // Wait for sync
             wave++;
+            StartCoroutine(SpawnWave()); // Wait for sync
+        } else if ( wave >= 10 && !mapCompleted ) {
+            mapCompleted = true;
         }
     }
     IEnumerator Teleport()
@@ -152,10 +157,22 @@ public class GameManager : MonoBehaviour
         //isTeleporting = true;
         doorsEntered = false;
         Time.timeScale = 0f; // Pause the game
-        yield return new WaitForSecondsRealtime(1f); // Wait a moment before teleporting for sync of coroutines
-        background.SetActive(false);
-        background2.SetActive(true);
+        CameraController.isTeleporting = true;
+        yield return StartCoroutine(CameraController.TeleportMoveUp()); // Wait a moment before teleporting for sync of coroutines
+        yield return new WaitForSecondsRealtime(0.5f); // Hold at the top position for a moment
+        CameraController.isTeleporting = false;
+        wave = 1;
+        background[map].SetActive(false);
+        map++;
+        background[map].SetActive(true);
+        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("BulletParent"))
+        {
+            Destroy(bullet); // Clear all remaining bullets
+        }
+        yield return StartCoroutine(CameraController.TeleportMoveDown());
         Time.timeScale = 1f; // Resume the game
+        yield return new WaitForSecondsRealtime(5f); // Wait a moment after teleporting before starting the next wave
+        mapCompleted = false;
         //isTeleporting = false;
     }
     IEnumerator SpawnWave()
@@ -170,12 +187,28 @@ public class GameManager : MonoBehaviour
         enemiesToSpawn.Clear(); // Clear the list before spawning enemies
     
         // Spawn a random number (0, 1, or 2) of each enemy type at random positions
-        foreach (GameObject enemyPrefab in EnemiesPrefabs[map])
+        for (int i = 0; i < EnemiesPrefabs[map].Length; i++)
         {
-            int enemyCount = UnityRandom.Range(1, 6); // Random number between 1 and 5
-            for (int i = 0; i < enemyCount; i++)
+            if (wave < 4 && i == 1) continue; // Skip spawning the second enemy type in the first three waves
+            if (wave < 7 && i == 2) continue; // Skip spawning the third enemy type in the first six waves
+            if (wave % 3 == 0)
             {
-                enemiesToSpawn.Add(enemyPrefab);
+                KindMinCount[wave % 3] = 10;
+            }
+            int enemyCount = UnityRandom.Range(KindMinCount[i], KindMinCount[i] + 2); // Random number between 1 and 5
+            if (wave >= 10)
+            {
+                enemyCount = 10;
+            }
+            for (int j = 0; j < enemyCount; j++)
+            {
+                enemiesToSpawn.Add(EnemiesPrefabs[map][i]);
+            }
+            if (KindMinCount[i] > 6)
+            {
+                KindMinCount[i] = 6;
+            } else {
+                KindMinCount[i]+= 2; // Increase the minimum count for the next wave
             }
         }
 
