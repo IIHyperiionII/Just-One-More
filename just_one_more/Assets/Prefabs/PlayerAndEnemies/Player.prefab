@@ -89,7 +89,7 @@ SpriteRenderer:
   m_Size: {x: 10.24, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &760541911462067422
@@ -106,10 +106,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandFollowCursor
   rotationSpeed: 15
   rotationOffset: 90
-  offsetUp: {x: -0.27, y: 0.21, z: 0}
-  offsetLeft: {x: 0, y: 0.05, z: 0}
-  offsetDown: {x: 0.24, y: 0.21, z: 0}
-  offsetRight: {x: 0, y: 0.2, z: 0}
+  offsetUp: {x: -0.25, y: 0.21, z: 0}
+  offsetLeft: {x: 0.05, y: 0.12, z: 0}
+  offsetDown: {x: 0.21, y: 0.21, z: 0}
+  offsetRight: {x: 0, y: 0.1, z: 0}
   bodyRenderer: {fileID: 4084593617875584895}
   frontOffsetOrder: 1
   backOffsetOrder: -1
@@ -299,12 +299,12 @@ SpriteRenderer:
   m_SortingLayerID: -1671810417
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 313647733, guid: e01b125a836a3984aa4404bf4f9af487, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c94250bd7207f46028c5a4d0ad0fe0d0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.6982422, y: 1}
+  m_Size: {x: 14.3, y: 20.48}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -362,7 +362,7 @@ Animator:
   m_GameObject: {fileID: 4497077220926923720}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0b0bde41b5d990a4b93dcf4e83d26115, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -427,8 +427,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.4133334, y: 3.4133334}
-    newSize: {x: 0.6982422, y: 1}
+    oldSize: {x: 2.86, y: 4.096}
+    newSize: {x: 14.3, y: 20.48}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

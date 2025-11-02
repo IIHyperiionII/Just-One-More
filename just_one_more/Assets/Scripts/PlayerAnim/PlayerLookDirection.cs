@@ -4,12 +4,15 @@ public class PlayerLookDirection : MonoBehaviour
 {
     public Animator animator;
     public Animator handAnimator;
+    public HandFollowCursor handScript;
+
     private Camera mainCam;
-    public HandFollowCursor handScript; 
+    private PlayerController playerController;
 
     void Start()
     {
         mainCam = Camera.main;
+        playerController = GetComponent<PlayerController>();
     }
 
     void Update()
@@ -18,33 +21,44 @@ public class PlayerLookDirection : MonoBehaviour
 
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;
+        Vector2 lookDirection = (mousePos - transform.position);
+        if (lookDirection.sqrMagnitude < 0.0001f) return;
 
-        Vector2 direction = mousePos - transform.position;
-
-    
-        if (direction.sqrMagnitude < 0.0001f) return;
-
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
         if (angle < 0) angle += 360f;
 
-        // Updates look direction value to change the animation
         float lookDirValue = 0f;
         if (angle >= 45f && angle < 135f)
-            lookDirValue = 0f; 
+            lookDirValue = 0f;
         else if (angle >= 135f && angle < 225f)
             lookDirValue = 1f;
         else if (angle >= 225f && angle < 315f)
-            lookDirValue = 2f; 
+            lookDirValue = 2f;
         else
-            lookDirValue = 3f; 
+            lookDirValue = 3f;
 
-        animator.SetFloat("LookDir", lookDirValue);
+        int lookDirInt = Mathf.RoundToInt(lookDirValue);
 
+        animator.SetFloat("LookDir", Mathf.Round(lookDirValue));
         if (handAnimator != null)
             handAnimator.SetFloat("LookDir", lookDirValue);
-        int lookDirInt = Mathf.RoundToInt(lookDirValue);
-        if (handScript != null) handScript.ApplyLookDir(lookDirInt);
+        if (handScript != null)
+            handScript.ApplyLookDir(lookDirInt);
 
+        Vector2 moveVector = playerController != null ? playerController.MovementVector : Vector2.zero;
+        bool isRunning = moveVector.sqrMagnitude > 0.001f;
+        animator.SetBool("isRunning", isRunning);
+        /*
+        if (isRunning)
+        {
+            Vector2 moveDir = moveVector.normalized;
+            Vector2 lookDirNorm = lookDirection.normalized;
+            float runDot = Vector2.Dot(moveDir, lookDirNorm) >= 0f ? 1f : -1f;
+            animator.SetFloat("runDirectionDot", runDot);
+        }
+        else
+        {
+            animator.SetFloat("runDirectionDot", 1f);
+        }*/
     }
 }
-

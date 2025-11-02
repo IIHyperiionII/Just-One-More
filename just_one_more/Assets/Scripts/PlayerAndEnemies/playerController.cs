@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
+    public Vector2 MovementVector => input * PlayerData.moveSpeed;
 
     void Start()
     {
