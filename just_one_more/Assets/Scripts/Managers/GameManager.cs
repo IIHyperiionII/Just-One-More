@@ -35,7 +35,6 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
             runtimePlayerData = Instantiate(basePlayerData); // Create a runtime copy of the player data, so we don't modify the base data
         }
         else
