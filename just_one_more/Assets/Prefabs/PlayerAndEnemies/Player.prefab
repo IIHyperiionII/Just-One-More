@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3754831443844779316}
   - component: {fileID: 3760618184261430844}
-  - component: {fileID: 760541911462067422}
   - component: {fileID: 8235888307287582652}
   m_Layer: 0
   m_Name: Hand
@@ -27,12 +26,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 273258712129342550}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.267, y: 0.266, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 772545561132822601}
+  m_Father: {fileID: 5913333705079489937}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3760618184261430844
 SpriteRenderer:
@@ -92,27 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &760541911462067422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 273258712129342550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0337fd2e49c47894f92ad3f3a7fe7046, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandFollowCursor
-  rotationSpeed: 15
-  rotationOffset: 90
-  offsetUp: {x: -0.25, y: 0.21, z: 0}
-  offsetLeft: {x: 0.05, y: 0.12, z: 0}
-  offsetDown: {x: 0.21, y: 0.21, z: 0}
-  offsetRight: {x: 0, y: 0.1, z: 0}
-  bodyRenderer: {fileID: 4084593617875584895}
-  frontOffsetOrder: 1
-  backOffsetOrder: -1
 --- !u!95 &8235888307287582652
 Animator:
   serializedVersion: 7
@@ -248,8 +226,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3754831443844779316}
   - {fileID: 2108543651848230983}
+  - {fileID: 5913333705079489937}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4084593617875584895
@@ -386,9 +364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065962016966fd944808c3a8af8760bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLookDirection
-  animator: {fileID: 7499383475064725224}
+  playerAnimator: {fileID: 7499383475064725224}
   handAnimator: {fileID: 8235888307287582652}
-  handScript: {fileID: 760541911462067422}
+  handScript: {fileID: 6978818808775337427}
 --- !u!61 &648253942694061091
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -435,3 +413,59 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.8, y: 2.9}
   m_EdgeRadius: 0
+--- !u!1 &8369832559701972666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5913333705079489937}
+  - component: {fileID: 6978818808775337427}
+  m_Layer: 0
+  m_Name: HandAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5913333705079489937
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8369832559701972666}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3754831443844779316}
+  m_Father: {fileID: 772545561132822601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6978818808775337427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8369832559701972666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0337fd2e49c47894f92ad3f3a7fe7046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandFollowCursor
+  handTransform: {fileID: 3754831443844779316}
+  handRenderer: {fileID: 3760618184261430844}
+  bodyRenderer: {fileID: 4084593617875584895}
+  rotationSpeed: 15
+  rotationOffset: 80
+  offsetUp: {x: 0, y: 0, z: 0}
+  offsetLeft: {x: 0.05, y: 0.05, z: 0}
+  offsetDown: {x: -0.04, y: 0.06, z: 0}
+  offsetRight: {x: 0, y: -0.05, z: 0}
+  frontOffsetOrder: 1
+  backOffsetOrder: -1
