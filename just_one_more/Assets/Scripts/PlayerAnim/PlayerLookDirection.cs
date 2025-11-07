@@ -48,7 +48,7 @@ public class PlayerLookDirection : MonoBehaviour
         Vector2 moveVector = playerController != null ? playerController.MovementVector : Vector2.zero;
         bool isRunning = moveVector.sqrMagnitude > 0.001f;
         animator.SetBool("isRunning", isRunning);
-        /*
+        
         if (isRunning)
         {
             Vector2 moveDir = moveVector.normalized;
@@ -56,9 +56,5 @@ public class PlayerLookDirection : MonoBehaviour
             float runDot = Vector2.Dot(moveDir, lookDirNorm) >= 0f ? 1f : -1f;
             animator.SetFloat("runDirectionDot", runDot);
         }
-        else
-        {
-            animator.SetFloat("runDirectionDot", 1f);
-        }*/
     }
 }
