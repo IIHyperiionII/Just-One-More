@@ -145,9 +145,11 @@ public class PlayerController : MonoBehaviour
         dashClone2.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         dashClone3.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.05f);
         Destroy(dashClone1);
+        yield return new WaitForSeconds(0.05f);
         Destroy(dashClone2);
+        yield return new WaitForSeconds(0.05f);
         Destroy(dashClone3);
         yield return null;
     }

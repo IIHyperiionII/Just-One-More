@@ -22,7 +22,7 @@ MonoBehaviour:
   isDead: 0
   isMelee: 0
   piercingLevel: 0
-  dashLevel: 0
+  dashLevel: 4
   hpRegenLevel: 0
   blockLevel: 4
   freezeLevel: 0
