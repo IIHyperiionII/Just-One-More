@@ -21,6 +21,7 @@ TagManager:
   - BulletParent
   - BucketParent
   - EnemiesParent
+  - Background3
   layers:
   - Default
   - TransparentFX

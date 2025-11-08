@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3020843116549233555}
   - component: {fileID: 7853387606527034540}
   m_Layer: 0
-  m_Name: RangeEnemyRotating
+  m_Name: EnemyToiletRotatingRanged
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
