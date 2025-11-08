@@ -966,6 +966,7 @@ Transform:
   - {fileID: 191558562}
   - {fileID: 2146412722}
   - {fileID: 1363497042}
+  - {fileID: 2053542021}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &732491445
@@ -1772,7 +1773,7 @@ PrefabInstance:
     - target: {fileID: 77029781131653991, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
         type: 3}
       propertyPath: wave
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 144895765840026659, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
         type: 3}
@@ -2964,6 +2965,12 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 50}
   m_EdgeRadius: 0
+--- !u!4 &2053542021 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 144895765840026659, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1345232703}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2073221590
 GameObject:
   m_ObjectHideFlags: 0

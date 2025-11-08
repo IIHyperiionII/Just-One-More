@@ -64,7 +64,20 @@ public class PlayerController : MonoBehaviour
     IEnumerator Dash()
     {
         lastPosition = Rigidbody.position;
-        lastHandPosition = transform.Find("Hand").position;
+        Transform handAnchor = transform.Find("HandAnchor");
+        if (handAnchor == null)
+        {
+            Debug.LogError("HandAnchor not found!");
+            yield return null;
+        }
+
+        Transform hand = handAnchor.Find("Hand");
+        if (hand == null)
+        {
+            Debug.LogError("Hand not found under HandAnchor!");
+            yield return null;
+        }
+        lastHandPosition = hand.position;
 
         isDashing = true;
         if (PlayerData.dashLevel == 4) numberOfDashes--;
@@ -109,13 +122,26 @@ public class PlayerController : MonoBehaviour
         GameObject dashClone = new GameObject("DashClone" + index);
         dashClone.transform.position = position;
         dashClone.transform.rotation = transform.rotation;
+        Transform handAnchor = transform.Find("HandAnchor");
+        if (handAnchor == null)
+        {
+            Debug.LogError("HandAnchor not found!");
+            return null;
+        }
+
+        Transform hand = handAnchor.Find("Hand");
+        if (hand == null)
+        {
+            Debug.LogError("Hand not found under HandAnchor!");
+            return null;
+        }
         GameObject cloneHand = new GameObject("Hand" + index);
         cloneHand.transform.position = handPosition;
-        cloneHand.transform.rotation = transform.Find("Hand").rotation;
+        cloneHand.transform.rotation = hand.rotation;
         SpriteRenderer originalSprite = GetComponent<SpriteRenderer>();
         SpriteRenderer cloneSprite = dashClone.AddComponent<SpriteRenderer>();
         cloneSprite.sprite = originalSprite.sprite;
-        SpriteRenderer originalHandSprite = transform.Find("Hand").GetComponent<SpriteRenderer>();
+        SpriteRenderer originalHandSprite = hand.GetComponent<SpriteRenderer>();
         SpriteRenderer cloneHandSprite = cloneHand.AddComponent<SpriteRenderer>();
         cloneHandSprite.sprite = originalHandSprite.sprite;
         cloneHand.transform.parent = dashClone.transform;
@@ -230,15 +256,40 @@ public class PlayerController : MonoBehaviour
     IEnumerator HitColor()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        GameObject hand = transform.Find("Hand").gameObject;
+
+        Transform handAnchor = transform.Find("HandAnchor");
+        if (handAnchor == null)
+        {
+            Debug.LogError("HandAnchor not found!");
+            yield break;
+        }
+
+        Transform hand = handAnchor.Find("Hand");
+        if (hand == null)
+        {
+            Debug.LogError("Hand not found under HandAnchor!");
+            yield break;
+        }
+
         SpriteRenderer handSpriteRenderer = hand.GetComponent<SpriteRenderer>();
+        if (handSpriteRenderer == null)
+        {
+            Debug.LogError("Hand does not have a SpriteRenderer!");
+            yield break;
+        }
+
         Color originalColor = spriteRenderer.color;
-        spriteRenderer.color = new Color(1f, 0.4f, 0.4f);
-        handSpriteRenderer.color = new Color(1f, 0.4f, 0.4f);
-        yield return new WaitForSeconds(0.2f); // Wait for 0.2 seconds
-        spriteRenderer.color = originalColor; // Revert to original color
-        handSpriteRenderer.color = originalColor; // Revert hand color to original
+        Color flashColor = new Color(1f, 0.4f, 0.4f);
+
+        spriteRenderer.color = flashColor;
+        handSpriteRenderer.color = flashColor;
+
+        yield return new WaitForSeconds(0.2f);
+
+        spriteRenderer.color = originalColor;
+        handSpriteRenderer.color = originalColor;
     }
+
 
         void Die()
     {
