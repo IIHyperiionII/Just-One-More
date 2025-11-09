@@ -86,7 +86,7 @@ public class RangeBaseEnemyController : MonoBehaviour
     void SpawnBullet(Quaternion rotation)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at enemy position with calculated rotation
-        bullet.GetComponent<EnemyBaseBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage); // Initialize bullet with speed and damage
+        bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, rotation); // Initialize bullet with speed and damage
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     } 
     void OnDestroy()

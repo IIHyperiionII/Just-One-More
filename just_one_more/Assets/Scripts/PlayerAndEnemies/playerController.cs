@@ -301,4 +301,50 @@ public class PlayerController : MonoBehaviour
     {
         PlayerData.money += amount;
     }
+
+    public void GetSaveData()
+    {
+        SaveData data = SaveSystem.Instance.currentSaveData;
+        PlayerSaveData playerData = new PlayerSaveData();
+        playerData.position = transform.position;
+        playerData.hp = PlayerData.hp;
+        playerData.moveSpeed = PlayerData.moveSpeed;
+        playerData.attackSpeed = PlayerData.attackSpeed;
+        playerData.damage = PlayerData.damage;
+        playerData.money = PlayerData.money;
+        playerData.bulletSpeed = PlayerData.bulletSpeed;
+        playerData.knockback = PlayerData.knockback;
+        playerData.isDead = PlayerData.isDead;
+        playerData.isMelee = PlayerData.isMelee;
+        playerData.piercingLevel = PlayerData.piercingLevel;
+        playerData.dashLevel = PlayerData.dashLevel;
+        playerData.hpRegenLevel = PlayerData.hpRegenLevel;
+        playerData.blockLevel = PlayerData.blockLevel;
+        playerData.freezeLevel = PlayerData.freezeLevel;
+        data.players.Clear();
+        data.players.Add(playerData);
+    }
+    public void ApplySaveData()
+    {
+        SaveData data = SaveSystem.Instance.currentSaveData;
+        if (data.players.Count > 0)
+        {
+            PlayerSaveData playerData = data.players[0];
+            transform.position = playerData.position;
+            PlayerData.hp = playerData.hp;
+            PlayerData.moveSpeed = playerData.moveSpeed;
+            PlayerData.attackSpeed = playerData.attackSpeed;
+            PlayerData.damage = playerData.damage;
+            PlayerData.money = playerData.money;
+            PlayerData.bulletSpeed = playerData.bulletSpeed;
+            PlayerData.knockback = playerData.knockback;
+            PlayerData.isDead = playerData.isDead;
+            PlayerData.isMelee = playerData.isMelee;
+            PlayerData.piercingLevel = playerData.piercingLevel;
+            PlayerData.dashLevel = playerData.dashLevel;
+            PlayerData.hpRegenLevel = playerData.hpRegenLevel;
+            PlayerData.blockLevel = playerData.blockLevel;
+            PlayerData.freezeLevel = playerData.freezeLevel;
+        }
+    }
 }

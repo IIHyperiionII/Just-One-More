@@ -2,17 +2,19 @@ using System.Security.Cryptography;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class EnemyWaveBulletController : MonoBehaviour
+public class EnemyBulletWaveController : MonoBehaviour
 {
     private Vector2 waveMovement;
     private Vector2 motionForward;
     private Vector2 startPosition;
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private int speed;
-    private int damage;
+    public string type = "WaveEnemyBullet";
+    public int speed;
+    public int damage;
+    public Quaternion initialRotation;
     private float timeAlive = 0f;
-    private int sign;
+    public int sign;
     private float frequency = 0f;
     private float amplitude = 0f;
 
@@ -25,11 +27,12 @@ public class EnemyWaveBulletController : MonoBehaviour
         amplitude = UnityEngine.Random.Range(0.5f, 5f); // random amplitude for wave motion
     }
 
-    public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign)
+    public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign, Quaternion rotation)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
         sign = bulletSign;
+        initialRotation = rotation;
     }
     void FixedUpdate()
     {

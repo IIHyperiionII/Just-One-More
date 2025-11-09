@@ -1,21 +1,24 @@
 using UnityEngine;
 
-public class EnemyBaseBulletController : MonoBehaviour
+public class EnemyBulletBaseController : MonoBehaviour
 {
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private int speed;
-    private int damage;
+    public string type = "BaseEnemyBullet";
+    public int speed;
+    public int damage;
+    public Quaternion initialRotation;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         direction = transform.right; // applying given rotation to world x axis
     }
 
-    public void Initialize( int bulletSpeed, int bulletDamage)
+    public void Initialize( int bulletSpeed, int bulletDamage , Quaternion rotation)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
+        initialRotation = rotation;
     }
 
     void FixedUpdate()

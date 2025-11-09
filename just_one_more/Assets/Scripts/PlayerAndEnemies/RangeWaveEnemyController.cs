@@ -86,7 +86,7 @@ public class RangeWaveEnemyController : MonoBehaviour
     {
         sign = Random.Range(0, 2) * 2 - 1; // Randomly choose between -1 and 1 for bullet wave direction starting sign
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-        bullet.GetComponent<EnemyWaveBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, sign); // Initialize the wave bullet with speed, damage, and wave direction sign
+        bullet.GetComponent<EnemyBulletWaveController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, sign, rotation); // Initialize the wave bullet with speed, damage, wave direction sign, and rotation
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()

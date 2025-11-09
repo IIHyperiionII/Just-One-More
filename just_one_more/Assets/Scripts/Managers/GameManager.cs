@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityRandom = UnityEngine.Random;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     public bool doorsEntered = false;
     private Collider2D doorsCollider;
     private Collider2D playerCollider;
+    private SaveData saveData;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -51,6 +53,10 @@ public class GameManager : MonoBehaviour
         {
             enemiesParent = GameObject.FindGameObjectWithTag("EnemiesParent").transform; // Create a new GameObject to hold enemies   
         }
+        if (saveData == null)
+        {
+            saveData = new SaveData();
+        }
     }
     void Start()
     {
@@ -73,6 +79,7 @@ public class GameManager : MonoBehaviour
         {
             playerCollider = GameObject.FindGameObjectWithTag("BoundsCheckPlayer").GetComponent<Collider2D>();
         }
+
     }
     void GetBackgroundSize()
     {
@@ -271,6 +278,133 @@ public class GameManager : MonoBehaviour
         cameraHeight += 1f; // Add some padding
         cameraWidth += 1f;  // Add some padding
         cameraBounds = new Bounds(cameraObject.transform.position, new Vector3(cameraWidth, cameraHeight, 0)); // Set the camera bounds
+    }
+
+    public void GetSaveData()
+    {
+        SaveData data = SaveSystem.Instance.currentSaveData;
+        data.map = map;
+        data.wave = wave;
+        data.mapCompleted = mapCompleted;
+        foreach (GameObject enemy in enemiesParent)
+        {
+            EnemySaveData enemyData = new EnemySaveData();
+            enemyData.position = enemy.transform.position;
+            enemyData.enemyType = enemy.GetComponent<EnemyData>().type;
+            enemyData.hp = enemy.GetComponent<EnemyData>().hp;
+            enemyData.moveSpeed = enemy.GetComponent<EnemyData>().moveSpeed;
+            enemyData.damage = enemy.GetComponent<EnemyData>().damage;
+            enemyData.attackSpeed = enemy.GetComponent<EnemyData>().attackSpeed;
+            enemyData.bulletSpeed = enemy.GetComponent<EnemyData>().bulletSpeed;
+            data.enemies.Add(enemyData);
+        }
+        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("BulletParent"))
+        {
+            ProjectileSaveData projectileData = new ProjectileSaveData();
+            switch (bullet.tag)
+            {
+                case "EnemyBullet":
+                    projectileData.position = bullet.transform.position;
+                    projectileData.projectileType = bullet.GetComponent<EnemyBulletBaseController>().type;
+                    projectileData.initialRotation = bullet.GetComponent<EnemyBulletBaseController>().initialRotation;
+                    projectileData.speed = bullet.GetComponent<EnemyBulletBaseController>().speed;
+                    projectileData.damage = bullet.GetComponent<EnemyBulletBaseController>().damage;
+                    break;
+                case "EnemyBulletWave":
+                    projectileData.position = bullet.transform.position;
+                    projectileData.projectileType = bullet.GetComponent<EnemyBulletWaveController>().type;
+                    projectileData.initialRotation = bullet.GetComponent<EnemyBulletWaveController>().initialRotation;
+                    projectileData.speed = bullet.GetComponent<EnemyBulletWaveController>().speed;
+                    projectileData.damage = bullet.GetComponent<EnemyBulletWaveController>().damage;
+                    projectileData.sign = bullet.GetComponent<EnemyBulletWaveController>().sign;
+                    break;
+                case "EnemyBulletScaling":
+                    projectileData.position = bullet.transform.position;
+                    projectileData.projectileType = bullet.GetComponent<EnemyBulletScalingController>().type;
+                    projectileData.initialRotation = bullet.GetComponent<EnemyBulletScalingController>().initialRotation;
+                    projectileData.speed = bullet.GetComponent<EnemyBulletScalingController>().speed;
+                    projectileData.damage = bullet.GetComponent<EnemyBulletScalingController>().damage;
+                    break;
+            }
+            data.projectiles.Add(projectileData);
+        }
+    }
+    public void ApplySaveData()
+    {
+        SaveData data = SaveSystem.Instance.currentSaveData;
+        map = data.map;
+        wave = data.wave;
+        mapCompleted = data.mapCompleted;
+        foreach (EnemySaveData enemyData in data.enemies)
+        {
+            GameObject enemyPrefab;
+            switch (enemyData.enemyType)
+            {
+                case "office1":
+                    enemyPrefab = officePrefabs[0];
+                    break;
+                case "office2":
+                    enemyPrefab = officePrefabs[1];
+                    break;
+                case "office3":
+                    enemyPrefab = officePrefabs[2];
+                    break;
+                case "toilet1":
+                    enemyPrefab = toiletPrefabs[0];
+                    break;
+                case "toilet2":
+                    enemyPrefab = toiletPrefabs[1];
+                    break;
+                case "toilet3":
+                    enemyPrefab = toiletPrefabs[2];
+                    break;
+                case "bossOffice1":
+                    enemyPrefab = bossOfficePrefabs[0];
+                    break;
+                case "bossOffice2":
+                    enemyPrefab = bossOfficePrefabs[1];
+                    break;
+                case "bossOffice3":
+                    enemyPrefab = bossOfficePrefabs[2];
+                    break;
+                default:
+                    Debug.LogWarning("Unknown enemy type: " + enemyData.enemyType);
+                    continue;
+            }
+            GameObject enemy = Instantiate(enemyPrefab, enemyData.position, Quaternion.identity);
+            enemy.GetComponent<EnemyData>().hp = enemyData.hp;
+            enemy.GetComponent<EnemyData>().moveSpeed = enemyData.moveSpeed;
+            enemy.GetComponent<EnemyData>().damage = enemyData.damage;
+            enemy.GetComponent<EnemyData>().attackSpeed = enemyData.attackSpeed;
+            enemy.GetComponent<EnemyData>().bulletSpeed = enemyData.bulletSpeed;
+            if (enemiesParent != null)
+                enemy.transform.SetParent(enemiesParent);
+        }
+        foreach (ProjectileSaveData projectileData in data.projectiles)
+        {
+            GameObject projectilePrefab;
+            switch (projectileData.projectileType)
+            {
+                case "EnemyBullet":
+                    projectilePrefab = GameObject.FindWithTag("EnemyBullet");
+                    GameObject enemyBullet = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
+                    enemyBullet.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
+                    break;
+                case "EnemyBulletWave":
+                    projectilePrefab = GameObject.FindWithTag("EnemyBulletWave");
+                    GameObject enemyBulletWave = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
+                    enemyBulletWave.GetComponent<EnemyBulletWaveController>().Initialize(projectileData.speed, projectileData.damage, projectileData.sign, projectileData.initialRotation);
+                    break;
+                case "EnemyBulletScaling":
+                    projectilePrefab = GameObject.FindWithTag("EnemyBulletScaling");
+                    GameObject enemyBulletScaling = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
+                    enemyBulletScaling.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
+                    break;
+                default:
+                    Debug.LogWarning("Unknown projectile type: " + projectileData.projectileType);
+                    continue;
+            }
+        }
     }
     
     /*

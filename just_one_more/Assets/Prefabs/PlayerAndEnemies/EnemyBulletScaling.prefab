@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 138204373857914976}
   - component: {fileID: -3777522006106084362}
   m_Layer: 0
-  m_Name: EnemyScalingBullet
-  m_TagString: EnemyBullet
+  m_Name: EnemyBulletScaling
+  m_TagString: EnemyBulletScaling
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
