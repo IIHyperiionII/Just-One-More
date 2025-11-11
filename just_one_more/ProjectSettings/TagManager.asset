@@ -11,6 +11,17 @@ TagManager:
   - PlayerBullet
   - Coin
   - Background
+  - BoundsCheckPlayer
+  - BoundsCheckDoors
+  - Background2
+  - Bucket
+  - Ball
+  - Peg
+  - Wall
+  - BulletParent
+  - BucketParent
+  - EnemiesParent
+  - Background3
   layers:
   - Default
   - TransparentFX
@@ -21,7 +32,7 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
+  - Forground
   - 
   - 
   - 

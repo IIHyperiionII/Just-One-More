@@ -84,6 +84,7 @@ public class RangedScalingEnemyController : MonoBehaviour
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn scaling bullet at enemy position with calculated rotation
         bullet.GetComponent<EnemyScalingBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage); // Initialize bullet with speed and damage
+        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()
     {

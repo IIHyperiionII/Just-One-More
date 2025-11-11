@@ -16,11 +16,13 @@ public class SpawningEnemyController : MonoBehaviour
     private Vector2 spawnPos;
     private float radius;
     private float nextAttackTime = 0f;
+    private Transform enemiesParent;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create a runtime instance of the enemy data for this enemy only
         Rigidbody = GetComponent<Rigidbody2D>();
         GetSpawningRadius(); // Calculate the spawning radius based on the collider size
+        enemiesParent = GameManager.enemiesParent;
     }
 
     void GetSpawningRadius()
@@ -93,7 +95,15 @@ public class SpawningEnemyController : MonoBehaviour
         Collider2D hit = Physics2D.OverlapCircle(spawnPos, radius - 1.0f); // Check for collisions at the spawn position
         if (hit == null)
         {
-            Instantiate(childEnemyPrefab, spawnPos, Quaternion.identity); // Spawn the child enemy if the position is clear
+            GameObject childEnemy = Instantiate(childEnemyPrefab, spawnPos, Quaternion.identity); // Spawn the child enemy if the position is clear
+            if (GameManager.enemiesParent == null)
+            {
+                Debug.LogError("Enemies Parent object not found in the GameManager.");
+            }
+            else
+            {
+                childEnemy.transform.parent = GameManager.enemiesParent; // Set the parent of the spawned child enemy for organization
+            }
         }
     }
     void OnDestroy()

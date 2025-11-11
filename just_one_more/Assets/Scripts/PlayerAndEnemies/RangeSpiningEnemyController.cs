@@ -101,10 +101,12 @@ public class RangeSpiningEnemyController : MonoBehaviour
         // Spawn the first bullet
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle));
         bullet.GetComponent<EnemyBaseBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
 
         // Spawn the second bullet in the opposite direction
         GameObject bullet2 = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle2));
         bullet2.GetComponent<EnemyBaseBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+        bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()
     {

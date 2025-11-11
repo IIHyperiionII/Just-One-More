@@ -35,7 +35,7 @@ public class GamblingManager : MonoBehaviour
             resultSent = true;
             gameActive = false;
 
-            // onGameComplete != null => Invoke (call) onGameComplete with multiplier
+            //onGameComplete != null => Invoke (call) onGameComplete with multiplier
             onGameComplete?.Invoke(multiplier);
         }
     }
