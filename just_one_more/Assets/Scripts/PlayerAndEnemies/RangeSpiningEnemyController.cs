@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class RangeSpiningEnemyController : MonoBehaviour
+public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 enemyPosition;
@@ -17,6 +17,7 @@ public class RangeSpiningEnemyController : MonoBehaviour
     private int spinDirection = 0;
     private float shootingAngle2 = 180f; // Second bullet angle (opposite direction)
     public GameObject coinPrefab;
+    private string enemyType = "";
     void Awake()
     {
         spinDirection = Random.Range(0, 2) * 2 - 1; // Randomly set to -1 or 1
@@ -112,5 +113,21 @@ public class RangeSpiningEnemyController : MonoBehaviour
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity);  // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
     }
 }

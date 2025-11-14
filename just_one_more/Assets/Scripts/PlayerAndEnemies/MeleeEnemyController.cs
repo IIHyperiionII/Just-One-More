@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MeleeEnemyController : MonoBehaviour
+public class MeleeEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 enemyPosition;
@@ -10,9 +10,12 @@ public class MeleeEnemyController : MonoBehaviour
     private Rigidbody2D Rigidbody;
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
+    private string enemyType;
     void Start()
     {
+        if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
+        }
         Rigidbody = GetComponent<Rigidbody2D>();
     }
     void FixedUpdate()
@@ -60,5 +63,26 @@ public class MeleeEnemyController : MonoBehaviour
         // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         if (!gameObject.scene.isLoaded) return;
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+    }
+
+    public EnemyData GetEnemyData()
+    {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
     }
 }

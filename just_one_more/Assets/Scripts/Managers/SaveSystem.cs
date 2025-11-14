@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
+using System.Collections;
 
 public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem Instance;
     private GameManager gameManager;
     private PlayerController playerController;
+    public bool toLoad = false;
     private string fileName = "saveData.json";
 
     private void Awake()
@@ -21,12 +24,6 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-    }
-
     public SaveData currentSaveData = new SaveData();
     
 
@@ -36,10 +33,17 @@ public class SaveSystem : MonoBehaviour
     }
     public void SaveGame()
     {
+        Debug.Log("Saving Game...");
+        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         UpdateSaveData();
 
         string savePath = GetFilePath();
-
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log("Save file deleted");
+        }
         // Convert the SaveData object to JSON
         string json = JsonUtility.ToJson(currentSaveData, true);
 
@@ -57,14 +61,19 @@ public class SaveSystem : MonoBehaviour
 
     public void LoadGame()
     {
+        Debug.Log("Loading Game...");
+        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+    
         Time.timeScale = 0f;
         string savePath = GetFilePath();
+        
+        StartCoroutine(WaitForSync());
 
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);
             currentSaveData = JsonUtility.FromJson<SaveData>(json);
-            Debug.Log("Game loaded from: " + savePath);
         }
         else
         {
@@ -74,5 +83,10 @@ public class SaveSystem : MonoBehaviour
         playerController.ApplySaveData();
         gameManager.ApplySaveData();
         Time.timeScale = 1f;
+    }
+
+    IEnumerator WaitForSync()
+    {
+        yield return new WaitUntil(() => gameManager.isGameReadyToLoad && playerController.isReadyToLoad);
     }
 }

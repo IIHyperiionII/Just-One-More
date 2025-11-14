@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyBulletScalingController : MonoBehaviour
+public class EnemyBulletScalingController : MonoBehaviour, IBullet
 {
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
@@ -10,6 +10,11 @@ public class EnemyBulletScalingController : MonoBehaviour
     public int damage;
     public Quaternion initialRotation;
     public Transform spriteTransform;
+    public string GetBulletType() { return type; }
+    public Quaternion GetInitialRotation() { return initialRotation; }
+    public int GetSpeed() { return speed; }
+    public int GetDamage() { return damage; }
+    public int GetSign() { return 0; }
 
     void Awake()
     {

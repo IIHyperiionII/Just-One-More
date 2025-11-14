@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class EnemyBulletWaveController : MonoBehaviour
+public class EnemyBulletWaveController : MonoBehaviour, IBullet
 {
     private Vector2 waveMovement;
     private Vector2 motionForward;
@@ -17,6 +17,11 @@ public class EnemyBulletWaveController : MonoBehaviour
     public int sign;
     private float frequency = 0f;
     private float amplitude = 0f;
+    public string GetBulletType() { return type; }
+    public Quaternion GetInitialRotation() { return initialRotation; }
+    public int GetSpeed() { return speed; }
+    public int GetDamage() { return damage; }
+    public int GetSign() { return sign; }
 
     void Awake()
     {

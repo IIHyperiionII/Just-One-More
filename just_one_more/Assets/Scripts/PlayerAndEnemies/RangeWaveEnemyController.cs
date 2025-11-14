@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class RangeWaveEnemyController : MonoBehaviour
+public class RangeWaveEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 lastPlayerPosition;
@@ -15,6 +15,7 @@ public class RangeWaveEnemyController : MonoBehaviour
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private int sign = 0;
+    private string enemyType = "";
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -93,5 +94,21 @@ public class RangeWaveEnemyController : MonoBehaviour
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
     }
 }

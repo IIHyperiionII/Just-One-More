@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using NUnit.Framework;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,11 +20,17 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastHandPosition;
     private int shieldRequests = 0;
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
+    public bool isReadyToLoad = false;
+    private bool isRed = false;
 
     void Start()
     {
-        PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
+        if (PlayerData == null){
+            PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
+        }
         Rigidbody = GetComponent<Rigidbody2D>();
+        Debug.Log("PlayerData initialized: " + (PlayerData != null));
+        isReadyToLoad = true;
     }
     void Update()
     {
@@ -234,7 +241,10 @@ public class PlayerController : MonoBehaviour
         PlayerData.hp -= damage;
         if (PlayerData.hp <= 0) Die();
         CameraController.ShakeCamera();
-        StartCoroutine(HitColor());
+        if (!isRed)
+        {
+            StartCoroutine(HitColor());
+        }
     }
     IEnumerator ShieldUp()
     {
@@ -255,6 +265,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator HitColor()
     {
+        isRed = true;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
         Transform handAnchor = transform.Find("HandAnchor");
@@ -288,13 +299,13 @@ public class PlayerController : MonoBehaviour
 
         spriteRenderer.color = originalColor;
         handSpriteRenderer.color = originalColor;
+        isRed = false;
     }
 
 
         void Die()
     {
         PlayerData.isDead = true;
-        Destroy(gameObject);
         SceneManager.LoadScene("MainMenuScene");
     }
     public void GetCoin(int amount)
@@ -326,6 +337,7 @@ public class PlayerController : MonoBehaviour
     }
     public void ApplySaveData()
     {
+        PlayerData = GameManager.Instance.runtimePlayerData;
         SaveData data = SaveSystem.Instance.currentSaveData;
         if (data.players.Count > 0)
         {

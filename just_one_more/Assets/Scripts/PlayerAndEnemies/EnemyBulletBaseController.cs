@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyBulletBaseController : MonoBehaviour
+public class EnemyBulletBaseController : MonoBehaviour, IBullet
 {
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
@@ -8,6 +8,11 @@ public class EnemyBulletBaseController : MonoBehaviour
     public int speed;
     public int damage;
     public Quaternion initialRotation;
+    public string GetBulletType() { return type; }
+    public Quaternion GetInitialRotation() { return initialRotation; }
+    public int GetSpeed() { return speed; }
+    public int GetDamage() { return damage; }
+    public int GetSign() { return 0; }
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();

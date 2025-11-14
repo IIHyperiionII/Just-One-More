@@ -35,6 +35,7 @@ public class HandFollowCursor : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
         if (mainCam == null || handTransform == null) return;
 
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);

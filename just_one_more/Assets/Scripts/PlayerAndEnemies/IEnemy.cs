@@ -1,0 +1,9 @@
+using UnityEngine;
+// IEnemy.cs
+public interface IEnemy
+{
+    EnemyData GetEnemyData(); // Must return the enemy's runtime data
+    Transform GetTransform(); // Must return the enemy's Transform
+    void SetEnemyType(string type); // Must set the enemy's type
+    string GetEnemyType(); // Must return the enemy's type
+}

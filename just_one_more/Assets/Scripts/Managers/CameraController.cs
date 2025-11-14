@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     public Transform player;
     private static Vector3 originalPosition;
     public static bool isTeleporting = false;
+    private static Vector3 newPosition;
     void Update()
     {
         if (player == null)
@@ -18,7 +19,7 @@ public class CameraController : MonoBehaviour
         {
             if (isTeleporting) return;
             // Follow the player while maintaining the camera's z position
-            Vector3 newPosition = player.position;
+            newPosition = player.position;
             newPosition.z = transform.position.z;
             transform.position = newPosition;
         }
@@ -31,7 +32,6 @@ public class CameraController : MonoBehaviour
     }
     private static IEnumerator Shake(float duration, float magnitude, Transform cameraTransform)
     {
-        Vector3 originalPos = cameraTransform.localPosition;
         float elapsed = 0.0f;
 
         while (elapsed < duration)
@@ -39,14 +39,14 @@ public class CameraController : MonoBehaviour
             float x = Random.Range(-0.5f, 0.5f) * magnitude;
             float y = Random.Range(-0.5f, 0.5f) * magnitude;
 
-            cameraTransform.localPosition = new Vector3(originalPos.x + x, originalPos.y + y, originalPos.z);
+            cameraTransform.position = new Vector3(newPosition.x + x, newPosition.y + y, newPosition.z);
 
             elapsed += Time.deltaTime;
 
             yield return null;
         }
 
-        cameraTransform.localPosition = originalPos;
+        cameraTransform.position = newPosition;
     }
 
     public static IEnumerator TeleportMoveUp()

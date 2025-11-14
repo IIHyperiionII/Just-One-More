@@ -28,6 +28,7 @@ public class PlayerLookDirection : MonoBehaviour
     void Update()
     {
         if (playerAnimator == null) return;
+        if (Time.timeScale == 0f) return;
 
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;

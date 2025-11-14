@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RangedScalingEnemyController : MonoBehaviour
+public class RangedScalingEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 lastPlayerPosition;
@@ -13,6 +13,7 @@ public class RangedScalingEnemyController : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
+    private string enemyType = "";
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -90,5 +91,21 @@ public class RangedScalingEnemyController : MonoBehaviour
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
     }
 }

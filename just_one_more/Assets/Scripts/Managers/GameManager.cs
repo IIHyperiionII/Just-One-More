@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] officePrefabs;
     public GameObject[] toiletPrefabs;
     public GameObject[] bossOfficePrefabs;
+    public GameObject[] bulletPrefabs;
     private List<GameObject> enemiesToSpawn = new List<GameObject>();
     private int[] KindMinCount = new int[] { 1, 1, 1 };
     public static Transform enemiesParent;
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
     private Collider2D doorsCollider;
     private Collider2D playerCollider;
     private SaveData saveData;
+    public bool isGameReadyToLoad = false;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
         {
             saveData = new SaveData();
         }
+        isGameReadyToLoad = true;
+        Debug.Log("GameManager is ready to load: " + isGameReadyToLoad);
     }
     void Start()
     {
@@ -78,6 +82,11 @@ public class GameManager : MonoBehaviour
         else
         {
             playerCollider = GameObject.FindGameObjectWithTag("BoundsCheckPlayer").GetComponent<Collider2D>();
+        }
+        if (SaveSystem.Instance.toLoad)
+        {
+            SaveSystem.Instance.LoadGame();
+            SaveSystem.Instance.toLoad = false;
         }
 
     }
@@ -126,19 +135,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Runtime Player Data is missing!");
             return;
-        }
-        // Check if the player is dead
-        if (runtimePlayerData.isDead)
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the editor
-#else
-                //Application.Quit(); // Uncomment this line to quit the application in a build
-#endif
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
         }
         if (doorsEntered == true && mapCompleted == true)
         {
@@ -227,7 +223,9 @@ public class GameManager : MonoBehaviour
         foreach (GameObject enemyPrefab in enemiesToSpawn)
         {
             GetSpawnposition(enemyPrefab); // Get a valid spawn position
+            string enemyType = GetEnemyType(enemyPrefab);
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity); // Spawn the enemy at the calculated position
+            enemy.GetComponent<IEnemy>().SetEnemyType(enemyType);
             if (enemiesParent != null)
                 enemy.transform.SetParent(enemiesParent); // Set the parent of the spawned enemy for better hierarchy organization
             yield return new WaitForSeconds(0.5f); // Wait before spawning the next enemy
@@ -271,6 +269,37 @@ public class GameManager : MonoBehaviour
             GetSpawnposition(enemyPrefab, recursionDepth + 1); // Recursively find a new position if out of bounds
         }
     }
+
+    string GetEnemyType(GameObject enemyPrefab)
+    {
+        string mapType = "";
+        if (map == 1)
+        {
+            mapType = "office";
+        }
+        else if (map == 2)
+        {
+            mapType = "toilet";
+        }
+        else
+        {
+            mapType = "bossOffice";
+        }
+        string enemyPrefix = "";
+        if (enemyPrefab == officePrefabs[0] || enemyPrefab == toiletPrefabs[0] || enemyPrefab == bossOfficePrefabs[0])
+        {
+            enemyPrefix = "1";
+        }
+        else if (enemyPrefab == officePrefabs[1] || enemyPrefab == toiletPrefabs[1] || enemyPrefab == bossOfficePrefabs[1])
+        {
+            enemyPrefix = "2";
+        }
+        else if (enemyPrefab == officePrefabs[2] || enemyPrefab == toiletPrefabs[2] || enemyPrefab == bossOfficePrefabs[2])
+        {
+            enemyPrefix = "3";
+        }
+        return mapType + enemyPrefix;
+    }
     void GetCameraBounds()
     {
         float cameraHeight = cameraObject.GetComponent<Camera>().orthographicSize * 2f; // Calculate camera height based on orthographic size
@@ -286,46 +315,35 @@ public class GameManager : MonoBehaviour
         data.map = map;
         data.wave = wave;
         data.mapCompleted = mapCompleted;
-        foreach (GameObject enemy in enemiesParent)
+        data.enemies.Clear();
+        foreach (Transform child in enemiesParent.transform)
         {
+            Debug.Log("Processing enemy for save data...");
+            GameObject enemy = child.gameObject;
+            IEnemy enemyController = enemy.GetComponent<IEnemy>();
+            EnemyData dataInstance = enemyController.GetEnemyData();
             EnemySaveData enemyData = new EnemySaveData();
             enemyData.position = enemy.transform.position;
-            enemyData.enemyType = enemy.GetComponent<EnemyData>().type;
-            enemyData.hp = enemy.GetComponent<EnemyData>().hp;
-            enemyData.moveSpeed = enemy.GetComponent<EnemyData>().moveSpeed;
-            enemyData.damage = enemy.GetComponent<EnemyData>().damage;
-            enemyData.attackSpeed = enemy.GetComponent<EnemyData>().attackSpeed;
-            enemyData.bulletSpeed = enemy.GetComponent<EnemyData>().bulletSpeed;
+            enemyData.enemyType = enemyController.GetEnemyType();
+            enemyData.hp = dataInstance.hp;
+            enemyData.moveSpeed = dataInstance.moveSpeed;
+            enemyData.damage = dataInstance.damage;
+            enemyData.attackSpeed = dataInstance.attackSpeed;
+            enemyData.bulletSpeed = dataInstance.bulletSpeed;
             data.enemies.Add(enemyData);
         }
-        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("BulletParent"))
+        data.projectiles.Clear();
+        foreach (Transform child in GameObject.FindGameObjectWithTag("BulletParent").transform)
         {
+            GameObject bullet = child.gameObject;
+            IBullet bulletController = bullet.GetComponent<IBullet>();
             ProjectileSaveData projectileData = new ProjectileSaveData();
-            switch (bullet.tag)
-            {
-                case "EnemyBullet":
-                    projectileData.position = bullet.transform.position;
-                    projectileData.projectileType = bullet.GetComponent<EnemyBulletBaseController>().type;
-                    projectileData.initialRotation = bullet.GetComponent<EnemyBulletBaseController>().initialRotation;
-                    projectileData.speed = bullet.GetComponent<EnemyBulletBaseController>().speed;
-                    projectileData.damage = bullet.GetComponent<EnemyBulletBaseController>().damage;
-                    break;
-                case "EnemyBulletWave":
-                    projectileData.position = bullet.transform.position;
-                    projectileData.projectileType = bullet.GetComponent<EnemyBulletWaveController>().type;
-                    projectileData.initialRotation = bullet.GetComponent<EnemyBulletWaveController>().initialRotation;
-                    projectileData.speed = bullet.GetComponent<EnemyBulletWaveController>().speed;
-                    projectileData.damage = bullet.GetComponent<EnemyBulletWaveController>().damage;
-                    projectileData.sign = bullet.GetComponent<EnemyBulletWaveController>().sign;
-                    break;
-                case "EnemyBulletScaling":
-                    projectileData.position = bullet.transform.position;
-                    projectileData.projectileType = bullet.GetComponent<EnemyBulletScalingController>().type;
-                    projectileData.initialRotation = bullet.GetComponent<EnemyBulletScalingController>().initialRotation;
-                    projectileData.speed = bullet.GetComponent<EnemyBulletScalingController>().speed;
-                    projectileData.damage = bullet.GetComponent<EnemyBulletScalingController>().damage;
-                    break;
-            }
+            projectileData.position = bullet.transform.position;
+            projectileData.projectileType = bulletController.GetBulletType();
+            projectileData.initialRotation = bulletController.GetInitialRotation();
+            projectileData.speed = bulletController.GetSpeed();
+            projectileData.damage = bulletController.GetDamage();
+            projectileData.sign = bulletController.GetSign();
             data.projectiles.Add(projectileData);
         }
     }
@@ -337,6 +355,7 @@ public class GameManager : MonoBehaviour
         mapCompleted = data.mapCompleted;
         foreach (EnemySaveData enemyData in data.enemies)
         {
+            Debug.Log("Restoring enemy of type: " + enemyData.enemyType);
             GameObject enemyPrefab;
             switch (enemyData.enemyType)
             {
@@ -372,11 +391,14 @@ public class GameManager : MonoBehaviour
                     continue;
             }
             GameObject enemy = Instantiate(enemyPrefab, enemyData.position, Quaternion.identity);
-            enemy.GetComponent<EnemyData>().hp = enemyData.hp;
-            enemy.GetComponent<EnemyData>().moveSpeed = enemyData.moveSpeed;
-            enemy.GetComponent<EnemyData>().damage = enemyData.damage;
-            enemy.GetComponent<EnemyData>().attackSpeed = enemyData.attackSpeed;
-            enemy.GetComponent<EnemyData>().bulletSpeed = enemyData.bulletSpeed;
+            IEnemy enemyController = enemy.GetComponent<IEnemy>();
+            EnemyData dataInstance = enemyController.GetEnemyData();
+            enemyController.SetEnemyType(enemyData.enemyType);
+            dataInstance.hp = enemyData.hp;
+            dataInstance.moveSpeed = enemyData.moveSpeed;
+            dataInstance.damage = enemyData.damage;
+            dataInstance.attackSpeed = enemyData.attackSpeed;
+            dataInstance.bulletSpeed = enemyData.bulletSpeed;
             if (enemiesParent != null)
                 enemy.transform.SetParent(enemiesParent);
         }
@@ -385,18 +407,18 @@ public class GameManager : MonoBehaviour
             GameObject projectilePrefab;
             switch (projectileData.projectileType)
             {
-                case "EnemyBullet":
-                    projectilePrefab = GameObject.FindWithTag("EnemyBullet");
+                case "BaseEnemyBullet":
+                    projectilePrefab = bulletPrefabs[0];
                     GameObject enemyBullet = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
                     enemyBullet.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
                     break;
-                case "EnemyBulletWave":
-                    projectilePrefab = GameObject.FindWithTag("EnemyBulletWave");
+                case "WaveEnemyBullet":
+                    projectilePrefab = bulletPrefabs[1];
                     GameObject enemyBulletWave = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
                     enemyBulletWave.GetComponent<EnemyBulletWaveController>().Initialize(projectileData.speed, projectileData.damage, projectileData.sign, projectileData.initialRotation);
                     break;
-                case "EnemyBulletScaling":
-                    projectilePrefab = GameObject.FindWithTag("EnemyBulletScaling");
+                case "ScalingEnemyBullet":
+                    projectilePrefab = bulletPrefabs[2];
                     GameObject enemyBulletScaling = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
                     enemyBulletScaling.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
                     break;
