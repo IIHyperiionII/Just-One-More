@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 11515614810336051}
   - component: {fileID: 138204373857914976}
   - component: {fileID: -3777522006106084362}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: EnemyBulletScaling
   m_TagString: EnemyBulletScaling
   m_Icon: {fileID: 0}
@@ -120,6 +120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20beb9eac1dc443e3b9e24015565df32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScalingBulletControllerTest
+  type: ScalingEnemyBullet
+  speed: 0
+  damage: 0
+  initialRotation: {x: 0, y: 0, z: 0, w: 0}
   spriteTransform: {fileID: 8297961092947569155}
 --- !u!1 &5384695135227804767
 GameObject:
@@ -131,7 +135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8297961092947569155}
   - component: {fileID: 2782029958964060794}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -3289,6 +3289,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BackgroundOfficeClosed
       objectReference: {fileID: 0}
+    - target: {fileID: 5558711367320229470, guid: d49bb5887ad084622881de113c09e1f8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6465618190074536426, guid: d49bb5887ad084622881de113c09e1f8,
         type: 3}
       propertyPath: m_LocalPosition.x
