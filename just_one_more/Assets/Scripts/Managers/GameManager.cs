@@ -3,14 +3,15 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityRandom = UnityEngine.Random;
 using System;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public PlayerData basePlayerData;
     public PlayerData runtimePlayerData;
-    private GameObject[] background = new GameObject[3];
-    public Bounds backgroundBounds;
+    public GameObject[] background = new GameObject[6];
+    private  Bounds[] spawnBounds;
     private GameObject cameraObject;
     private Bounds cameraBounds;
     public int wave = 1;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     private Collider2D playerCollider;
     private SaveData saveData;
     public bool isGameReadyToLoad = false;
+    private bool backgroundSet = false;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -65,7 +67,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
-        GetBackgroundSize();
         GetCamera();
         if (GameObject.FindGameObjectWithTag("BoundsCheckDoors").GetComponent<Collider2D>() == null)
         {
@@ -87,36 +88,22 @@ public class GameManager : MonoBehaviour
         {
             SaveSystem.Instance.LoadGame();
             SaveSystem.Instance.toLoad = false;
+        }if (background[map] != null)
+        {
+            for (int i = 0; i < background.Length; i++)
+            {
+                if (i == map)
+                {
+                    Debug.Log("Setting background active for map: " + map);
+                    background[i].SetActive(true);
+                }
+                else if (background[i] != null)
+                {
+                    background[i].SetActive(false);
+                }
+            }
         }
 
-    }
-    void GetBackgroundSize()
-    {
-        if (GameObject.FindGameObjectWithTag("Background") == null)
-        {
-            Debug.LogError("Background GameObject is not assigned in GameManager!");
-        }
-        else
-        {
-            background[0] = GameObject.FindGameObjectWithTag("Background"); // Find the background object in the scene
-            background[1] = GameObject.FindGameObjectWithTag("Background2"); // Find the second background object in the scene
-            background[2] = GameObject.FindGameObjectWithTag("Background3"); // Find the third background object in the scene
-            background[1].SetActive(false); // Disable the second background at start
-            background[2].SetActive(false); // Disable the third background at start
-            SpriteRenderer backgroundRenderer = background[map].GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
-            if (backgroundRenderer == null)
-            {
-                Debug.LogError("Background GameObject does not have a SpriteRenderer component!");
-            }
-            else
-            {
-                float backgroundWidth = backgroundRenderer.bounds.size.x;
-                float backgroundHeight = backgroundRenderer.bounds.size.y;
-                backgroundWidth -= 1f; // Add some padding
-                backgroundHeight -= 1f; // Add some padding
-                backgroundBounds = new Bounds(background[map].transform.position, new Vector3(backgroundWidth, backgroundHeight, 0)); // Set the background bounds
-            }
-        }
     }
     void GetCamera()
     {
@@ -131,6 +118,13 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+        if (mapCompleted && !backgroundSet && enemiesParent.childCount == 0)
+        {
+            Debug.Log("Switching background from map " + map + " to map " + (map + 1));
+            background[map].SetActive(false);
+            background[map + 1].SetActive(true);
+            backgroundSet = true;
+        }
         if (runtimePlayerData == null)
         {
             Debug.LogError("Runtime Player Data is missing!");
@@ -150,7 +144,7 @@ public class GameManager : MonoBehaviour
         {
             wave++;
             StartCoroutine(SpawnWave()); // Wait for sync
-        } else if ( wave >= 10 && !mapCompleted ) {
+        } else if ( wave > 10 && !mapCompleted ) {
             mapCompleted = true;
         }
     }
@@ -164,7 +158,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f); // Hold at the top position for a moment
         CameraController.isTeleporting = false;
         wave = 1;
-        background[map].SetActive(false);
+        background[map + 1].SetActive(false);
         map++;
         background[map].SetActive(true);
         foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("BulletParent"))
@@ -175,6 +169,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f; // Resume the game
         yield return new WaitForSecondsRealtime(5f); // Wait a moment after teleporting before starting the next wave
         mapCompleted = false;
+        backgroundSet = false;
         //isTeleporting = false;
     }
     IEnumerator SpawnWave()
@@ -230,6 +225,10 @@ public class GameManager : MonoBehaviour
                 enemy.transform.SetParent(enemiesParent); // Set the parent of the spawned enemy for better hierarchy organization
             yield return new WaitForSeconds(0.5f); // Wait before spawning the next enemy
         }
+        if (wave == 10)
+        {
+            mapCompleted = true;
+        }
     }
     void GetSpawnposition(GameObject enemyPrefab, int recursionDepth = 0)
     {
@@ -249,25 +248,92 @@ public class GameManager : MonoBehaviour
         int side = UnityRandom.Range(0, 4); // 0: top, 1: right, 2: bottom, 3: left
         spawnPosition = Vector2.zero;
         // Determine spawn position based on the selected side and ensure it's outside the camera bounds but within the background bounds
+        float x, y;
         switch (side)
         {
             case 0: // Top
-                spawnPosition = new Vector2(Mathf.Clamp(UnityRandom.Range(backgroundBounds.min.x, backgroundBounds.max.x), backgroundBounds.min.x, backgroundBounds.max.x), Mathf.Clamp(UnityRandom.Range(cameraBounds.max.y, backgroundBounds.max.y), cameraBounds.max.y, backgroundBounds.max.y));
+                x = UnityRandom.Range(-38f, 38f);
+                if ((-38f < x && x < -15f) || (15f < x && x < 38f))
+                {
+                    y   = UnityRandom.Range(cameraBounds.max.y, 16f);
+                }
+                else
+                {
+                    y = UnityRandom.Range(cameraBounds.max.y, 13.5f);
+                }
+                spawnPosition = new Vector2(x, y);
                 break;
             case 1: // Right
-                spawnPosition = new Vector2(Mathf.Clamp(UnityRandom.Range(cameraBounds.max.x, backgroundBounds.max.x), backgroundBounds.min.x, backgroundBounds.max.x), UnityRandom.Range(backgroundBounds.min.y, backgroundBounds.max.y));
+                x = UnityRandom.Range(cameraBounds.max.x, 38f);
+                if ((-38f < x && x < -15f) || (15f < x && x < 38f))
+                {
+                    y = UnityRandom.Range(-20.5f, 16f);
+                }
+                else
+                {
+                    y = UnityRandom.Range(-20.5f, 13.5f);
+                }
+                spawnPosition = new Vector2(x, y);
                 break;
             case 2: // Bottom
-                spawnPosition = new Vector2(Mathf.Clamp(UnityRandom.Range(backgroundBounds.min.x, backgroundBounds.max.x), backgroundBounds.min.x, backgroundBounds.max.x), Mathf.Clamp(UnityRandom.Range(backgroundBounds.min.y, cameraBounds.min.y), backgroundBounds.min.y, cameraBounds.min.y));
+                x = UnityRandom.Range(-38f, 38f);
+                y = UnityRandom.Range(-20.5f, cameraBounds.min.y);
+                spawnPosition = new Vector2(x, y);
                 break;
             case 3: // Left
-                spawnPosition = new Vector2(Mathf.Clamp(UnityRandom.Range(backgroundBounds.min.x, cameraBounds.min.x), backgroundBounds.min.x, cameraBounds.min.x), Mathf.Clamp(UnityRandom.Range(backgroundBounds.min.y, backgroundBounds.max.y), backgroundBounds.min.y, backgroundBounds.max.y));
+                x = UnityRandom.Range(-38f, cameraBounds.min.x);
+                if ((-38f < x && x < -15f) || (15f < x && x < 38f))
+                {
+                    y = UnityRandom.Range(-20.5f, 16f);
+                }
+                else
+                {
+                    y = UnityRandom.Range(-20.5f, 13.5f);
+                }
+                spawnPosition = new Vector2(x, y);
                 break;
         }
-        if (backgroundBounds.Contains(spawnPosition) == false || cameraBounds.Contains(spawnPosition) == true)
+        UpdateBounds();
+        if (spawnBounds.Any(bounds => bounds.Contains(spawnPosition)) && !cameraBounds.Contains(spawnPosition))
+        {
+            return;
+        }
+        else
         {
             GetSpawnposition(enemyPrefab, recursionDepth + 1); // Recursively find a new position if out of bounds
         }
+    }
+
+    void UpdateBounds()
+    {
+        spawnBounds = new Bounds[4];
+
+        // top
+        Vector3 topMin = new Vector3(-38f, cameraBounds.max.y, 0);
+        Vector3 topMax = new Vector3(38f, 16f, 0);
+        spawnBounds[0] = CreateBounds(topMin, topMax);
+
+        // right
+        Vector3 rightMin = new Vector3(cameraBounds.max.x, -20.5f, 0);
+        Vector3 rightMax = new Vector3(38f, 16f, 0);
+        spawnBounds[1] = CreateBounds(rightMin, rightMax);
+
+        // bottom
+        Vector3 bottomMin = new Vector3(-38f, -20.5f, 0);
+        Vector3 bottomMax = new Vector3(38f, cameraBounds.min.y, 0);
+        spawnBounds[2] = CreateBounds(bottomMin, bottomMax);
+
+        // left
+        Vector3 leftMin = new Vector3(-38f, -20.5f, 0);
+        Vector3 leftMax = new Vector3(cameraBounds.min.x, 16f, 0);
+        spawnBounds[3] = CreateBounds(leftMin, leftMax);
+    }
+
+    Bounds CreateBounds(Vector3 min, Vector3 max)
+    {
+        Vector3 center = (min + max) * 0.5f;
+        Vector3 size = max - min;
+        return new Bounds(center, size);
     }
 
     string GetEnemyType(GameObject enemyPrefab)
@@ -445,4 +511,22 @@ public class GameManager : MonoBehaviour
         Gizmos.DrawWireCube(spawnPosition, tmpEnemy != null ? tmpEnemy.GetComponent<Collider2D>().bounds.extents * 2 : Vector3.one);
     }
     */
+    private void OnDrawGizmos()
+    {
+        if (spawnBounds == null) return;
+
+        Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // Semi-transparent red
+
+        foreach (var b in spawnBounds)
+        {
+            Gizmos.DrawCube(b.center, b.size);
+        }
+
+        Gizmos.color = Color.red;
+        foreach (var b in spawnBounds)
+        {
+            Gizmos.DrawWireCube(b.center, b.size);
+        }
+    }
+
 }

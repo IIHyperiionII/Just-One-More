@@ -35,8 +35,8 @@ TagManager:
   - 
   - PostProcessing
   - Forground
-  - 
-  - 
+  - Wall
+  - PlayerCheck
   - 
   - 
   - 
