@@ -97,6 +97,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         if (hit == null)
         {
             GameObject childEnemy = Instantiate(childEnemyPrefab, spawnPos, Quaternion.identity); // Spawn the child enemy if the position is clear
+            childEnemy.GetComponent<IEnemy>().SetEnemyType("office1");
             if (GameManager.enemiesParent == null)
             {
                 Debug.LogError("Enemies Parent object not found in the GameManager.");
@@ -114,6 +115,10 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     }
     public EnemyData GetEnemyData()
     {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
         return runtimeEnemiesData;
     }
     public Transform GetTransform()

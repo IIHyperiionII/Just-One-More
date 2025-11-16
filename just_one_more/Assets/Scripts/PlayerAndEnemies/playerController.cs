@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
     public bool isReadyToLoad = false;
     private bool isRed = false;
-
+    
     void Start()
     {
         if (PlayerData == null){
@@ -148,9 +148,12 @@ public class PlayerController : MonoBehaviour
         SpriteRenderer originalSprite = GetComponent<SpriteRenderer>();
         SpriteRenderer cloneSprite = dashClone.AddComponent<SpriteRenderer>();
         cloneSprite.sprite = originalSprite.sprite;
+        cloneSprite.sortingOrder = 1;
+        cloneHand.transform.parent = dashClone.transform;
         SpriteRenderer originalHandSprite = hand.GetComponent<SpriteRenderer>();
         SpriteRenderer cloneHandSprite = cloneHand.AddComponent<SpriteRenderer>();
         cloneHandSprite.sprite = originalHandSprite.sprite;
+        cloneHandSprite.sortingOrder = 1;
         cloneHand.transform.parent = dashClone.transform;
 
         cloneSprite.color = new Color(((index - 1f)/3f), ((index - 1f)/3f), ((index - 1f)/3f), 0.5f);
@@ -240,7 +243,9 @@ public class PlayerController : MonoBehaviour
         }
         PlayerData.hp -= damage;
         if (PlayerData.hp <= 0) Die();
-        CameraController.ShakeCamera();
+        if (Time.timeScale > 0){
+            CameraController.ShakeCamera();
+        }
         if (!isRed)
         {
             StartCoroutine(HitColor());

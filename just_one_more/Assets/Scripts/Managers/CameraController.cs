@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using NUnit.Framework;
+using System.Runtime.Serialization.Formatters;
 
 public class CameraController : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class CameraController : MonoBehaviour
 
         while (elapsed < duration)
         {
+            if (Time.timeScale == 0) yield break;
             float x = Random.Range(-0.5f, 0.5f) * magnitude;
             float y = Random.Range(-0.5f, 0.5f) * magnitude;
 

@@ -94,6 +94,10 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
     }
     public EnemyData GetEnemyData()
     {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
         return runtimeEnemiesData;
     }
     public Transform GetTransform()

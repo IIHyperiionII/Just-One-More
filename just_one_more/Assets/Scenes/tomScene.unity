@@ -1957,7 +1957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -824.57654, y: 424.83014}
+  m_AnchoredPosition: {x: -593, y: 348}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1194613018
@@ -2065,7 +2065,7 @@ PrefabInstance:
     - target: {fileID: 77029781131653991, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
         type: 3}
       propertyPath: wave
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 77029781131653991, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
         type: 3}
@@ -2137,6 +2137,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f, type: 3}
+--- !u!1 &1232533622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1232533623}
+  m_Layer: 5
+  m_Name: NumbersParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1232533623
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232533622}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1363497042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -870, y: 440}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1287589043
 GameObject:
   m_ObjectHideFlags: 0
@@ -2299,7 +2334,7 @@ GameObject:
   - component: {fileID: 1363497039}
   - component: {fileID: 1363497043}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: HUDCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2385,6 +2420,7 @@ RectTransform:
   - {fileID: 649956518}
   - {fileID: 1724338045}
   - {fileID: 493844112}
+  - {fileID: 1232533623}
   m_Father: {fileID: 683894557}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2408,6 +2444,18 @@ MonoBehaviour:
   coinsText: {fileID: 649956519}
   msText: {fileID: 493844113}
   asText: {fileID: 1724338046}
+  numbers:
+  - {fileID: -193960607, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: 34494796, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: -1929703341, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: 527212359, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: 1758049151, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: -238631519, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: 2124172028, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: -2029813364, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: -1320022802, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  - {fileID: 1775225650, guid: 997e418db705049c7b51047b431a9457, type: 3}
+  numbersParent: {fileID: 1232533622}
 --- !u!1 &1419311620
 GameObject:
   m_ObjectHideFlags: 0
@@ -3362,6 +3410,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1505612280834989475, guid: ac7e71bd61cb7439d8fa71472f02f0ff,
+        type: 3}
+      propertyPath: orthographic size
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2581568118991637722, guid: ac7e71bd61cb7439d8fa71472f02f0ff,
         type: 3}
       propertyPath: player

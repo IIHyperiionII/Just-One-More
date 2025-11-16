@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private GameObject cameraObject;
     private Bounds cameraBounds;
     public int wave = 1;
-    private int map = 0;
+    public int map = 0;
     private bool mapCompleted = false;
     private GameObject[][] EnemiesPrefabs;
     public GameObject[] officePrefabs;
@@ -339,11 +339,11 @@ public class GameManager : MonoBehaviour
     string GetEnemyType(GameObject enemyPrefab)
     {
         string mapType = "";
-        if (map == 1)
+        if (map == 0)
         {
             mapType = "office";
         }
-        else if (map == 2)
+        else if (map == 1)
         {
             mapType = "toilet";
         }
@@ -459,6 +459,7 @@ public class GameManager : MonoBehaviour
             GameObject enemy = Instantiate(enemyPrefab, enemyData.position, Quaternion.identity);
             IEnemy enemyController = enemy.GetComponent<IEnemy>();
             EnemyData dataInstance = enemyController.GetEnemyData();
+            Debug.Log("Enemy data: " + (dataInstance != null ? "found" : "null"));
             enemyController.SetEnemyType(enemyData.enemyType);
             dataInstance.hp = enemyData.hp;
             dataInstance.moveSpeed = enemyData.moveSpeed;
@@ -486,7 +487,7 @@ public class GameManager : MonoBehaviour
                 case "ScalingEnemyBullet":
                     projectilePrefab = bulletPrefabs[2];
                     GameObject enemyBulletScaling = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
-                    enemyBulletScaling.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
+                    enemyBulletScaling.GetComponent<EnemyBulletScalingController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
                     break;
                 default:
                     Debug.LogWarning("Unknown projectile type: " + projectileData.projectileType);
