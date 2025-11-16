@@ -18,15 +18,20 @@ public class PlayerStatsPanel : MonoBehaviour
 
     void Start()
     {
-        if (playerData != null) {
+        if (playerData != null) 
+        {
             attackModifierName = GetAttackModifierName();
+            Debug.Log($"Attack modifier is {attackModifierName}");
             UpdateUI();
-        }
+        } 
     }
 
     public void SetPlayerData(PlayerData pd)
     {
         playerData = pd;
+        if (playerData != null) {
+            attackModifierName = GetAttackModifierName();
+        }
         UpdateUI();
     }
 
