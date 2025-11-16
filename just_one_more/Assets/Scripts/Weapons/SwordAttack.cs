@@ -1,4 +1,48 @@
-// using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SwordAttack : MonoBehaviour
+{
+    private float TimeBtwAttack;
+    public float startTimeBtwAttack;
+
+
+    public Transform attackPos;
+    public LayerMask IsEnemy;
+    public float attackRange;
+    public int damage;
+    void Update()
+    {
+        if (TimeBtwAttack <= 0)
+        {
+            if (Input.GetKey(KeyCode.Mouse0))
+            {
+                Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, IsEnemy);
+                for (int i = 0; i < enemiesToDamage.Length; i++)
+                {
+                    enemiesToDamage[i].GetComponent<EnemyData>().hp -= damage;
+                }
+            }
+            TimeBtwAttack = startTimeBtwAttack;
+        }
+        else
+        {
+            TimeBtwAttack -= Time.deltaTime;
+        }
+    }
+    // void OnGizmosSelected()
+    // {
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawWireSphere(attackPos.position, attackRange);
+    // }
+    void OnDrawGizmosSelected()
+    {
+        // Display the explosion radius when selected
+        Gizmos.color = new Color(1, 1, 0, 0.75F);
+        Gizmos.DrawSphere(transform.position, attackRange);
+    }
+}
 
 // public class SwordSwing2D : MonoBehaviour
 // {
