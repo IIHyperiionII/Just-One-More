@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using NUnit.Framework;
+using UnityEngine.Rendering.PostProcessing;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +24,9 @@ public class PlayerController : MonoBehaviour
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
     public bool isReadyToLoad = false;
     private bool isRed = false;
+    private float startTimer = 0f;
+    public PostProcessVolume postProcessVolume;
+    private Vignette vignetteEffect;
     
     void Start()
     {
@@ -31,6 +36,12 @@ public class PlayerController : MonoBehaviour
         Rigidbody = GetComponent<Rigidbody2D>();
         Debug.Log("PlayerData initialized: " + (PlayerData != null));
         isReadyToLoad = true;
+        if (postProcessVolume != null)
+        {
+            postProcessVolume.enabled = false;
+            postProcessVolume.profile.TryGetSettings(out vignetteEffect);
+        }
+        startTimer = Time.time;
     }
     void Update()
     {
@@ -41,6 +52,11 @@ public class PlayerController : MonoBehaviour
         }
         GetAttackInput(); // Just for testing will be removed after weapons are implemented
         Attack(); // Just for testing will be removed after weapons are implemented
+        if (Time.time - startTimer >= 1f) {
+            startTimer = Time.time;
+            PlayerData.needToGamble ++;
+            NeedToGambleEffect();
+        }
     }
 
     void FixedUpdate()
@@ -49,6 +65,42 @@ public class PlayerController : MonoBehaviour
         Vector2 movement = input * Time.deltaTime * PlayerData.moveSpeed;
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
+    }
+
+    void NeedToGambleEffect()
+    {
+        if (PlayerData.needToGamble >= 75)
+        {
+            if (vignetteEffect != null)
+            {
+                vignetteEffect.intensity.value = 0.5f + 0.05f * (PlayerData.needToGamble - 10);
+                postProcessVolume.enabled = true;
+            }
+        } else if (PlayerData.needToGamble >= 50)
+        {
+            if (vignetteEffect != null)
+            {
+                vignetteEffect.intensity.value = 0.3f + 0.004f * (PlayerData.needToGamble - 50);
+                postProcessVolume.enabled = true;
+            }
+        } else if (PlayerData.needToGamble >= 25)
+        {
+            if (vignetteEffect != null)
+            {
+                float normalized = (float)PlayerData.needToGamble/100f;
+                CameraController.ShakeCamera(0.2f, normalized);
+                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 25);
+                postProcessVolume.enabled = true;
+            }
+        } else
+        {
+            if (vignetteEffect != null)
+            {
+                vignetteEffect.intensity.value = 0f;
+                postProcessVolume.enabled = false;
+            }
+
+        }
     }
 
     void GetMovementInput()
@@ -337,6 +389,7 @@ public class PlayerController : MonoBehaviour
         playerData.hpRegenLevel = PlayerData.hpRegenLevel;
         playerData.blockLevel = PlayerData.blockLevel;
         playerData.freezeLevel = PlayerData.freezeLevel;
+        playerData.needToGamble = PlayerData.needToGamble;
         data.players.Clear();
         data.players.Add(playerData);
     }
@@ -362,6 +415,7 @@ public class PlayerController : MonoBehaviour
             PlayerData.hpRegenLevel = playerData.hpRegenLevel;
             PlayerData.blockLevel = playerData.blockLevel;
             PlayerData.freezeLevel = playerData.freezeLevel;
+            PlayerData.needToGamble = playerData.needToGamble;
         }
     }
 }

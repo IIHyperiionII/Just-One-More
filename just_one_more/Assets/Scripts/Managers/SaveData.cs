@@ -34,6 +34,7 @@ public class PlayerSaveData
     public int hpRegenLevel;
     public int blockLevel;
     public int freezeLevel;
+    public int needToGamble;
 }
 
 [Serializable]

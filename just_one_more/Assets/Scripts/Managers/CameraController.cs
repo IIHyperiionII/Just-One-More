@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     private static Vector3 originalPosition;
     public static bool isTeleporting = false;
     private static Vector3 newPosition;
+    private static bool isShaking = false;
     void Update()
     {
         if (player == null)
@@ -28,12 +29,14 @@ public class CameraController : MonoBehaviour
 
     public static void ShakeCamera(float duration = 0.2f, float magnitude = 0.2f)
     {
+        if (isShaking) return;
         GameObject cameraObject = Camera.main.gameObject;
         cameraObject.GetComponent<CameraController>().StartCoroutine(Shake(duration, magnitude, cameraObject.transform));
     }
     private static IEnumerator Shake(float duration, float magnitude, Transform cameraTransform)
     {
         float elapsed = 0.0f;
+        isShaking = true;
 
         while (elapsed < duration)
         {
@@ -47,7 +50,7 @@ public class CameraController : MonoBehaviour
 
             yield return null;
         }
-
+        isShaking = false;
         cameraTransform.position = newPosition;
     }
 

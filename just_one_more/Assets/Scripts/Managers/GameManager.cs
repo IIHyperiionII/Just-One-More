@@ -147,6 +147,7 @@ public class GameManager : MonoBehaviour
         } else if ( wave > 10 && !mapCompleted ) {
             mapCompleted = true;
         }
+
     }
     IEnumerator Teleport()
     {
