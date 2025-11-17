@@ -53,6 +53,39 @@ public class CameraController : MonoBehaviour
         isShaking = false;
         cameraTransform.position = newPosition;
     }
+    public static IEnumerator PulseCamera(float intensity, float duration)
+    {
+        GameObject cameraObject = Camera.main.gameObject;
+        cameraObject.GetComponent<CameraController>().StartCoroutine(HeartbeatPulse(intensity * 0.6f, duration, cameraObject.transform));
+        yield return new WaitForSeconds(duration);
+        cameraObject.GetComponent<CameraController>().StartCoroutine(Shake(duration * 0.5f, intensity * 0.5f, cameraObject.transform));
+        yield return new WaitForSeconds(duration * 0.5f +0.3f);
+        cameraObject.GetComponent<CameraController>().StartCoroutine(HeartbeatPulse(intensity, duration, cameraObject.transform));
+        yield return new WaitForSeconds(duration);
+        cameraObject.GetComponent<CameraController>().StartCoroutine(Shake(duration * 0.5f, intensity * 1f, cameraObject.transform));
+    }
+    public static IEnumerator HeartbeatPulse(float intensity, float duration, Transform cameraTransform)
+    {
+        float t = 0f;
+        float pulseDuration = duration;
+        float originalSize = cameraTransform.GetComponent<Camera>().orthographicSize;
+        float targetSize = originalSize + intensity;
+
+        // scale up
+        while (t < pulseDuration)
+        {
+            t += Time.deltaTime;
+            float normalized = t / pulseDuration;
+            cameraTransform.GetComponent<Camera>().orthographicSize = Mathf.Lerp(originalSize, targetSize, normalized);
+            yield return null;
+        }
+
+        t = 0f;
+        yield return new WaitForSeconds(duration * 0.5f);
+
+
+        cameraTransform.GetComponent<Camera>().orthographicSize = originalSize;
+    }
 
     public static IEnumerator TeleportMoveUp()
     {

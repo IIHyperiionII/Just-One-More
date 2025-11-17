@@ -34,6 +34,9 @@ public class GameManager : MonoBehaviour
     private SaveData saveData;
     public bool isGameReadyToLoad = false;
     private bool backgroundSet = false;
+    public GameObject doorClosed;
+    public GameObject doorClosedLight;
+    public GameObject casinoButton;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -147,7 +150,19 @@ public class GameManager : MonoBehaviour
         } else if ( wave > 10 && !mapCompleted ) {
             mapCompleted = true;
         }
-
+        if (runtimePlayerData.money >= 100)
+        {
+            doorClosed.SetActive(false);
+            doorClosedLight.SetActive(true);
+            casinoButton.SetActive(true);
+        }
+        else
+        {
+            doorClosed.SetActive(true);
+            doorClosedLight.SetActive(false);
+            casinoButton.SetActive(false);
+        }
+    
     }
     IEnumerator Teleport()
     {
@@ -218,6 +233,7 @@ public class GameManager : MonoBehaviour
         }
         foreach (GameObject enemyPrefab in enemiesToSpawn)
         {
+            if (enemyPrefab == null) continue;
             GetSpawnposition(enemyPrefab); // Get a valid spawn position
             string enemyType = GetEnemyType(enemyPrefab);
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity); // Spawn the enemy at the calculated position

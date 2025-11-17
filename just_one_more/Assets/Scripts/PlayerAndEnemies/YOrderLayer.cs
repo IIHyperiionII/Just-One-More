@@ -10,7 +10,6 @@ public class YOrderLayer : MonoBehaviour
         if (spriteRenderer == null) return;
         if (positionReference == null)
             positionReference = this.gameObject.GetComponent<BoxCollider2D>();
-
         spriteRenderer.sortingOrder = Mathf.RoundToInt(-positionReference.bounds.min.y * 100f);
     }
 }

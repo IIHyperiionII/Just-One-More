@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private float startTimer = 0f;
     public PostProcessVolume postProcessVolume;
     private Vignette vignetteEffect;
+    private float multiplier = 1f; // Default multiplier value
+    private int pulseCount = 4;
     
     void Start()
     {
@@ -62,34 +64,46 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (isDashing) return; // Skip normal movement while dashing
-        Vector2 movement = input * Time.deltaTime * PlayerData.moveSpeed;
+        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier);
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
     }
 
     void NeedToGambleEffect()
     {
-        if (PlayerData.needToGamble >= 75)
+        if (PlayerData.needToGamble >= 70)
         {
             if (vignetteEffect != null)
             {
-                vignetteEffect.intensity.value = 0.5f + 0.05f * (PlayerData.needToGamble - 10);
-                postProcessVolume.enabled = true;
+                pulseCount++;
+                if (pulseCount % 3 == 0){
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(VignettePulse());
+                    pulseCount = 0;
+                }
+            }
+        } else if (PlayerData.needToGamble >= 60)
+        {
+            if (vignetteEffect != null)
+            {
+                pulseCount++;
+                if (pulseCount % 4 == 0){
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(VignettePulse());
+                    pulseCount = 0;
+                }
             }
         } else if (PlayerData.needToGamble >= 50)
         {
             if (vignetteEffect != null)
             {
-                vignetteEffect.intensity.value = 0.3f + 0.004f * (PlayerData.needToGamble - 50);
-                postProcessVolume.enabled = true;
-            }
-        } else if (PlayerData.needToGamble >= 25)
-        {
-            if (vignetteEffect != null)
-            {
-                float normalized = (float)PlayerData.needToGamble/100f;
-                CameraController.ShakeCamera(0.2f, normalized);
-                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 25);
+                pulseCount++;
+                if (pulseCount % 5 == 0){
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(VignettePulse());
+                    pulseCount = 0;
+                }
+                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 10);
                 postProcessVolume.enabled = true;
             }
         } else
@@ -100,6 +114,39 @@ public class PlayerController : MonoBehaviour
                 postProcessVolume.enabled = false;
             }
 
+        }
+    }
+
+    public IEnumerator VignettePulse()
+    {
+        float init = 0.45f + 0.005f*(PlayerData.needToGamble - 10);
+        float target = Mathf.Lerp(init, init + 0.2f, 1f);
+
+        yield return new WaitForSeconds(0.1f);
+        vignetteEffect.intensity.value = target;
+        yield return new WaitForSeconds(0.05f);
+
+        // fade back down
+        float t = 0f;
+        float start = target;
+        while (t < 0.35f)
+        {
+            t += Time.deltaTime;
+            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f);
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.1f);
+        vignetteEffect.intensity.value = target;
+        yield return new WaitForSeconds(0.05f);
+
+        // fade back down
+        t = 0f;
+        start = target;
+        while (t < 0.35f)
+        {
+            t += Time.deltaTime;
+            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f);
+            yield return null;
         }
     }
 
@@ -258,11 +305,11 @@ public class PlayerController : MonoBehaviour
     {
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1f / PlayerData.attackSpeed;
+            nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
 
             Quaternion rotation = UpdateAngle();
             GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
-            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, PlayerData.damage); // Initialize bullet with player stats
+            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
         }
     }
     Quaternion UpdateAngle()

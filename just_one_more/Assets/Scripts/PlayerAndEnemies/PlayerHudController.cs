@@ -39,7 +39,7 @@ public class PlayerHudController : MonoBehaviour
                 GetHp();
             }
             healthText.text = $"Health: {playerData.hp}";
-            coinsText.text = $"Coins: {playerData.money}";
+            coinsText.text = $"{playerData.money}";
             msText.text = $"MS: {playerData.moveSpeed}";
             asText.text = $"AS: {playerData.attackSpeed}";
         }
@@ -70,6 +70,7 @@ public class PlayerHudController : MonoBehaviour
                 GameObject number = new GameObject();
                 number.AddComponent<Image>();
                 number.GetComponent<Image>().sprite = numbers[digit];
+                number.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
                 numberSprites[index] = number;
                 number.transform.SetParent(numbersParent.transform);
             }
@@ -90,8 +91,9 @@ public class PlayerHudController : MonoBehaviour
         {
             if (numberSprites.ContainsKey(i))
             {
-                numberSprites[i].transform.position = new Vector3(numbersParent.transform.position.x + (numberSprites[i].GetComponent<Image>().sprite.rect.size.x/2) * iterator, numbersParent.transform.position.y, numbersParent.transform.position.z);
+                numberSprites[i].transform.position = new Vector3(numbersParent.transform.position.x + (numberSprites[i].GetComponent<Image>().sprite.rect.size.x/3f) * iterator, numbersParent.transform.position.y, numbersParent.transform.position.z);
             }
+        
             iterator++;
 
         }
