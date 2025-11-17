@@ -20,6 +20,9 @@ public class ShopManager : MonoBehaviour
     private PlayerData playerData;
     private ShopItem currentItem;
     private int rerollCount = 0;
+    private int baseRerollPrice = 100;
+    private int baseItemPrice = 100;
+    private int itemLevelPriceIncrement = 150;
 
     void Start()
     {
@@ -116,11 +119,13 @@ public class ShopManager : MonoBehaviour
         } 
         else
         {
-            if (!playerStatsPanel.SpendMoney(100 * rerollCount))
+            if (!playerStatsPanel.SpendMoney(baseRerollPrice * rerollCount))
             {
                 Debug.Log("Not enough money for reroll.");
                 return;
-            }    
+            } 
+
+            rerollCount++;   
         }
 
         currentItem = GenerateRandomUpgrade();
@@ -171,7 +176,7 @@ public class ShopManager : MonoBehaviour
 
     private int CalculatePrice(int currentLevel)
     {
-        return 100 + (currentLevel * 150);
+        return baseItemPrice + (currentLevel * itemLevelPriceIncrement);
     }
 
     private void ApplyUpgrade(ShopItem item)
@@ -245,7 +250,7 @@ public class ShopManager : MonoBehaviour
     {
         if (rerollPriceText)
         {
-            int nextRerollPrice = 100 * rerollCount;
+            int nextRerollPrice = baseRerollPrice * rerollCount;
             rerollPriceText.text = nextRerollPrice.ToString();
         }
     }

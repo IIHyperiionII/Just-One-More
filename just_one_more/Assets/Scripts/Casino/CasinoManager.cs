@@ -53,6 +53,7 @@ public class CasinoManager : MonoBehaviour
             REMOVE RESOURCES FROM UNITY ASSETS IN PROJECT
         */
         EnsureGameManagerForTesting();
+        CreatePhysicsSceneIfNeeded();
 #endif
 
         if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null)
@@ -127,9 +128,6 @@ public class CasinoManager : MonoBehaviour
         if (Camera.main != null && Camera.main.tag != "MainCamera")
             Camera.main.tag = "MainCamera";
 
-        // Create physics scene for plinko
-        CreatePhysicsSceneIfNeeded();
-
         Debug.Log("=== CASINO TEST SETUP COMPLETE ===");
     }
 
@@ -155,9 +153,8 @@ public class CasinoManager : MonoBehaviour
         Scene physicsScene = SceneManager.GetSceneByName("MiniGamePhysicsScene");
         if (!physicsScene.IsValid())
         {
-            Scene miniScene = SceneManager.CreateScene("MiniGamePhysicsScene", 
+            SceneManager.CreateScene("MiniGamePhysicsScene", 
                 new CreateSceneParameters(LocalPhysicsMode.Physics2D));
-            Debug.Log("MiniGamePhysicsScene created for casino testing.");
         }
     }
 #endif
@@ -436,9 +433,6 @@ public class CasinoManager : MonoBehaviour
             gamblingManager.ResetGame();
 
         UpdateUI();
-
-
-        // WHERE IS THIS
         playerStatsPanel.UpdateUI();
     }
 
