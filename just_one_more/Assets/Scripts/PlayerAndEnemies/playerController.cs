@@ -32,8 +32,8 @@ public class PlayerController : MonoBehaviour
         {
             GetDashInput();
         }
-        GetAttackInput(); // Just for testing will be removed after weapons are implemented
-        Attack(); // Just for testing will be removed after weapons are implemented
+        // GetAttackInput(); // Just for testing will be removed after weapons are implemented
+        // Attack(); // Just for testing will be removed after weapons are implemented
     }
 
     void FixedUpdate()
