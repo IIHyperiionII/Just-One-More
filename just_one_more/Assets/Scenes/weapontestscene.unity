@@ -1143,12 +1143,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
   startTimeBtwAttack: 0.3
+  attackRange: 3.54
+  damage: 10
   attackPos: {fileID: 1817688541}
   IsEnemy:
     serializedVersion: 2
     m_Bits: 4294967295
-  attackRange: 4.09
-  damage: 10
+  attackAngle: 144
 --- !u!1 &770007082
 GameObject:
   m_ObjectHideFlags: 0
@@ -2023,7 +2024,8 @@ PrefabInstance:
       value: -180.428
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2826152758682791490, guid: 14692a133e9d0a448859bd4e37717cad, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4655307399472632654, guid: 14692a133e9d0a448859bd4e37717cad,
@@ -2877,13 +2879,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817688540}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.05, y: -0.9, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.09, y: -1.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1791574910}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!1 &1879640347
 GameObject:
   m_ObjectHideFlags: 0
