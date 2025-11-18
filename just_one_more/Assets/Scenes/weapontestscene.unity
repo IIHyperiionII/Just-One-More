@@ -1146,8 +1146,8 @@ MonoBehaviour:
   attackPos: {fileID: 1817688541}
   IsEnemy:
     serializedVersion: 2
-    m_Bits: 0
-  attackRange: 5
+    m_Bits: 4294967295
+  attackRange: 4.09
   damage: 10
 --- !u!1 &770007082
 GameObject:
@@ -1990,7 +1990,7 @@ PrefabInstance:
     - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.999993
+      value: -0.0037349495
       objectReference: {fileID: 0}
     - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
         type: 3}
@@ -2000,12 +2000,12 @@ PrefabInstance:
     - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0037315758
+      value: -0.999993
       objectReference: {fileID: 0}
     - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
         type: 3}
@@ -2020,7 +2020,7 @@ PrefabInstance:
     - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -0.428
+      value: -180.428
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2878,7 +2878,7 @@ Transform:
   m_GameObject: {fileID: 1817688540}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9, y: -0.84, z: 0}
+  m_LocalPosition: {x: 2.05, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
