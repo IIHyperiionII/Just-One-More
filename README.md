@@ -17,3 +17,5 @@ Watch him struggle, fail, and desperately chase the jackpot he believes will red
 * Gambling minigame
 * Multiple enemies, weapons and maps
 * Hand drawn art style
+
+## [Report 1](../hry_reports/report_1.pdf)
