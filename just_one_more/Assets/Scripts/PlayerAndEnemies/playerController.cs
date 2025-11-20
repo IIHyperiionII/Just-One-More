@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastPosition;
     private Vector2 lastHandPosition;
     private int shieldRequests = 0;
+
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
     public bool isReadyToLoad = false;
     private bool isRed = false;
@@ -355,7 +356,6 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = false;
         }
-
     }
     Quaternion UpdateAngle()
     {

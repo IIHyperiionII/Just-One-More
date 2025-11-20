@@ -4,11 +4,11 @@ using UnityEngine.Animations;
 public class HandFollowCursor : MonoBehaviour
 {
     [Header("References")]
-    public Transform handTransform;        
-    public SpriteRenderer handRenderer;      
-    public SpriteRenderer bodyRenderer;      
+    public Transform handTransform;
+    public SpriteRenderer handRenderer;
+    public SpriteRenderer bodyRenderer;
 
-[Header("Rotation")]
+    [Header("Rotation")]
     public float rotationSpeed = 15f;
     public float rotationOffset = 0f;
 
@@ -38,11 +38,13 @@ public class HandFollowCursor : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
+        playerController = GetComponentInParent<PlayerController>();
 
-        if (handTransform == null)
-            handTransform = transform.GetChild(0); 
+        if (handTransform == null) handTransform = transform.GetChild(0);
         if (handRenderer == null && handTransform != null)
             handRenderer = handTransform.GetComponent<SpriteRenderer>();
+
+        lastRotation = handTransform.rotation;
     }
 
     void Update()
@@ -68,24 +70,24 @@ public class HandFollowCursor : MonoBehaviour
             return;
         }
 
-
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = handTransform.position.z;
+
         Vector2 direction = mousePos - handTransform.position;
         if (direction.sqrMagnitude < 0.0001f) return;
 
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
         Quaternion targetRotationMouse = Quaternion.Euler(0f, 0f, targetAngle);
-        handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotationMouse, Time.deltaTime * rotationSpeed);
-    
+        handTransform.rotation = Quaternion.Lerp(lastRotation, targetRotationMouse, Time.deltaTime * rotationSpeed);
+
         lastRotation = handTransform.rotation;
-        }
+    }
 
     public void ApplyLookDir(int lookDir)
     {
         if (handTransform == null) return;
         currentLookDir = lookDir;
-     
+
         switch (lookDir)
         {
             case 0: handTransform.localPosition = offsetUp; break;
