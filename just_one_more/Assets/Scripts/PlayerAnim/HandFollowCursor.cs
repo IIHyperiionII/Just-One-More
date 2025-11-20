@@ -28,6 +28,7 @@ public class HandFollowCursor : MonoBehaviour
     private PlayerController playerController;
 
     private Quaternion lastRotation;
+    private int currentLookDir = 3;
 
     void Start()
     {
@@ -47,12 +48,22 @@ public class HandFollowCursor : MonoBehaviour
 
         if (playerController != null && playerController.isAttacking)
         {
-            handTransform.rotation = Quaternion.Lerp(handTransform.rotation, Quaternion.identity, Time.deltaTime * 10f);
+            Quaternion targetRotation;
+            
+            if (currentLookDir == 0)         // Up
+               targetRotation = Quaternion.Euler(0f, 0f, 250f);
+            else if (currentLookDir == 1)    // Left
+                targetRotation = Quaternion.Euler(0f, 0f, 270f);
+            else if (currentLookDir == 2)    // Down
+                targetRotation = Quaternion.identity;
+            else                             // Right
+                targetRotation = Quaternion.Euler(0f, 0f, 180f);
+
+            handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotation, Time.deltaTime * 10f);
             lastRotation = handTransform.rotation;
             return;
         }
 
- 
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = handTransform.position.z;
 
@@ -60,8 +71,8 @@ public class HandFollowCursor : MonoBehaviour
         if (direction.sqrMagnitude < 0.0001f) return;
 
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
-        handTransform.rotation = Quaternion.Lerp(lastRotation, targetRotation, Time.deltaTime * rotationSpeed);
+        Quaternion targetRotationMouse = Quaternion.Euler(0f, 0f, targetAngle);
+        handTransform.rotation = Quaternion.Lerp(lastRotation, targetRotationMouse, Time.deltaTime * rotationSpeed);
 
         lastRotation = handTransform.rotation;
     }
@@ -69,6 +80,7 @@ public class HandFollowCursor : MonoBehaviour
     public void ApplyLookDir(int lookDir)
     {
         if (handTransform == null) return;
+        currentLookDir = lookDir;
 
         switch (lookDir)
         {

@@ -19,7 +19,6 @@ public class PlayerLookDirection : MonoBehaviour
 
         if (handAnimator == null && transform.Find("HandAnchor/Hand") != null)
             handAnimator = transform.Find("HandAnchor/Hand").GetComponent<Animator>();
-            
 
         if (handScript == null && transform.Find("HandAnchor") != null)
             handScript = transform.Find("HandAnchor").GetComponent<HandFollowCursor>();
@@ -33,7 +32,7 @@ public class PlayerLookDirection : MonoBehaviour
 
         if (playerController != null && playerController.isAttacking)
         {
-            handAnimator.SetBool("isAttacking", true); 
+            handAnimator.SetBool("isAttacking", true);
             return;
         }
         else
@@ -44,7 +43,6 @@ public class PlayerLookDirection : MonoBehaviour
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;
         Vector2 lookDirection = new Vector2(mousePos.x - transform.position.x, mousePos.y - transform.position.y);
-
         if (lookDirection.sqrMagnitude < 0.0001f) return;
 
         float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
@@ -57,8 +55,23 @@ public class PlayerLookDirection : MonoBehaviour
         else lookDirInt = 3; // Right
 
         float handSwitchFloat = 0f;
-        if ((lookDirInt == 0 && angle > 90f) || (lookDirInt == 2 && angle > 270f))
-            handSwitchFloat = 1f;
+
+        if (lookDirInt == 0) // Up (45°–135°)
+        {
+            if (angle < 75f) handSwitchFloat = 0f;        
+            else if (angle < 105f) handSwitchFloat = 1f;
+            else handSwitchFloat = 2f;                    
+        }
+        else if (lookDirInt == 2) // Down (225°–315°)
+        {
+            if (angle < 255f) handSwitchFloat = 0f;
+            else if (angle < 285f) handSwitchFloat = 1f;
+            else handSwitchFloat = 2f;
+        }
+        else
+        {
+            handSwitchFloat = 0f;
+        }
 
         playerAnimator.SetFloat("LookDir", lookDirInt);
 
