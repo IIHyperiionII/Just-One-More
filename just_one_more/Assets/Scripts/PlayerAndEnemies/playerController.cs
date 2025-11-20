@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
+
+    public bool isAttacking = false; // for animation testing
     private bool isDashing = false;
     private bool dashReset = true;
     private Vector2 dashDir;
@@ -18,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastPosition;
     private Vector2 lastHandPosition;
     private int shieldRequests = 0;
+
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
 
     void Start()
@@ -197,10 +200,17 @@ public class PlayerController : MonoBehaviour
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + 1f / PlayerData.attackSpeed;
+            isAttacking = true;
 
             Quaternion rotation = UpdateAngle();
             GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
             bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, PlayerData.damage); // Initialize bullet with player stats
+        }
+
+        //for animation testing
+        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
+        {
+            isAttacking = false;
         }
     }
     Quaternion UpdateAngle()

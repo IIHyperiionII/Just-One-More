@@ -3,11 +3,11 @@ using UnityEngine;
 public class HandFollowCursor : MonoBehaviour
 {
     [Header("References")]
-    public Transform handTransform;        
-    public SpriteRenderer handRenderer;      
-    public SpriteRenderer bodyRenderer;      
+    public Transform handTransform;
+    public SpriteRenderer handRenderer;
+    public SpriteRenderer bodyRenderer;
 
-[Header("Rotation")]
+    [Header("Rotation")]
     public float rotationSpeed = 15f;
     public float rotationOffset = 0f;
 
@@ -21,37 +21,67 @@ public class HandFollowCursor : MonoBehaviour
     public int frontOffsetOrder = 1;
     public int backOffsetOrder = -1;
 
+    [Header("Hand flip/switch")]
+    public float handSwitch = 0f;
+
     private Camera mainCam;
+    private PlayerController playerController;
+
+    private Quaternion lastRotation;
+    private int currentLookDir = 3;
 
     void Start()
     {
         mainCam = Camera.main;
+        playerController = GetComponentInParent<PlayerController>();
 
-        if (handTransform == null)
-            handTransform = transform.GetChild(0); 
+        if (handTransform == null) handTransform = transform.GetChild(0);
         if (handRenderer == null && handTransform != null)
             handRenderer = handTransform.GetComponent<SpriteRenderer>();
+
+        lastRotation = handTransform.rotation;
     }
 
     void Update()
     {
         if (mainCam == null || handTransform == null) return;
 
+        if (playerController != null && playerController.isAttacking)
+        {
+            Quaternion targetRotation;
+            
+            if (currentLookDir == 0)         // Up
+               targetRotation = Quaternion.Euler(0f, 0f, 250f);
+            else if (currentLookDir == 1)    // Left
+                targetRotation = Quaternion.Euler(0f, 0f, 270f);
+            else if (currentLookDir == 2)    // Down
+                targetRotation = Quaternion.identity;
+            else                             // Right
+                targetRotation = Quaternion.Euler(0f, 0f, 180f);
+
+            handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotation, Time.deltaTime * 10f);
+            lastRotation = handTransform.rotation;
+            return;
+        }
+
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = handTransform.position.z;
+
         Vector2 direction = mousePos - handTransform.position;
         if (direction.sqrMagnitude < 0.0001f) return;
 
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
-        handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        Quaternion targetRotationMouse = Quaternion.Euler(0f, 0f, targetAngle);
+        handTransform.rotation = Quaternion.Lerp(lastRotation, targetRotationMouse, Time.deltaTime * rotationSpeed);
+
+        lastRotation = handTransform.rotation;
     }
 
     public void ApplyLookDir(int lookDir)
     {
         if (handTransform == null) return;
+        currentLookDir = lookDir;
 
-     
         switch (lookDir)
         {
             case 0: handTransform.localPosition = offsetUp; break;
@@ -70,4 +100,8 @@ public class HandFollowCursor : MonoBehaviour
         }
     }
 
+    public void SetHandSwitch(float state)
+    {
+        handSwitch = state;
+    }
 }
