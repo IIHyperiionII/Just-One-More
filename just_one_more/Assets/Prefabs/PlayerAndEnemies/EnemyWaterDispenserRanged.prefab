@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4039854693898424665}
   - component: {fileID: 7480293928712251223}
   m_Layer: 0
-  m_Name: RangeEnemyBase
+  m_Name: EnemyWaterDispenserRanged
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
