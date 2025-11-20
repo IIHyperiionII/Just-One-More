@@ -22,7 +22,15 @@ public class HandFollowCursor : MonoBehaviour
     public int frontOffsetOrder = 1;
     public int backOffsetOrder = -1;
 
+    [Header("Hand flip/switch")]
+    public float handSwitch = 0f;
+
     private Camera mainCam;
+    private PlayerController playerController;
+
+    private Quaternion lastRotation;
+    private int currentLookDir = 3;
+
     public SpriteRenderer spriteRenderer;
     public BoxCollider2D positionReference;
     public BoxCollider2D positionReference2;
@@ -42,20 +50,41 @@ public class HandFollowCursor : MonoBehaviour
         if (Time.timeScale == 0f) return;
         if (mainCam == null || handTransform == null) return;
 
+        if (playerController != null && playerController.isAttacking)
+        {
+            Quaternion targetRotation;
+            
+            if (currentLookDir == 0)         // Up
+               targetRotation = Quaternion.Euler(0f, 0f, 250f);
+            else if (currentLookDir == 1)    // Left
+                targetRotation = Quaternion.Euler(0f, 0f, 270f);
+            else if (currentLookDir == 2)    // Down
+                targetRotation = Quaternion.identity;
+            else                             // Right
+                targetRotation = Quaternion.Euler(0f, 0f, 180f);
+
+            handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotation, Time.deltaTime * 10f);
+            lastRotation = handTransform.rotation;
+            return;
+        }
+
+
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = handTransform.position.z;
         Vector2 direction = mousePos - handTransform.position;
         if (direction.sqrMagnitude < 0.0001f) return;
 
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
-        handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-    }
+        Quaternion targetRotationMouse = Quaternion.Euler(0f, 0f, targetAngle);
+        handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotationMouse, Time.deltaTime * rotationSpeed);
+    
+        lastRotation = handTransform.rotation;
+        }
 
     public void ApplyLookDir(int lookDir)
     {
         if (handTransform == null) return;
-
+        currentLookDir = lookDir;
      
         switch (lookDir)
         {
@@ -81,5 +110,11 @@ public class HandFollowCursor : MonoBehaviour
             }
         }
     }
+
+    public void SetHandSwitch(float state)
+    {
+        handSwitch = state;
+    }
+
 
 }
