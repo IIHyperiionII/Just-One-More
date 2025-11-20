@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using NUnit.Framework;
+using UnityEngine.Rendering.PostProcessing;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,8 +14,7 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
-
-    public bool isAttacking = false; // for animation testing
+    public bool isAttacking = false; // for animation testing 
     private bool isDashing = false;
     private bool dashReset = true;
     private Vector2 dashDir;
@@ -22,11 +24,31 @@ public class PlayerController : MonoBehaviour
     private int shieldRequests = 0;
 
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
-
+    public bool isReadyToLoad = false;
+    private bool isRed = false;
+    private float startTimer = 0f;
+    public PostProcessVolume postProcessVolume;
+    private Vignette vignetteEffect;
+    private float multiplier = 1f; // Default multiplier value
+    private int pulseCount = 4;
+    private int sign = 1;
+    private bool isReversed = false;
+    
     void Start()
     {
-        PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
+        if (PlayerData == null){
+            PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
+        }
         Rigidbody = GetComponent<Rigidbody2D>();
+        Debug.Log("PlayerData initialized: " + (PlayerData != null));
+        isReadyToLoad = true;
+        if (postProcessVolume != null)
+        {
+            postProcessVolume.enabled = false;
+            postProcessVolume.profile.TryGetSettings(out vignetteEffect);
+        }
+        startTimer = Time.time;
+        PlayerData.damage = 1; // For testing purposes only
     }
     void Update()
     {
@@ -37,14 +59,126 @@ public class PlayerController : MonoBehaviour
         }
         GetAttackInput(); // Just for testing will be removed after weapons are implemented
         Attack(); // Just for testing will be removed after weapons are implemented
+        if (Time.time - startTimer >= 1f) {
+            startTimer = Time.time;
+            PlayerData.needToGamble ++;
+            NeedToGambleEffect();
+        }
     }
 
     void FixedUpdate()
     {
         if (isDashing) return; // Skip normal movement while dashing
-        Vector2 movement = input * Time.deltaTime * PlayerData.moveSpeed;
+        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier) * sign;
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
+    }
+
+    void NeedToGambleEffect()
+    {
+        if (PlayerData.needToGamble >= 70)
+        {
+            if (vignetteEffect != null)
+            {
+                multiplier = 0.3f;
+                pulseCount++;
+                vignetteEffect.intensity.value = 0.60f;
+                if (pulseCount % 3 == 0){
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(VignettePulse());
+                    pulseCount = 0;
+                }
+                postProcessVolume.enabled = true;
+            }
+            if (!isReversed && Random.Range(0, 100) < 30){
+                    StartCoroutine(ReverseInputs());
+                }
+            if (!isDashing && numberOfDashes > 0 && dashReset && Random.Range(0, 100) < 20)
+            {
+                StartCoroutine(Dash(true));
+                StartCoroutine(ResetDash());
+            }
+        } else if (PlayerData.needToGamble >= 60)
+        {
+            if (vignetteEffect != null)
+            {
+                multiplier = 0.5f;
+                pulseCount++;
+                vignetteEffect.intensity.value = 0.55f + 0.005f*(PlayerData.needToGamble - 60);
+                if (pulseCount % 4 == 0){
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(VignettePulse());
+                    pulseCount = 0;
+                }
+                postProcessVolume.enabled = true;
+            }
+            if (!isReversed && Random.Range(0, 100) < 15){
+                    StartCoroutine(ReverseInputs());
+                }
+        } else if (PlayerData.needToGamble >= 50)
+        {
+            if (vignetteEffect != null)
+            {
+                pulseCount++;
+                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 50);
+                if (pulseCount % 5 == 0){
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(VignettePulse());
+                    pulseCount = 0;
+                }
+                postProcessVolume.enabled = true;
+            }
+        } else
+        {
+            if (vignetteEffect != null)
+            {
+                vignetteEffect.intensity.value = 0f;
+                postProcessVolume.enabled = false;
+            }
+
+        }
+    }
+
+    IEnumerator ReverseInputs()
+    {
+        isReversed = true;
+        sign = -1;
+        yield return new WaitForSeconds(3f);
+        sign = 1;
+        isReversed = false;
+    }
+
+    public IEnumerator VignettePulse()
+    {
+        float init = vignetteEffect.intensity.value;
+        float target = Mathf.Lerp(init, init + 0.2f, 1f);
+
+        yield return new WaitForSeconds(0.1f);
+        vignetteEffect.intensity.value = target;
+        yield return new WaitForSeconds(0.05f);
+
+        // fade back down
+        float t = 0f;
+        float start = target;
+        while (t < 0.35f)
+        {
+            t += Time.deltaTime;
+            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f);
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.1f);
+        vignetteEffect.intensity.value = target;
+        yield return new WaitForSeconds(0.05f);
+
+        // fade back down
+        t = 0f;
+        start = target;
+        while (t < 0.35f)
+        {
+            t += Time.deltaTime;
+            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f);
+            yield return null;
+        }
     }
 
     void GetMovementInput()
@@ -59,13 +193,14 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && !isDashing && numberOfDashes > 0 && dashReset)
         {
-            StartCoroutine(Dash());
+            StartCoroutine(Dash(false));
             StartCoroutine(ResetDash());
         }
     }
 
-    IEnumerator Dash()
+    IEnumerator Dash(bool isRandom)
     {
+        isDashing = true;
         lastPosition = Rigidbody.position;
         Transform handAnchor = transform.Find("HandAnchor");
         if (handAnchor == null)
@@ -82,7 +217,6 @@ public class PlayerController : MonoBehaviour
         }
         lastHandPosition = hand.position;
 
-        isDashing = true;
         if (PlayerData.dashLevel == 4) numberOfDashes--;
         if (numberOfDashes > 0 && PlayerData.dashLevel == 4)
         {
@@ -93,7 +227,14 @@ public class PlayerController : MonoBehaviour
             dashReset = false;
         }
         Vector2 start = Rigidbody.position;
-        dashDir = input;
+        if (isRandom)
+        {
+            dashDir = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        }
+        else
+        {
+            dashDir = input;
+        }
         if (dashDir == Vector2.zero)
             dashDir = Vector2.right; // default direction
 
@@ -144,9 +285,12 @@ public class PlayerController : MonoBehaviour
         SpriteRenderer originalSprite = GetComponent<SpriteRenderer>();
         SpriteRenderer cloneSprite = dashClone.AddComponent<SpriteRenderer>();
         cloneSprite.sprite = originalSprite.sprite;
+        cloneSprite.sortingOrder = 1;
+        cloneHand.transform.parent = dashClone.transform;
         SpriteRenderer originalHandSprite = hand.GetComponent<SpriteRenderer>();
         SpriteRenderer cloneHandSprite = cloneHand.AddComponent<SpriteRenderer>();
         cloneHandSprite.sprite = originalHandSprite.sprite;
+        cloneHandSprite.sortingOrder = 1;
         cloneHand.transform.parent = dashClone.transform;
 
         cloneSprite.color = new Color(((index - 1f)/3f), ((index - 1f)/3f), ((index - 1f)/3f), 0.5f);
@@ -199,12 +343,12 @@ public class PlayerController : MonoBehaviour
     {
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1f / PlayerData.attackSpeed;
-            isAttacking = true;
+            nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
+            isAttacking = true; // for animation testing
 
             Quaternion rotation = UpdateAngle();
             GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
-            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, PlayerData.damage); // Initialize bullet with player stats
+            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
         }
 
         //for animation testing
@@ -243,8 +387,13 @@ public class PlayerController : MonoBehaviour
         }
         PlayerData.hp -= damage;
         if (PlayerData.hp <= 0) Die();
-        CameraController.ShakeCamera();
-        StartCoroutine(HitColor());
+        if (Time.timeScale > 0){
+            CameraController.ShakeCamera();
+        }
+        if (!isRed)
+        {
+            StartCoroutine(HitColor());
+        }
     }
     IEnumerator ShieldUp()
     {
@@ -265,6 +414,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator HitColor()
     {
+        isRed = true;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
         Transform handAnchor = transform.Find("HandAnchor");
@@ -298,17 +448,65 @@ public class PlayerController : MonoBehaviour
 
         spriteRenderer.color = originalColor;
         handSpriteRenderer.color = originalColor;
+        isRed = false;
     }
-
 
         void Die()
     {
         PlayerData.isDead = true;
-        Destroy(gameObject);
         SceneManager.LoadScene("MainMenuScene");
     }
     public void GetCoin(int amount)
     {
         PlayerData.money += amount;
+    }
+
+    public void GetSaveData()
+    {
+        SaveData data = SaveSystem.Instance.currentSaveData;
+        PlayerSaveData playerData = new PlayerSaveData();
+        playerData.position = transform.position;
+        playerData.hp = PlayerData.hp;
+        playerData.moveSpeed = PlayerData.moveSpeed;
+        playerData.attackSpeed = PlayerData.attackSpeed;
+        playerData.damage = PlayerData.damage;
+        playerData.money = PlayerData.money;
+        playerData.bulletSpeed = PlayerData.bulletSpeed;
+        playerData.knockback = PlayerData.knockback;
+        playerData.isDead = PlayerData.isDead;
+        playerData.isMelee = PlayerData.isMelee;
+        playerData.piercingLevel = PlayerData.piercingLevel;
+        playerData.dashLevel = PlayerData.dashLevel;
+        playerData.hpRegenLevel = PlayerData.hpRegenLevel;
+        playerData.blockLevel = PlayerData.blockLevel;
+        playerData.freezeLevel = PlayerData.freezeLevel;
+        playerData.needToGamble = PlayerData.needToGamble;
+        data.players.Clear();
+        data.players.Add(playerData);
+    }
+    public void ApplySaveData()
+    {
+        PlayerData = GameManager.Instance.runtimePlayerData;
+        SaveData data = SaveSystem.Instance.currentSaveData;
+        if (data.players.Count > 0)
+        {
+            PlayerSaveData playerData = data.players[0];
+            transform.position = playerData.position;
+            PlayerData.hp = playerData.hp;
+            PlayerData.moveSpeed = playerData.moveSpeed;
+            PlayerData.attackSpeed = playerData.attackSpeed;
+            PlayerData.damage = playerData.damage;
+            PlayerData.money = playerData.money;
+            PlayerData.bulletSpeed = playerData.bulletSpeed;
+            PlayerData.knockback = playerData.knockback;
+            PlayerData.isDead = playerData.isDead;
+            PlayerData.isMelee = playerData.isMelee;
+            PlayerData.piercingLevel = playerData.piercingLevel;
+            PlayerData.dashLevel = playerData.dashLevel;
+            PlayerData.hpRegenLevel = playerData.hpRegenLevel;
+            PlayerData.blockLevel = playerData.blockLevel;
+            PlayerData.freezeLevel = playerData.freezeLevel;
+            PlayerData.needToGamble = playerData.needToGamble;
+        }
     }
 }

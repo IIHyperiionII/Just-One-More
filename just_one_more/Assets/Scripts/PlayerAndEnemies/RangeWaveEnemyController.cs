@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using System.Collections;
 
-public class RangeWaveEnemyController : MonoBehaviour
+public class RangeWaveEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 lastPlayerPosition;
@@ -15,6 +16,8 @@ public class RangeWaveEnemyController : MonoBehaviour
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private int sign = 0;
+    private string enemyType = "";
+    private bool isChangingSprite = false;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -86,12 +89,55 @@ public class RangeWaveEnemyController : MonoBehaviour
     {
         sign = Random.Range(0, 2) * 2 - 1; // Randomly choose between -1 and 1 for bullet wave direction starting sign
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-        bullet.GetComponent<EnemyWaveBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, sign); // Initialize the wave bullet with speed, damage, and wave direction sign
+        bullet.GetComponent<EnemyBulletWaveController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, sign, rotation); // Initialize the wave bullet with speed, damage, wave direction sign, and rotation
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
+    }
+    public void TakeDamage(int damage)
+    {
+        runtimeEnemiesData.hp -= damage;
+        if (runtimeEnemiesData.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
+        {
+            Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
+            StartCoroutine(SpriteChange(newSprite));
+        }
+    }
+    IEnumerator SpriteChange(Sprite newSprite)
+    {
+        isChangingSprite = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite originalSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = newSprite;
+        yield return new WaitForSeconds(2f);
+        spriteRenderer.sprite = originalSprite;
+        isChangingSprite = false;
     }
 }

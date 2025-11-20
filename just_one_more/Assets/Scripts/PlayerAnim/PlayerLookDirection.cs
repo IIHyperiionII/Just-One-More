@@ -29,6 +29,7 @@ public class PlayerLookDirection : MonoBehaviour
     void Update()
     {
         if (playerAnimator == null) return;
+        if (Time.timeScale == 0f) return;
 
         if (playerController != null && playerController.isAttacking)
         {

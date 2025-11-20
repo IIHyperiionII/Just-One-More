@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class HandFollowCursor : MonoBehaviour
 {
@@ -30,6 +31,10 @@ public class HandFollowCursor : MonoBehaviour
     private Quaternion lastRotation;
     private int currentLookDir = 3;
 
+    public SpriteRenderer spriteRenderer;
+    public BoxCollider2D positionReference;
+    public BoxCollider2D positionReference2;
+
     void Start()
     {
         mainCam = Camera.main;
@@ -44,6 +49,7 @@ public class HandFollowCursor : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
         if (mainCam == null || handTransform == null) return;
 
         if (playerController != null && playerController.isAttacking)
@@ -93,10 +99,17 @@ public class HandFollowCursor : MonoBehaviour
         if (handRenderer != null && bodyRenderer != null)
         {
             int baseOrder = bodyRenderer.sortingOrder;
-            if (lookDir == 1 || lookDir == 2)
-                handRenderer.sortingOrder = baseOrder + frontOffsetOrder;
-            else
-                handRenderer.sortingOrder = baseOrder + backOffsetOrder;
+            if (lookDir == 1 || lookDir == 2){
+                if (positionReference2 == null){
+                    positionReference2 = this.gameObject.GetComponent<BoxCollider2D>();
+                }
+                spriteRenderer.sortingOrder = Mathf.RoundToInt(-positionReference2.bounds.min.y * 100f);
+            } else{
+                if (positionReference == null){
+                    positionReference = this.gameObject.GetComponent<BoxCollider2D>();
+                }
+                spriteRenderer.sortingOrder = Mathf.RoundToInt(-positionReference.bounds.min.y * 100f);
+            }
         }
     }
 
@@ -104,4 +117,6 @@ public class HandFollowCursor : MonoBehaviour
     {
         handSwitch = state;
     }
+
+
 }
