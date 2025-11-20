@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private Bounds cameraBounds;
     public int wave = 1;
     public int map = 0;
-    private bool mapCompleted = false;
+    public bool mapCompleted = false;
     private GameObject[][] EnemiesPrefabs;
     public GameObject[] officePrefabs;
     public GameObject[] toiletPrefabs;
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Switching background from map " + map + " to map " + (map + 1));
             background[map].SetActive(false);
-            background[map + 1].SetActive(true);
+            background[map + 3].SetActive(true);
             backgroundSet = true;
         }
         if (runtimePlayerData == null)
@@ -166,17 +166,16 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Teleport()
     {
-        //isTeleporting = true;
         doorsEntered = false;
         Time.timeScale = 0f; // Pause the game
         CameraController.isTeleporting = true;
         yield return StartCoroutine(CameraController.TeleportMoveUp()); // Wait a moment before teleporting for sync of coroutines
-        yield return new WaitForSecondsRealtime(0.5f); // Hold at the top position for a moment
         CameraController.isTeleporting = false;
         wave = 1;
-        background[map + 1].SetActive(false);
-        map++;
-        background[map].SetActive(true);
+        background[map + 3].SetActive(false);
+        map ++;
+        background[map + 3].SetActive(true);
+        mapCompleted = false;
         foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("BulletParent"))
         {
             Destroy(bullet); // Clear all remaining bullets
@@ -184,10 +183,9 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(CameraController.TeleportMoveDown());
         Time.timeScale = 1f; // Resume the game
         yield return new WaitForSecondsRealtime(5f); // Wait a moment after teleporting before starting the next wave
-        mapCompleted = false;
         backgroundSet = false;
-        //isTeleporting = false;
     }
+
     IEnumerator SpawnWave()
     {
         WavesIsSpawning = true;
@@ -511,6 +509,19 @@ public class GameManager : MonoBehaviour
                     continue;
             }
         }
+    }
+
+    public Sprite GetRandomSprite(Sprite initSprite)
+    {
+        int tmpMap = UnityEngine.Random.Range(0, 3);  
+        int tmpVariant = UnityEngine.Random.Range(0, 3);
+        Debug.Log("Selected random sprite from map " + tmpMap + " variant " + tmpVariant);
+        Sprite newSprite = EnemiesPrefabs[tmpMap][tmpVariant].GetComponent<SpriteRenderer>().sprite;
+        if (newSprite == initSprite)
+        {
+            return GetRandomSprite(initSprite); // Recursively get a new sprite if it's the same as the initial one
+        }
+        return newSprite;
     }
     
     /*

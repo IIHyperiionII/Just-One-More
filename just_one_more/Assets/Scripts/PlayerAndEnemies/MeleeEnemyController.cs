@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MeleeEnemyController : MonoBehaviour, IEnemy
@@ -11,6 +12,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private string enemyType;
+    private bool isChangingSprite = false;
+    private bool isInvisible = false;
     void Start()
     {
         if (runtimeEnemiesData == null){
@@ -85,4 +88,44 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         return enemyType;
     }
+    public void TakeDamage(int damage)
+    {
+        runtimeEnemiesData.hp -= damage;
+        if (runtimeEnemiesData.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
+        {
+            Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
+            StartCoroutine(SpriteChange(newSprite));
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isInvisible)
+        {
+            StartCoroutine(BecomeInvisible());
+        }
+    }
+    IEnumerator SpriteChange(Sprite newSprite)
+    {
+        Debug.Log("Changing sprite to " + newSprite.name);
+        isChangingSprite = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite originalSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = newSprite;
+        yield return new WaitForSeconds(2f);
+        spriteRenderer.sprite = originalSprite;
+        isChangingSprite = false;
+    }
+    IEnumerator BecomeInvisible()
+    {
+        Debug.Log("Becoming invisible");
+        isInvisible = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f); // Set alpha to 0.0 for invisibility
+        yield return new WaitForSeconds(3f);
+        spriteRenderer.color = originalColor; // Restore original color
+        isInvisible = false;
+    }
+
 }

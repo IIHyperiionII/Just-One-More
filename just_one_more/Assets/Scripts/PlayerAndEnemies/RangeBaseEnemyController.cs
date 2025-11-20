@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using System.Collections;
 
 public class RangeBaseEnemyController : MonoBehaviour, IEnemy
 {
@@ -15,6 +16,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private string enemyType = "";
+    private bool isChangingSprite = false;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -114,5 +116,28 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     public string GetEnemyType()
     {
         return enemyType;
+    }
+    public void TakeDamage(int damage)
+    {
+        runtimeEnemiesData.hp -= damage;
+        if (runtimeEnemiesData.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
+        {
+            Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
+            StartCoroutine(SpriteChange(newSprite));
+        }
+    }
+    IEnumerator SpriteChange(Sprite newSprite)
+    {
+        isChangingSprite = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite originalSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = newSprite;
+        yield return new WaitForSeconds(2f);
+        spriteRenderer.sprite = originalSprite;
+        isChangingSprite = false;
     }
 }

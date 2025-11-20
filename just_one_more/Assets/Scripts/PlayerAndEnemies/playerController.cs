@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private Vignette vignetteEffect;
     private float multiplier = 1f; // Default multiplier value
     private int pulseCount = 4;
+    private int sign = 1;
+    private bool isReversed = false;
     
     void Start()
     {
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
             postProcessVolume.profile.TryGetSettings(out vignetteEffect);
         }
         startTimer = Time.time;
+        PlayerData.damage = 1; // For testing purposes only
     }
     void Update()
     {
@@ -64,7 +67,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (isDashing) return; // Skip normal movement while dashing
-        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier);
+        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier) * sign;
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
     }
@@ -75,35 +78,52 @@ public class PlayerController : MonoBehaviour
         {
             if (vignetteEffect != null)
             {
+                multiplier = 0.3f;
                 pulseCount++;
+                vignetteEffect.intensity.value = 0.60f;
                 if (pulseCount % 3 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
                     pulseCount = 0;
                 }
+                postProcessVolume.enabled = true;
+            }
+            if (!isReversed && Random.Range(0, 100) < 30){
+                    StartCoroutine(ReverseInputs());
+                }
+            if (!isDashing && numberOfDashes > 0 && dashReset && Random.Range(0, 100) < 20)
+            {
+                StartCoroutine(Dash(true));
+                StartCoroutine(ResetDash());
             }
         } else if (PlayerData.needToGamble >= 60)
         {
             if (vignetteEffect != null)
             {
+                multiplier = 0.5f;
                 pulseCount++;
+                vignetteEffect.intensity.value = 0.55f + 0.005f*(PlayerData.needToGamble - 60);
                 if (pulseCount % 4 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
                     pulseCount = 0;
                 }
+                postProcessVolume.enabled = true;
             }
+            if (!isReversed && Random.Range(0, 100) < 15){
+                    StartCoroutine(ReverseInputs());
+                }
         } else if (PlayerData.needToGamble >= 50)
         {
             if (vignetteEffect != null)
             {
                 pulseCount++;
+                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 50);
                 if (pulseCount % 5 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
                     pulseCount = 0;
                 }
-                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 10);
                 postProcessVolume.enabled = true;
             }
         } else
@@ -117,9 +137,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    IEnumerator ReverseInputs()
+    {
+        isReversed = true;
+        sign = -1;
+        yield return new WaitForSeconds(3f);
+        sign = 1;
+        isReversed = false;
+    }
+
     public IEnumerator VignettePulse()
     {
-        float init = 0.45f + 0.005f*(PlayerData.needToGamble - 10);
+        float init = vignetteEffect.intensity.value;
         float target = Mathf.Lerp(init, init + 0.2f, 1f);
 
         yield return new WaitForSeconds(0.1f);
@@ -162,13 +191,14 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && !isDashing && numberOfDashes > 0 && dashReset)
         {
-            StartCoroutine(Dash());
+            StartCoroutine(Dash(false));
             StartCoroutine(ResetDash());
         }
     }
 
-    IEnumerator Dash()
+    IEnumerator Dash(bool isRandom)
     {
+        isDashing = true;
         lastPosition = Rigidbody.position;
         Transform handAnchor = transform.Find("HandAnchor");
         if (handAnchor == null)
@@ -185,7 +215,6 @@ public class PlayerController : MonoBehaviour
         }
         lastHandPosition = hand.position;
 
-        isDashing = true;
         if (PlayerData.dashLevel == 4) numberOfDashes--;
         if (numberOfDashes > 0 && PlayerData.dashLevel == 4)
         {
@@ -196,7 +225,14 @@ public class PlayerController : MonoBehaviour
             dashReset = false;
         }
         Vector2 start = Rigidbody.position;
-        dashDir = input;
+        if (isRandom)
+        {
+            dashDir = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        }
+        else
+        {
+            dashDir = input;
+        }
         if (dashDir == Vector2.zero)
             dashDir = Vector2.right; // default direction
 
@@ -405,7 +441,6 @@ public class PlayerController : MonoBehaviour
         handSpriteRenderer.color = originalColor;
         isRed = false;
     }
-
 
         void Die()
     {

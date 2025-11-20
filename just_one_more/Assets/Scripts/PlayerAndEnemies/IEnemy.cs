@@ -6,4 +6,5 @@ public interface IEnemy
     Transform GetTransform(); // Must return the enemy's Transform
     void SetEnemyType(string type); // Must set the enemy's type
     string GetEnemyType(); // Must return the enemy's type
+    void TakeDamage(int damage); // Must handle taking damage
 }

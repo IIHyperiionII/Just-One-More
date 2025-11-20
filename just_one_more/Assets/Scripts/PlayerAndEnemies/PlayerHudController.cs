@@ -63,10 +63,8 @@ public class PlayerHudController : MonoBehaviour
             }
             if (numberSprites.ContainsKey(index) )
             {
-                Debug.Log("Updating existing sprite for index " + index + " to digit " + digit);
                 numberSprites[index].GetComponent<Image>().sprite = numbers[digit];
             } else {
-                Debug.Log("Creating new sprite for index " + index + " with digit " + digit);
                 GameObject number = new GameObject();
                 number.AddComponent<Image>();
                 number.GetComponent<Image>().sprite = numbers[digit];
