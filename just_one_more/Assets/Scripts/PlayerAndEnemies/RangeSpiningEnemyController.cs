@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class RangeSpiningEnemyController : MonoBehaviour
+public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 enemyPosition;
@@ -17,6 +17,8 @@ public class RangeSpiningEnemyController : MonoBehaviour
     private int spinDirection = 0;
     private float shootingAngle2 = 180f; // Second bullet angle (opposite direction)
     public GameObject coinPrefab;
+    private string enemyType = "";
+    private bool isChangingSprite = false;
     void Awake()
     {
         spinDirection = Random.Range(0, 2) * 2 - 1; // Randomly set to -1 or 1
@@ -101,17 +103,60 @@ public class RangeSpiningEnemyController : MonoBehaviour
     {
         // Spawn the first bullet
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle));
-        bullet.GetComponent<EnemyBaseBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+        bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, Quaternion.Euler(0f, 0f, shootingAngle));
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
 
         // Spawn the second bullet in the opposite direction
         GameObject bullet2 = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle2));
-        bullet2.GetComponent<EnemyBaseBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage);
+        bullet2.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, Quaternion.Euler(0f, 0f, shootingAngle2));
         bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity);  // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
+    }
+    public void TakeDamage(int damage)
+    {
+        runtimeEnemiesData.hp -= damage;
+        if (runtimeEnemiesData.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
+        {
+            Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
+            StartCoroutine(SpriteChange(newSprite));
+        }
+    }
+    IEnumerator SpriteChange(Sprite newSprite)
+    {
+        isChangingSprite = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite originalSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = newSprite;
+        yield return new WaitForSeconds(2f);
+        spriteRenderer.sprite = originalSprite;
+        isChangingSprite = false;
     }
 }

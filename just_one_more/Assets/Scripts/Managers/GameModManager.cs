@@ -5,8 +5,10 @@ public class GameModeManager : MonoBehaviour
 {
     public GameObject gameLoopParent;
     public GameObject miniGameParent;
-    public PhysicsScene2D miniPhysicsScene;
     public GameObject Casino;
+    public GameObject escMenu;
+    private bool inMiniGame = false;
+    private bool escMenuActive = false;
     public static bool playerInCasino;
 
     void Start()
@@ -18,9 +20,26 @@ public class GameModeManager : MonoBehaviour
         }
         ExitMiniGame();
     }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive)
+        {
+            escMenuActive = true;
+            Time.timeScale = 0f;
+            escMenu.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive)
+        {
+            escMenuActive = false;
+            escMenu.SetActive(false);
+            Time.timeScale = 1f;
+        }
+    }
 
     public void EnterMiniGame()
     {
+        inMiniGame = true;
         gameLoopParent.SetActive(false);
         miniGameParent.SetActive(true);
         playerInCasino = true;
@@ -28,9 +47,11 @@ public class GameModeManager : MonoBehaviour
 
     public void ExitMiniGame()
     {
+        inMiniGame = false;
         gameLoopParent.SetActive(true);
         miniGameParent.SetActive(false);
         playerInCasino = false;
     }
+
 }
 

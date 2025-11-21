@@ -46,6 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   basePlayerData: {fileID: 11400000, guid: 090639ed8209b4818b3aa880d3efd296, type: 2}
   runtimePlayerData: {fileID: 0}
+  backgroundBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  wave: 1
   officePrefabs:
   - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
   - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}
@@ -58,4 +62,9 @@ MonoBehaviour:
   - {fileID: 540468372576299302, guid: 5b2e2dbe173b842d192ff88ba3b1ac05, type: 3}
   - {fileID: 3026029418750680626, guid: 653203549b32240868d466e7432603bd, type: 3}
   - {fileID: 762159802268367773, guid: 1dc17f6c77c8a469da37687099b9f28c, type: 3}
+  bulletPrefabs:
+  - {fileID: 1432469908638311180, guid: 2f4161520e9284bf2b7df5a177359e55, type: 3}
+  - {fileID: 1432469908638311180, guid: 1acec768c769a4c26ba51f9220320f36, type: 3}
+  - {fileID: 2814504955684298624, guid: 704c74363284c4b289d350abd3440f2e, type: 3}
   doorsEntered: 0
+  isGameReadyToLoad: 0

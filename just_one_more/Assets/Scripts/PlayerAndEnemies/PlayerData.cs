@@ -17,5 +17,6 @@ public class PlayerData : ScriptableObject
     public int hpRegenLevel = 0;
     public int blockLevel = 0;
     public int freezeLevel = 0;
+    public int needToGamble = 0;
 
 }

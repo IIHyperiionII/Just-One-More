@@ -10,7 +10,7 @@ public class DoorsController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("BoundsCheckPlayer"))
+        if (other.CompareTag("BoundsCheckPlayer") && GameManager.Instance.mapCompleted == true)
         {
             gameManager.GetComponent<GameManager>().doorsEntered = true;
         }
@@ -22,4 +22,5 @@ public class DoorsController : MonoBehaviour
             gameManager.GetComponent<GameManager>().doorsEntered = false;
         }
     }
+
 }
