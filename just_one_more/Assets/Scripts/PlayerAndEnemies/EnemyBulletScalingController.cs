@@ -30,6 +30,7 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
     }
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         ScaleSize();
     }
     void FixedUpdate()

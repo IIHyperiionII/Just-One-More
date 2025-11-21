@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CasinoManager : MonoBehaviour
 {
@@ -94,16 +95,55 @@ public class CasinoManager : MonoBehaviour
         var existing = FindFirstObjectByType<GameManager>();
         if (existing != null) return;
 
-        // načti prefab z Resources/GameManager.prefab
+        // Load prefab from Resources/GameManager.prefab
         var prefab = Resources.Load<GameObject>("GameManager");
         if (prefab != null)
         {
-            Instantiate(prefab); // Awake se zavolá automaticky, basePlayerData už je přiřazeno
-            Debug.Log("GameManager prefab instantiated from Resources.");
+            GameObject gmObject = Instantiate(prefab);
+        
+            // Explicitně vypnout GameManager komponentu
+            GameManager gm = gmObject.GetComponent<GameManager>();
+            if (gm != null)
+            {
+                gm.enabled = false;
+                Debug.Log("GameManager instantiated and DISABLED.");
+            }
         }
         else
         {
             Debug.LogWarning("GameManager prefab not found in Resources folder!");
+        }
+
+        // Create dummy objects
+        CreateDummyIfMissing("Player", "DummyPlayer");
+        CreateDummyIfMissing("Background", "DummyBackground", addSprite: true);
+        CreateDummyIfMissing("Background2", "DummyBackground2", addSprite: true, setInactive: true);
+        CreateDummyIfMissing("Background3", "DummyBackground3", addSprite: true, setInactive: true);
+        CreateDummyIfMissing("EnemiesParent", "EnemiesParent");
+        CreateDummyIfMissing("BoundsCheckDoors", "DummyBoundsCheckDoors", addCollider: true);
+        CreateDummyIfMissing("BoundsCheckPlayer", "DummyBoundsCheckPlayer", addCollider: true);
+
+        // Set main camera tag
+        if (Camera.main != null && Camera.main.tag != "MainCamera")
+            Camera.main.tag = "MainCamera";
+
+        Debug.Log("=== CASINO TEST SETUP COMPLETE ===");
+    }
+
+    private void CreateDummyIfMissing(string tag, string name, bool addSprite = false, 
+                                   bool setInactive = false, bool addCollider = false)
+    {
+        if (GameObject.FindGameObjectWithTag(tag) == null)
+        {
+            GameObject dummy = new GameObject(name);
+            dummy.tag = tag;
+            if (addSprite) dummy.AddComponent<SpriteRenderer>();
+            if (addCollider)
+            {
+                BoxCollider2D col = dummy.AddComponent<BoxCollider2D>();
+                col.isTrigger = true;
+            }
+            if (setInactive) dummy.SetActive(false);
         }
     }
 #endif

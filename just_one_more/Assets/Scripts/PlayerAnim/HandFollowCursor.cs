@@ -49,7 +49,11 @@ public class HandFollowCursor : MonoBehaviour
 
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
+
+        // Useless ???
         if (Time.timeScale == 0f) return;
+        
         if (mainCam == null || handTransform == null) return;
 
         if (playerController != null && playerController.isAttacking)

@@ -5,36 +5,24 @@ public class GameModeManager : MonoBehaviour
 {
     public GameObject gameLoopParent;
     public GameObject miniGameParent;
-    public PhysicsScene2D miniPhysicsScene;
-    private Scene miniScene;
     public GameObject Casino;
     public GameObject escMenu;
     private bool inMiniGame = false;
     private bool escMenuActive = false;
-
+    public static bool playerInCasino;
 
     void Start()
     {
         Application.targetFrameRate = 100;
-        miniScene = SceneManager.CreateScene("MiniGamePhysicsScene", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
-        miniPhysicsScene = miniScene.GetPhysicsScene2D();
         if (Casino == null)
         {
             Casino = GameObject.FindGameObjectWithTag("Casino");
-        }
-        else
-        {
-            SceneManager.MoveGameObjectToScene(Casino, miniScene);
         }
         ExitMiniGame();
     }
     
     void Update()
     {
-        if (miniPhysicsScene.IsValid())
-        {
-            miniPhysicsScene.Simulate(Time.unscaledDeltaTime);
-        }
         if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive)
         {
             escMenuActive = true;
@@ -54,7 +42,7 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = true;
         gameLoopParent.SetActive(false);
         miniGameParent.SetActive(true);
-        Time.timeScale = 0f;
+        playerInCasino = true;
     }
 
     public void ExitMiniGame()
@@ -62,7 +50,7 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = false;
         gameLoopParent.SetActive(true);
         miniGameParent.SetActive(false);
-        Time.timeScale = 1f;
+        playerInCasino = false;
     }
 
 }

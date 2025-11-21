@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     private static bool isShaking = false;
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (player == null)
         {
             Debug.LogError("Player transform is not assigned in CameraController.");

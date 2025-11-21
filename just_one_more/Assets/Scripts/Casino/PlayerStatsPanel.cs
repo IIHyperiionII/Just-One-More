@@ -11,6 +11,11 @@ public class PlayerStatsPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI moneyText;
     [SerializeField] private TextMeshProUGUI attackSpeedText;
     [SerializeField] private TextMeshProUGUI attackModifierText;
+    [SerializeField] private TextMeshProUGUI piercingText;
+    [SerializeField] private TextMeshProUGUI dashText;
+    [SerializeField] private TextMeshProUGUI hpRegenText;
+    [SerializeField] private TextMeshProUGUI blockText;
+    [SerializeField] private TextMeshProUGUI freezeText;
 
     private PlayerData playerData;
     // Changes based on whether the player is melee or ranged
@@ -18,15 +23,19 @@ public class PlayerStatsPanel : MonoBehaviour
 
     void Start()
     {
-        if (playerData != null) {
+        if (playerData != null) 
+        {
             attackModifierName = GetAttackModifierName();
             UpdateUI();
-        }
+        } 
     }
 
     public void SetPlayerData(PlayerData pd)
     {
         playerData = pd;
+        if (playerData != null) {
+            attackModifierName = GetAttackModifierName();
+        }
         UpdateUI();
     }
 
@@ -110,7 +119,7 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         if (playerData != null)
         {
-            return playerData.isMelee ? "Knockback" : "Bullet Speed";
+            return playerData.isMelee ? "Knockback" : "BulletSpeed";
         }
         return "Attack Modifier";
     }
@@ -191,12 +200,17 @@ public class PlayerStatsPanel : MonoBehaviour
             return;
         }
 
+        UpdateTextField(moneyText, "Money", playerData.money);
         UpdateTextField(hpText, "HP", playerData.hp);
         UpdateTextField(dmgText, "Damage", playerData.damage);
-        UpdateTextField(speedText, "Speed", playerData.moveSpeed);
-        UpdateTextField(moneyText, "Money", playerData.money);
+        UpdateTextField(speedText, "Move Speed", playerData.moveSpeed);
         UpdateTextField(attackSpeedText, "Attack Speed", playerData.attackSpeed);
         int attackModifierValue = playerData.isMelee ? playerData.knockback : playerData.bulletSpeed;
         UpdateTextField(attackModifierText, attackModifierName, attackModifierValue);
+        UpdateTextField(piercingText, "Piercing Level", playerData.piercingLevel);
+        UpdateTextField(dashText, "Dash Level", playerData.dashLevel);
+        UpdateTextField(hpRegenText, "HP Regen Level", playerData.hpRegenLevel);
+        UpdateTextField(blockText, "Block Level", playerData.blockLevel);
+        UpdateTextField(freezeText, "Freeze Level", playerData.freezeLevel);
     }
 }
