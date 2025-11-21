@@ -242,10 +242,10 @@ BoxCollider2D:
   m_Offset: {x: 0.24, y: -0.8}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.562, y: 0.84}
+    oldSize: {x: 3.4133334, y: 3.4133334}
+    newSize: {x: 3.4133334, y: 3.4133334}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -522,6 +522,7 @@ MonoBehaviour:
   MouseKeyHoldDown: 0
   bulletPrefab: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
     type: 3}
+  isAttacking: 0
   isReadyToLoad: 0
   postProcessVolume: {fileID: 0}
 --- !u!50 &5946437661379280412
@@ -724,7 +725,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.5}
+  m_Size: {x: 0.6, y: 0.5}
   m_EdgeRadius: 0
 --- !u!1 &8369832559701972666
 GameObject:
@@ -784,6 +785,7 @@ MonoBehaviour:
   offsetRight: {x: 0, y: -0.05, z: 0}
   frontOffsetOrder: 1
   backOffsetOrder: -1
+  handSwitch: 0
   spriteRenderer: {fileID: 3760618184261430844}
   positionReference: {fileID: 750437169914328846}
   positionReference2: {fileID: 910579046067608434}

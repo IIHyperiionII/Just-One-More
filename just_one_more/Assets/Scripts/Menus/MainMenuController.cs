@@ -27,10 +27,11 @@ public class MainMenuController : MonoBehaviour
         {
             loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         }
+        SaveSystem.Instance.LoadBestTime();
     }
     public void StartGame()
     {
-        SceneManager.LoadScene("tomScene");
+        SceneManager.LoadScene("ModeAndWeaponSelectionMenu");
     }
     public void QuitGame()
     {

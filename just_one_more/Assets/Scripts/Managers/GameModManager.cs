@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameModeManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class GameModeManager : MonoBehaviour
     public GameObject escMenu;
     private bool inMiniGame = false;
     private bool escMenuActive = false;
+    public Button casinoButton;
+    private bool gameWonMenuActive = false;
+    public GameObject gameWonMenu;
 
 
     void Start()
@@ -27,6 +31,7 @@ public class GameModeManager : MonoBehaviour
             SceneManager.MoveGameObjectToScene(Casino, miniScene);
         }
         ExitMiniGame();
+        casinoButton.onClick.AddListener(EnterMiniGame);
     }
     
     void Update()
@@ -35,17 +40,29 @@ public class GameModeManager : MonoBehaviour
         {
             miniPhysicsScene.Simulate(Time.unscaledDeltaTime);
         }
-        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive)
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive )
         {
             escMenuActive = true;
             Time.timeScale = 0f;
             escMenu.SetActive(true);
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive)
+        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive && !inMiniGame && !gameWonMenuActive)
         {
             escMenuActive = false;
             escMenu.SetActive(false);
             Time.timeScale = 1f;
+        }
+        if (escMenuActive || inMiniGame || gameWonMenuActive)
+        {
+            casinoButton.interactable = false;
+        } else
+        {
+            casinoButton.interactable = true;
+        }
+        if (GameManager.Instance != null && GameManager.Instance.gameWon && !inMiniGame && !escMenuActive)
+        {
+            gameWonMenuActive = true;
+            GameWonMenu();
         }
     }
 
@@ -63,6 +80,12 @@ public class GameModeManager : MonoBehaviour
         gameLoopParent.SetActive(true);
         miniGameParent.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+    void GameWonMenu()
+    {
+        Time.timeScale = 0f;
+        gameWonMenu.SetActive(true);
     }
 
 }
