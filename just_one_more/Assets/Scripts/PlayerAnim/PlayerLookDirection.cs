@@ -27,6 +27,7 @@ public class PlayerLookDirection : MonoBehaviour
 
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (playerAnimator == null) return;
 
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);

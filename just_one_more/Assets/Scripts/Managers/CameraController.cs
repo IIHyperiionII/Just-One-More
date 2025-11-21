@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     public static bool isTeleporting = false;
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (player == null)
         {
             Debug.LogError("Player transform is not assigned in CameraController.");

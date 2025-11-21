@@ -35,6 +35,7 @@ public class HandFollowCursor : MonoBehaviour
 
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (mainCam == null || handTransform == null) return;
 
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);

@@ -33,6 +33,7 @@ public class EnemyWaveBulletController : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         GetWaveMovement();
             Rigidbody.MovePosition(motionForward + waveMovement);
     }

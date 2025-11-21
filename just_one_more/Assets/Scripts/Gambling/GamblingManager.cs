@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using UnityEngine.Events;
 
 public class GamblingManager : MonoBehaviour
 {

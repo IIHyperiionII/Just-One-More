@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Ball : MonoBehaviour
 {
-    private float lifetime = 10f;
+    private float lifetime = 30f;
     private float destroyDelay = 0.2f;
     private bool scoreRegistered = false;
 

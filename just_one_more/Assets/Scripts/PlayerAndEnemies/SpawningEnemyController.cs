@@ -35,6 +35,7 @@ public class SpawningEnemyController : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player object not found in the scene.");

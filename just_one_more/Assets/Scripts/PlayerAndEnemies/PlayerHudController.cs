@@ -27,6 +27,7 @@ public class PlayerHudController : MonoBehaviour
 
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (playerData != null)
         {
             healthText.text = $"Health: {playerData.hp}";

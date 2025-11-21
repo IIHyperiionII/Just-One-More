@@ -53,7 +53,6 @@ public class CasinoManager : MonoBehaviour
             REMOVE RESOURCES FROM UNITY ASSETS IN PROJECT
         */
         EnsureGameManagerForTesting();
-        CreatePhysicsSceneIfNeeded();
 #endif
 
         if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null)
@@ -145,16 +144,6 @@ public class CasinoManager : MonoBehaviour
                 col.isTrigger = true;
             }
             if (setInactive) dummy.SetActive(false);
-        }
-    }
-
-    private void CreatePhysicsSceneIfNeeded()
-    {
-        Scene physicsScene = SceneManager.GetSceneByName("MiniGamePhysicsScene");
-        if (!physicsScene.IsValid())
-        {
-            SceneManager.CreateScene("MiniGamePhysicsScene", 
-                new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         }
     }
 #endif

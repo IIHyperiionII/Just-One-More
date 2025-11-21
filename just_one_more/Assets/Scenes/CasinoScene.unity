@@ -347,36 +347,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3149787747633366000, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_text
-      value: Buy
-      objectReference: {fileID: 0}
     - target: {fileID: 3244995356763349586, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1929464716}
-    - target: {fileID: 3445666579300736280, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_fontColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3445666579300736280, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_fontColor.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3445666579300736280, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_fontColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3445666579300736280, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4294967295
-      objectReference: {fileID: 0}
     - target: {fileID: 7733288476956803336, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_Name

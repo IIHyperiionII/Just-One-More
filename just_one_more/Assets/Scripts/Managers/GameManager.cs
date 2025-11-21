@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (runtimePlayerData == null)
         {
             Debug.LogError("Runtime Player Data is missing!");
@@ -155,7 +156,7 @@ public class GameManager : MonoBehaviour
     {
         //isTeleporting = true;
         doorsEntered = false;
-        Time.timeScale = 0f; // Pause the game
+        // Time.timeScale = 0f; // Pause the game
         CameraController.isTeleporting = true;
         yield return StartCoroutine(CameraController.TeleportMoveUp()); // Wait a moment before teleporting for sync of coroutines
         yield return new WaitForSecondsRealtime(0.5f); // Hold at the top position for a moment
@@ -169,7 +170,7 @@ public class GameManager : MonoBehaviour
             Destroy(bullet); // Clear all remaining bullets
         }
         yield return StartCoroutine(CameraController.TeleportMoveDown());
-        Time.timeScale = 1f; // Resume the game
+        // Time.timeScale = 1f; // Resume the game
         yield return new WaitForSecondsRealtime(5f); // Wait a moment after teleporting before starting the next wave
         mapCompleted = false;
         //isTeleporting = false;

@@ -23,6 +23,7 @@ public class RangeWaveEnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player does not exist in the scene.");

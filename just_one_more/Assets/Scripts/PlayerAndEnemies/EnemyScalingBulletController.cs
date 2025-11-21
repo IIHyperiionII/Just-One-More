@@ -22,6 +22,7 @@ public class EnemyScalingBulletController : MonoBehaviour
     }
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         ScaleSize();
     }
     void FixedUpdate()
