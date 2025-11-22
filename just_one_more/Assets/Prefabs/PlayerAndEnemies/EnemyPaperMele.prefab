@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7293279234463011717}
   - component: {fileID: -2149543244922151165}
   - component: {fileID: 7681321861560697937}
+  - component: {fileID: 8045807154699433998}
   m_Layer: 0
   m_Name: EnemyPaperMele
   m_TagString: Enemy
@@ -195,7 +196,7 @@ Animator:
   m_GameObject: {fileID: 540468372576299302}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc54a908b90e13f4aa9cb3300c5cbd53, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -221,6 +222,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::YOrderLayer
   spriteRenderer: {fileID: 1047085697662210379}
   positionReference: {fileID: 6337765405601146531}
+--- !u!114 &8045807154699433998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540468372576299302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed54464c57557d4c971c446a5bf70c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPlayerPosition
+  playerTag: Player
+  leftRightValue: 0
+  moveTowardsValue: 0
 --- !u!1 &5301312200687785638
 GameObject:
   m_ObjectHideFlags: 0

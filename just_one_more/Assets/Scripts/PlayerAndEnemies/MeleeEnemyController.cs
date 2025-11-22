@@ -129,4 +129,10 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         isInvisible = false;
     }
 
+    public Vector2 GetDirectionToPlayer()
+    {
+        return direction;
+    }
+
+
 }
