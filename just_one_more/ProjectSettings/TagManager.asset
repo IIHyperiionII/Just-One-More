@@ -22,6 +22,8 @@ TagManager:
   - BucketParent
   - EnemiesParent
   - Background3
+  - EnemyBulletWave
+  - EnemyBulletScaling
   layers:
   - Default
   - TransparentFX
@@ -33,9 +35,9 @@ TagManager:
   - 
   - PostProcessing
   - Forground
-  - 
-  - 
-  - 
+  - Wall
+  - PlayerCheck
+  - BulletLayer
   - 
   - 
   - 

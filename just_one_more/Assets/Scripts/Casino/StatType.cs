@@ -6,5 +6,10 @@ public enum StatType
     MoveSpeed,
     AttackSpeed,
     BulletSpeed,
-    Knockback
+    Knockback,
+    PiercingLevel,
+    DashLevel,
+    HpRegenLevel,
+    BlockLevel,
+    FreezeLevel
 }

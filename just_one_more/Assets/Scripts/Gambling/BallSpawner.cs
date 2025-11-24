@@ -26,7 +26,7 @@ public class BallSpawner : MonoBehaviour
 
         // Instantiate ball, no rotation, parented to spawner
         currentBall = Instantiate(ballPrefab, spawnPos, Quaternion.identity);
-        SceneManager.MoveGameObjectToScene(currentBall, SceneManager.GetSceneByName("MiniGamePhysicsScene"));
+
         currentBall.transform.SetParent(transform);
         currentBall.transform.localScale = transform.localScale;
 

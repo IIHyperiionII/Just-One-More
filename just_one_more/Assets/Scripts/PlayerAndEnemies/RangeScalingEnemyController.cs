@@ -1,6 +1,7 @@
 using UnityEngine;
+using System.Collections;
 
-public class RangedScalingEnemyController : MonoBehaviour
+public class RangedScalingEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 lastPlayerPosition;
@@ -13,6 +14,8 @@ public class RangedScalingEnemyController : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
+    private string enemyType = "";
+    private bool isChangingSprite = false;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -20,6 +23,7 @@ public class RangedScalingEnemyController : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player does not exist in the scene.");
@@ -83,12 +87,55 @@ public class RangedScalingEnemyController : MonoBehaviour
     void SpawnBullet(Quaternion rotation)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn scaling bullet at enemy position with calculated rotation
-        bullet.GetComponent<EnemyScalingBulletController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage); // Initialize bullet with speed and damage
+        bullet.GetComponent<EnemyBulletScalingController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, rotation); // Initialize bullet with speed and damage
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
+    }
+    public void TakeDamage(int damage)
+    {
+        runtimeEnemiesData.hp -= damage;
+        if (runtimeEnemiesData.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
+        {
+            Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
+            StartCoroutine(SpriteChange(newSprite));
+        }
+    }
+    IEnumerator SpriteChange(Sprite newSprite)
+    {
+        isChangingSprite = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite originalSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = newSprite;
+        yield return new WaitForSeconds(2f);
+        spriteRenderer.sprite = originalSprite;
+        isChangingSprite = false;
     }
 }

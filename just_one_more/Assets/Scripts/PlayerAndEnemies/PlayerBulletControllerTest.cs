@@ -19,7 +19,7 @@ public class PlayerBulletControllerTest : MonoBehaviour
     }
     void FixedUpdate()
     {
-        
+        if (GameModeManager.playerInCasino) return;
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
         
     }
@@ -30,7 +30,13 @@ public class PlayerBulletControllerTest : MonoBehaviour
         if (other.gameObject.CompareTag("Coin")) return;
         if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("EnemyBullet"))
         {
-            Destroy(other.gameObject);
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                DoDamage(other.gameObject);
+            } else
+            {
+                Destroy(other.gameObject);
+            }
             Destroy(gameObject);
             return;
         }
@@ -39,6 +45,11 @@ public class PlayerBulletControllerTest : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void DoDamage(GameObject target)
+    {
+        target.GetComponent<IEnemy>().TakeDamage(damage);
     }
 
 }

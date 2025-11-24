@@ -1,13 +1,20 @@
 using UnityEngine;
 
-public class EnemyScalingBulletController : MonoBehaviour
+public class EnemyBulletScalingController : MonoBehaviour, IBullet
 {
     private Vector2 direction;
     private Rigidbody2D Rigidbody;
-    private int speed;
+    public string type = "ScalingEnemyBullet";
+    public int speed;
     private float growth;
-    private int damage;
+    public int damage;
+    public Quaternion initialRotation;
     public Transform spriteTransform;
+    public string GetBulletType() { return type; }
+    public Quaternion GetInitialRotation() { return initialRotation; }
+    public int GetSpeed() { return speed; }
+    public int GetDamage() { return damage; }
+    public int GetSign() { return 0; }
 
     void Awake()
     {
@@ -15,13 +22,15 @@ public class EnemyScalingBulletController : MonoBehaviour
         direction = transform.right; // applying given rotation to world x axis
     }
 
-    public void Initialize(int bulletSpeed, int bulletDamage)
+    public void Initialize(int bulletSpeed, int bulletDamage, Quaternion rotation)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
+        initialRotation = rotation;
     }
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         ScaleSize();
     }
     void FixedUpdate()

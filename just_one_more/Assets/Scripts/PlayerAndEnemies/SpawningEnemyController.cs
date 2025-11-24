@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using System.Collections;
 
-public class SpawningEnemyController : MonoBehaviour
+public class SpawningEnemyController : MonoBehaviour, IEnemy
 {
     private Vector2 playerPosition;
     private Vector2 lastPlayerPosition;
@@ -17,6 +18,8 @@ public class SpawningEnemyController : MonoBehaviour
     private float radius;
     private float nextAttackTime = 0f;
     private Transform enemiesParent;
+    private string enemyType = "";
+    private bool isChangingSprite = false;  
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create a runtime instance of the enemy data for this enemy only
@@ -35,6 +38,7 @@ public class SpawningEnemyController : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player object not found in the scene.");
@@ -96,6 +100,7 @@ public class SpawningEnemyController : MonoBehaviour
         if (hit == null)
         {
             GameObject childEnemy = Instantiate(childEnemyPrefab, spawnPos, Quaternion.identity); // Spawn the child enemy if the position is clear
+            childEnemy.GetComponent<IEnemy>().SetEnemyType("office1");
             if (GameManager.enemiesParent == null)
             {
                 Debug.LogError("Enemies Parent object not found in the GameManager.");
@@ -110,6 +115,49 @@ public class SpawningEnemyController : MonoBehaviour
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+    }
+    public EnemyData GetEnemyData()
+    {
+        if (runtimeEnemiesData == null)
+        {
+            runtimeEnemiesData = Instantiate(EnemiesData);
+        }
+        return runtimeEnemiesData;
+    }
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+    public void SetEnemyType(string type)
+    {
+        enemyType = type;
+    }
+    public string GetEnemyType()
+    {
+        return enemyType;
+    }
+    public void TakeDamage(int damage)
+    {
+        runtimeEnemiesData.hp -= damage;
+        if (runtimeEnemiesData.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
+        {
+            Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
+            StartCoroutine(SpriteChange(newSprite));
+        }
+    }
+    IEnumerator SpriteChange(Sprite newSprite)
+    {
+        isChangingSprite = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite originalSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = newSprite;
+        yield return new WaitForSeconds(2f);
+        spriteRenderer.sprite = originalSprite;
+        isChangingSprite = false;
     }
 
 }
