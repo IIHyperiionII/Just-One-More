@@ -6,7 +6,6 @@ public class Ball : MonoBehaviour
     private float lifetime = 30f;
     private float destroyDelay = 0.2f;
     private bool scoreRegistered = false;
-
     private float pushForce = 40f;
     private int maxPushes = 3;
     private int currentPushes;
@@ -27,8 +26,7 @@ public class Ball : MonoBehaviour
         previewLine.material = new Material(Shader.Find("Sprites/Default"));
         
         // Zelená s gradientem
-        previewLine.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-        previewLine.endColor = new Color(0.8f, 0.8f, 0.8f, 0.3f);
+        previewLine.material.color = new Color(0.71f, 0f, 1f, 1f);
         
         previewLine.sortingOrder = 15;
         previewLine.enabled = true; // ZAPNUTÉ od začátku
@@ -73,8 +71,8 @@ public class Ball : MonoBehaviour
         Vector3 direction = mousePos - transform.position;
         direction.z = 0;
         
-        previewLine.SetPosition(0, transform.position + direction.normalized * 0.1f);
-        previewLine.SetPosition(1, transform.position + direction.normalized * 0.4f);
+        previewLine.SetPosition(0, transform.position + direction.normalized * 0.2f);
+        previewLine.SetPosition(1, transform.position + direction.normalized * 0.8f);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

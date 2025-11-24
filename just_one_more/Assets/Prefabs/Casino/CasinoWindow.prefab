@@ -726,7 +726,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1474214065360250049}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -735,7 +735,7 @@ RectTransform:
   - {fileID: 5293998170757262452}
   - {fileID: 7911106050186312956}
   - {fileID: 3824373740555969471}
-  m_Father: {fileID: 7045248535599247020}
+  m_Father: {fileID: 8455515572616415405}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -758,42 +758,6 @@ MonoBehaviour:
     type: 3}
   ballSpawnPoint: {fileID: 3824373740555969471}
   initialRandomForce: 2
---- !u!1 &1524442509509649562
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7045248535599247020}
-  m_Layer: 5
-  m_Name: PlinkoGame
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7045248535599247020
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524442509509649562}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8621314222590673229}
-  m_Father: {fileID: 8455515572616415405}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1600139186356171510
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,7 +1026,7 @@ GameObject:
   - component: {fileID: 3830920112819498504}
   - component: {fileID: 5509995940459136956}
   m_Layer: 5
-  m_Name: GamblingPanel
+  m_Name: PlinkoPanel
   m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1081,7 +1045,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7473440403512918430}
-  - {fileID: 7045248535599247020}
+  - {fileID: 8621314222590673229}
   m_Father: {fileID: 3457254644643073994}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2797,9 +2761,9 @@ MonoBehaviour:
   attackModifierButton: {fileID: 5585729936532739406}
   attackModifierButtonText: {fileID: 1156703584679055390}
   casinoPanel: {fileID: 4103577776822132986}
-  gamblingPanel: {fileID: 1803072833152413144}
+  plinkoPanel: {fileID: 1803072833152413144}
   playerStatsPanel: {fileID: 5656620569944510357}
-  gamblingManager: {fileID: 5509995940459136956}
+  plinkoManager: {fileID: 5509995940459136956}
 --- !u!1 &4300031139749849496
 GameObject:
   m_ObjectHideFlags: 0
