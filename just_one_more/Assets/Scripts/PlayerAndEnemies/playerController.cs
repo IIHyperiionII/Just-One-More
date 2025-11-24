@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastHandPosition;
     private int shieldRequests = 0;
 
+    public float attackCooldown = 0.5f;
+
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
     public bool isReadyToLoad = false;
     private bool isRed = false;
@@ -341,23 +343,67 @@ public class PlayerController : MonoBehaviour
             MouseKeyHoldDown = false;
         }
     }
+    // void Attack()
+    // {
+    //     if (MouseKeyHoldDown && Time.time >= nextAttackTime)
+    //     {
+    //         nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
+    //         isAttacking = true; // for animation testing
+
+    //         Quaternion rotation = UpdateAngle();
+    //         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
+    //         bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
+    //     }
+
+    //     //for animation testing
+    //     if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
+    //     {
+    //         isAttacking = false;
+    //     }
+    // }
     void Attack()
     {
+        // Kontrola, zda držíme tlačítko a zda uběhl čas cooldownu
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
-            isAttacking = true; // for animation testing
+            // 1. Nastavení dalšího času útoku (Logika Cooldownu)
+            // Pokud chceš použít staty:
+            float delay = 1f / (PlayerData.attackSpeed * multiplier);
+            
+            // POKUD chceš použít ten pevný cooldown, co jsi tam přidal minule:
+            // float delay = attackCooldown; 
 
+            nextAttackTime = Time.time + delay;
+
+            // 2. Spuštění vizuální stránky (Animace)
+            if (!isAttacking) // Spustíme jen pokud už neútočíme
+            {
+                StartCoroutine(ResetAttackAnimation());
+            }
+
+            // 3. Vytvoření projektilu (Logika Střelby)
             Quaternion rotation = UpdateAngle();
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
-            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
+            
+            // Kontrola null reference pro jistotu
+            var bulletScript = bullet.GetComponent<PlayerBulletControllerTest>();
+            if (bulletScript != null)
+            {
+                bulletScript.Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier));
+            }
         }
+    }
 
-        //for animation testing
-        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
-        {
-            isAttacking = false;
-        }
+    // Tato Coroutina se stará pouze o to, aby bool isAttacking byl chvíli true
+    IEnumerator ResetAttackAnimation()
+    {
+        isAttacking = true;
+        
+        // Zde nastav, jak dlouho má trvat "animace" útoku, než se může přehrát znovu/ukončit.
+        // Může to být pevné číslo (např. 0.1f) nebo závislé na rychlosti útoku.
+        yield return new WaitForSeconds(0.0000001f); 
+
+        isAttacking = false;
     }
     Quaternion UpdateAngle()
     {
