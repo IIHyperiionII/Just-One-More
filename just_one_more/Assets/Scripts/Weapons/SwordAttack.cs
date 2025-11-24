@@ -18,6 +18,8 @@ public class SwordAttack : MonoBehaviour
     [Range(0, 360)]
     public float attackAngle = 180f; 
 
+    public Animator animator;
+
     void Update()
     {
         RotateTowardsMouse();
@@ -50,6 +52,11 @@ public class SwordAttack : MonoBehaviour
 
     void Attack()
     {
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Attack");
+        }
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, IsEnemy);
         
         for (int i = 0; i < enemiesToDamage.Length; i++)

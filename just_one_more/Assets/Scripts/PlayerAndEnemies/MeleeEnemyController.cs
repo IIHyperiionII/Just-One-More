@@ -10,7 +10,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     // Variable References
     public EnemyData EnemiesData;
     private EnemyData runtimeEnemiesData;
-    private Rigidbody2D rb; // Renamed to standard 'rb' convention
+    private Rigidbody2D RigidBody; // Renamed to standard 'rb' convention
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private string enemyType;
@@ -25,9 +25,9 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
-        Rigidbody = GetComponent<Rigidbody2D>();
+        RigidBody = GetComponent<Rigidbody2D>();
         runtimeEnemiesData = Instantiate(EnemiesData); 
-        rb = GetComponent<Rigidbody2D>();
+        RigidBody = GetComponent<Rigidbody2D>();
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTransform = playerObj.transform;
@@ -37,19 +37,6 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         if (GameModeManager.playerInCasino) return;
         Move();
-    }
-
-    // --- NEW METHOD START ---
-    // This method is called by SwordAttack.cs
-    public void TakeDamage(int damageAmount)
-    {
-        runtimeEnemiesData.hp -= damageAmount;
-
-        // Check if the enemy is dead
-        if (runtimeEnemiesData.hp <= 0)
-        {
-            Die();
-        }
     }
 
     void Die()
@@ -72,7 +59,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         
         GetDirections();
         Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
-        rb.MovePosition(rb.position + movement);
+        RigidBody.MovePosition(RigidBody.position + movement);
     }
 
     void GetDirections()
