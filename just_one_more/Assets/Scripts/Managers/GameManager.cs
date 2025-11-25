@@ -152,12 +152,14 @@ public class GameManager : MonoBehaviour
             doorClosedLight.SetActive(false);
             casinoButton.SetActive(false);
         }
-        if (wave == 10 && mapCompleted && map == 2 )
+        if ((wave == 10 && mapCompleted && map == 2) || runtimePlayerData.isDead == true)
         {
-            if (!currentSelection.basicDeifficultyCompleted && currentSelection.selectedMode == GameMode.none){
-                currentSelection.basicDeifficultyCompleted = true;
+            if (wave == 10 && mapCompleted && map == 2){
+                if (!currentSelection.basicDeifficultyCompleted && currentSelection.selectedMode == GameMode.none){
+                    currentSelection.basicDeifficultyCompleted = true;
+                }
+                gameWon = true;
             }
-            gameWon = true;
         } else {
             time += Time.deltaTime;
         }

@@ -75,7 +75,7 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
         {
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
-                Destroy(gameObject);
+                other.gameObject.GetComponent<PlayerController>().Die();
             } else {
                 other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
             }

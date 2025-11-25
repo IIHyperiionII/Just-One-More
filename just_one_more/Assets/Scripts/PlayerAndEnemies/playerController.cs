@@ -450,10 +450,10 @@ public class PlayerController : MonoBehaviour
         isRed = false;
     }
 
-        void Die()
+    public void Die()
     {
         PlayerData.isDead = true;
-        SceneManager.LoadScene("MainMenuScene");
+        PlayerData.hp = 0;
     }
     public void GetCoin(int amount)
     {

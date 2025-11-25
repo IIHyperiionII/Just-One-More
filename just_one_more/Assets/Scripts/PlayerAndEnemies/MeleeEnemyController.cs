@@ -61,7 +61,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
-                Destroy(other.gameObject);
+                other.gameObject.GetComponent<PlayerController>().Die();
             } else {
                 other.gameObject.GetComponent<PlayerController>().takeDamage(runtimeEnemiesData.damage);
             }
@@ -75,7 +75,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
-                Destroy(other.gameObject);
+                other.gameObject.GetComponent<PlayerController>().Die();
             } else {
                 other.gameObject.GetComponent<PlayerController>().takeDamage(runtimeEnemiesData.damage);
             }

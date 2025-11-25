@@ -12,6 +12,11 @@ public class PlayerLookDirection : MonoBehaviour
     private Camera mainCam;
     private PlayerController playerController;
 
+    void OnEnable()
+    {
+        handAnimator.SetInteger("Weapon", 1);
+    }
+
     void Start()
     {
         mainCam = Camera.main;
@@ -57,13 +62,13 @@ public class PlayerLookDirection : MonoBehaviour
 
         float handSwitchFloat = 0f;
 
-        if (lookDirInt == 0) // Up (45°–135°)
+        if (lookDirInt == 0) // Up (45ï¿½ï¿½135ï¿½)
         {
             if (angle < 75f) handSwitchFloat = 0f;        
             else if (angle < 105f) handSwitchFloat = 1f;
             else handSwitchFloat = 2f;                    
         }
-        else if (lookDirInt == 2) // Down (225°–315°)
+        else if (lookDirInt == 2) // Down (225ï¿½ï¿½315ï¿½)
         {
             if (angle < 255f) handSwitchFloat = 0f;
             else if (angle < 285f) handSwitchFloat = 1f;
