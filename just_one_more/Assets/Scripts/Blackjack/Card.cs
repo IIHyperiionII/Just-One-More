@@ -26,4 +26,9 @@ public struct Card
     {
         return $"{rank} of {suit}";
     }
+
+    public string GetSpriteName()
+    {
+        return $"{rank}_{suit}";
+    }
 }

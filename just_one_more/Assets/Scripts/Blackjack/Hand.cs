@@ -5,9 +5,10 @@ public class Hand
 {
     List<Card> hand = new List<Card>();
 
-    public void AddCard(Card card)
+    public Card AddCard(Card card)
     {
         hand.Add(card);
+        return card;
     }
 
     public void Clear()

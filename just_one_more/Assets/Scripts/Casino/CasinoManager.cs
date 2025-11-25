@@ -466,6 +466,12 @@ public class CasinoManager : MonoBehaviour
         if (plinkoManager)
             plinkoManager.ResetGame();
 
+        if (blackjackPanel)
+            blackjackPanel.SetActive(false);
+        
+        if (blackjackManager)
+            blackjackManager.ResetGame();
+
         UpdateUI();
         playerStatsPanel.UpdateUI();
     }

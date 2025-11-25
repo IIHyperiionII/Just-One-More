@@ -4,10 +4,13 @@ using UnityEditor.PackageManager;
 
 public class BlackjackManager : MonoBehaviour
 {
-
+    [SerializeField] private CardSlot[] playerCardSlots;
+    [SerializeField] private CardSlot[] dealerCardSlots;
     private Action<float> onGameComplete;
     private bool gameActive = false;
     private bool resultSent = false;
+    private int playerCardIndex;
+    private int dealerCardIndex;
     private Deck deck;
     private Hand playerHand;
     private Hand dealerHand;
@@ -34,18 +37,29 @@ public class BlackjackManager : MonoBehaviour
 
     public void StartNewGame(Action<float> onComplete)
     {
+        playerCardIndex = 0;
+        dealerCardIndex = 0;
         gameActive = true;
         resultSent = false;
         onGameComplete = onComplete;
 
+        foreach (CardSlot pCardSlot in playerCardSlots) {
+            pCardSlot.Initialize();
+        }
+
+        foreach (CardSlot dCardSlot in dealerCardSlots)
+        {
+            dCardSlot.Initialize();
+        }
+
         playerHand.Clear();
         dealerHand.Clear();
 
-        playerHand.AddCard(deck.DrawCard());
-        dealerHand.AddCard(deck.DrawCard());
-        playerHand.AddCard(deck.DrawCard());
-        dealerHand.AddCard(deck.DrawCard());
-        
+        ShowPlayerCard(playerHand.AddCard(deck.DrawCard()));
+        ShowDealerCard(dealerHand.AddCard(deck.DrawCard()));
+        ShowPlayerCard(playerHand.AddCard(deck.DrawCard()));
+        ShowDealerCard(dealerHand.AddCard(deck.DrawCard()));
+
         Debug.Log("===== NEW BLACKJACK GAME =====");
         Debug.Log($"Player: {playerHand.GetHandString()} = {playerHand.GetValue()}");
 
@@ -74,7 +88,7 @@ public class BlackjackManager : MonoBehaviour
     {
         if (!gameActive) return;
 
-        playerHand.AddCard(deck.DrawCard());
+        ShowPlayerCard(playerHand.AddCard(deck.DrawCard()));
         Debug.Log("Player hits!");
         Debug.Log($"Players new hand: {playerHand.GetHandString()} = {playerHand.GetValue()}");
 
@@ -94,7 +108,8 @@ public class BlackjackManager : MonoBehaviour
 
         while (dealerHand.GetValue() < 17)
         {
-            dealerHand.AddCard(deck.DrawCard());
+            ShowDealerCard(dealerHand.AddCard(deck.DrawCard()));
+
             Debug.Log("Dealer hits!");
             Debug.Log($"Dealers new hand: {dealerHand.GetHandString()} = {dealerHand.GetValue()}");
         }
@@ -134,6 +149,48 @@ public class BlackjackManager : MonoBehaviour
             //onGameComplete != null => Invoke (call) onGameComplete with multiplier
             onGameComplete?.Invoke(multiplier);
         }
+    }
+
+    private void ShowPlayerCard(Card card)
+    {
+        string spriteName = card.GetSpriteName();
+        Sprite sprite = Resources.Load<Sprite>($"Cards/{spriteName}");
+
+        if (sprite == null)
+        {
+            Debug.LogError($"Sprite not found: Cards/{spriteName}");
+            return;
+        }
+
+        if (playerCardIndex >= playerCardSlots.Length)
+        {
+            Debug.LogError("No more player card slots available!");
+            return;
+        }
+
+        playerCardSlots[playerCardIndex].ShowCard(sprite);
+        playerCardIndex++;
+    }
+
+    private void ShowDealerCard(Card card)
+    {
+        string spriteName = card.GetSpriteName();
+        Sprite sprite = Resources.Load<Sprite>($"Cards/{spriteName}");
+
+        if (sprite == null)
+        {
+            Debug.LogError($"Sprite not found: Cards/{spriteName}");
+            return;
+        }
+
+        if (dealerCardIndex >= dealerCardSlots.Length)
+        {
+            Debug.LogError("No more dealer card slots available!");
+            return;
+        }
+
+        dealerCardSlots[dealerCardIndex].ShowCard(sprite);
+        dealerCardIndex++;
     }
 
     public void ResetGame() 
