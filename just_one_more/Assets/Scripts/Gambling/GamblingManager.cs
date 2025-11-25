@@ -11,7 +11,6 @@ public class GamblingManager : MonoBehaviour
     private bool gameActive = false;
     private bool resultSent = false;
 
-    // Receives onGameComplete callback from casinoManager to be invoked when game ends
     public void StartNewGame(Action<float> onComplete)
     {
         gameActive = true;

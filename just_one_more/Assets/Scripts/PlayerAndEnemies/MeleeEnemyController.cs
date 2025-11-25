@@ -32,6 +32,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     }
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         Move();
     }
     void Move()

@@ -16,7 +16,6 @@ public class PlayerLookDirection : MonoBehaviour
     {
         handAnimator.SetInteger("Weapon", 1);
     }
-
     void Start()
     {
         mainCam = Camera.main;
@@ -33,6 +32,7 @@ public class PlayerLookDirection : MonoBehaviour
 
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         if (playerAnimator == null) return;
         if (Time.timeScale == 0f) return;
 

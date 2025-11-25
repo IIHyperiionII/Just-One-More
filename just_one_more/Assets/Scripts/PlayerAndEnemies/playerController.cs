@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if (GameModeManager.playerInCasino) return;
         GetMovementInput();
         if (PlayerData.dashLevel > 0)
         {
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         if (isDashing) return; // Skip normal movement while dashing
         Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier) * sign;
         Rigidbody.MovePosition(Rigidbody.position + movement);

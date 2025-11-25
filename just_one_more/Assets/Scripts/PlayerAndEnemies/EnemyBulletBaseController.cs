@@ -34,6 +34,7 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
 
     void FixedUpdate()
     {
+        if (GameModeManager.playerInCasino) return;
         // Move the bullet in the set direction
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
     }

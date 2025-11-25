@@ -135,4 +135,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0dcf13fbbd4b7e4992572e65c77a7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreBucket
-  scoreValue: 10
+  multiplier: 1
