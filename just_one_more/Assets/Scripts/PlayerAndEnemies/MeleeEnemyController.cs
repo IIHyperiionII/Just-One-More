@@ -14,12 +14,18 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private string enemyType;
     private bool isChangingSprite = false;
     private bool isInvisible = false;
+    private GameObject player;
+    private Transform target;
+
     void Start()
     {
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
         Rigidbody = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        target = player.transform.Find("WallBoundsCheck");
+
     }
     void FixedUpdate()
     {
@@ -39,10 +45,12 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     }
     void GetDirections()
     {
-        playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+        playerPosition = target.position;
+        playerPosition.y -= 1.25f;
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
+
     void OnCollisionEnter2D(Collision2D other)
     {
         // Check if the collided object has the "Player" tag
@@ -128,5 +136,11 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         isInvisible = false;
     }
+
+    public Vector2 GetDirectionToPlayer()
+    {
+        return direction;
+    }
+
 
 }
