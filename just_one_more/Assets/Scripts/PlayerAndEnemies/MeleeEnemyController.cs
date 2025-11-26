@@ -17,6 +17,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private ModeAndWeaponSelection currentSelection;
     private GameObject player;
     private Transform target;
+
     void Start()
     {
         if (runtimeEnemiesData == null){
@@ -54,6 +55,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
+
     void OnCollisionEnter2D(Collision2D other)
     {
         // Check if the collided object has the "Player" tag
@@ -148,5 +150,11 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         isInvisible = false;
     }
+
+    public Vector2 GetDirectionToPlayer()
+    {
+        return direction;
+    }
+
 
 }

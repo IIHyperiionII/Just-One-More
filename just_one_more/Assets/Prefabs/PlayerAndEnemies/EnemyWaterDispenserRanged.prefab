@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1926264063920393995}
   - component: {fileID: 4039854693898424665}
   - component: {fileID: 7480293928712251223}
+  - component: {fileID: 4849261188137114511}
+  - component: {fileID: 6352940084550028477}
   m_Layer: 0
   m_Name: EnemyWaterDispenserRanged
   m_TagString: Enemy
@@ -84,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
     type: 3}
-  m_Color: {r: 0.8396226, g: 0.019802418, b: 0.019802418, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -184,3 +186,40 @@ MonoBehaviour:
     type: 3}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
+--- !u!95 &4849261188137114511
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762159802268367773}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f7070c9a975a8374c99a4d198b7fb5f6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6352940084550028477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762159802268367773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed54464c57557d4c971c446a5bf70c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPlayerPosition
+  playerTag: Player
+  leftRightValue: 0
+  moveTowardsValue: 0

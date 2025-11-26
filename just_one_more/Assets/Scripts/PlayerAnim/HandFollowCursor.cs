@@ -51,29 +51,15 @@ public class HandFollowCursor : MonoBehaviour
     {
         if (GameModeManager.timeIsPaused) return;
 
-        // Useless ???
-        if (Time.timeScale == 0f) return;
-        
         if (mainCam == null || handTransform == null) return;
 
         if (playerController != null && playerController.isAttacking)
         {
-            Quaternion targetRotation;
-            
-            if (currentLookDir == 0)         // Up
-               targetRotation = Quaternion.Euler(0f, 0f, 250f);
-            else if (currentLookDir == 1)    // Left
-                targetRotation = Quaternion.Euler(0f, 0f, 270f);
-            else if (currentLookDir == 2)    // Down
-                targetRotation = Quaternion.identity;
-            else                             // Right
-                targetRotation = Quaternion.Euler(0f, 0f, 180f);
-
-            handTransform.rotation = Quaternion.Lerp(handTransform.rotation, targetRotation, Time.deltaTime * 10f);
-            lastRotation = handTransform.rotation;
-            return;
+            return; //dont change hand position when attacking to avoid weird angles
         }
+        
 
+        // Regular hand follow for cursor
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = handTransform.position.z;
 
@@ -92,6 +78,7 @@ public class HandFollowCursor : MonoBehaviour
         if (handTransform == null) return;
         currentLookDir = lookDir;
 
+        // Set hand local position based on look direction
         switch (lookDir)
         {
             case 0: handTransform.localPosition = offsetUp; break;
@@ -100,16 +87,21 @@ public class HandFollowCursor : MonoBehaviour
             case 3: handTransform.localPosition = offsetRight; break;
         }
 
+        // Adjust sorting order based on look direction
         if (handRenderer != null && bodyRenderer != null)
         {
-            int baseOrder = bodyRenderer.sortingOrder;
-            if (lookDir == 1 || lookDir == 2){
-                if (positionReference2 == null){
+            if (lookDir == 1 || lookDir == 2)
+            {
+                if (positionReference2 == null)
+                {
                     positionReference2 = this.gameObject.GetComponent<BoxCollider2D>();
                 }
                 spriteRenderer.sortingOrder = Mathf.RoundToInt(-positionReference2.bounds.min.y * 100f);
-            } else{
-                if (positionReference == null){
+            }
+            else
+            {
+                if (positionReference == null)
+                {
                     positionReference = this.gameObject.GetComponent<BoxCollider2D>();
                 }
                 spriteRenderer.sortingOrder = Mathf.RoundToInt(-positionReference.bounds.min.y * 100f);
@@ -119,8 +111,6 @@ public class HandFollowCursor : MonoBehaviour
 
     public void SetHandSwitch(float state)
     {
-        handSwitch = state;
+        handSwitch = state; // Set hand switch state for animation
     }
-
-
 }
