@@ -15,7 +15,7 @@ public class GameModeManager : MonoBehaviour
     public GameObject gameWonMenu;
     private bool deadMenuActive = false;
     public GameObject deadMenu;
-    public static bool playerInCasino;
+    public static bool timeIsPaused;
 
 
     void Start()
@@ -31,17 +31,17 @@ public class GameModeManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive)
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive)
         {
             escMenuActive = true;
-            Time.timeScale = 0f;
+            timeIsPaused = true;
             escMenu.SetActive(true);
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive && !inMiniGame && !gameWonMenuActive && !deadMenuActive)
         {
             escMenuActive = false;
             escMenu.SetActive(false);
-            Time.timeScale = 1f;
+            timeIsPaused = false;
         }
         if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive)
         {
@@ -67,7 +67,7 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = true;
         gameLoopParent.SetActive(false);
         miniGameParent.SetActive(true);
-        playerInCasino = true;
+        timeIsPaused = true;
     }
 
     public void ExitMiniGame()
@@ -75,19 +75,19 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = false;
         gameLoopParent.SetActive(true);
         miniGameParent.SetActive(false);
-        playerInCasino = false;
+        timeIsPaused = false;
     }
 
     void GameWonMenu()
     {
-        Time.timeScale = 0f;
         gameWonMenu.SetActive(true);
+        timeIsPaused = true;
     }
 
     void DeadMenu()
     {
-        Time.timeScale = 0f;
         deadMenu.SetActive(true);
+        timeIsPaused = true;
     }
 
 }

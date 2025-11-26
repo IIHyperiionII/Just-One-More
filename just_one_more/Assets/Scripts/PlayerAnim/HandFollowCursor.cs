@@ -49,7 +49,7 @@ public class HandFollowCursor : MonoBehaviour
 
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
 
         // Useless ???
         if (Time.timeScale == 0f) return;

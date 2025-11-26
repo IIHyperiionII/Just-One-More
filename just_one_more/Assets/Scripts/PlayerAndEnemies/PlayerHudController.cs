@@ -35,7 +35,7 @@ public class PlayerHudController : MonoBehaviour
 
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         if (playerData != null)
         {
             if (playerData.hp > 0){

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6403574788615969186}
   - component: {fileID: 8068766714920674394}
   - component: {fileID: 6861017646169245740}
+  - component: {fileID: 4560682198446247641}
   m_Layer: 12
   m_Name: EnemyBulletBase
   m_TagString: EnemyBullet
@@ -173,3 +174,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &4560682198446247641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432469908638311180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e30ee3c062794445d8de9c9416b4596a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YOrderLayer
+  spriteRenderer: {fileID: 692364189109575027}
+  positionReference: {fileID: 0}
+  circlePositionReference: {fileID: 6403574788615969186}
+  isCircle: 1

@@ -32,7 +32,7 @@ public class PlayerLookDirection : MonoBehaviour
 
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         if (playerAnimator == null) return;
         if (Time.timeScale == 0f) return;
 

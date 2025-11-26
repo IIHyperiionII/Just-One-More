@@ -25,7 +25,7 @@ public class PlayerBulletControllerTest : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
         
     }

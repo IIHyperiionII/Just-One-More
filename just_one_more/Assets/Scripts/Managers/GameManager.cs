@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
     public GameObject casinoButton;
     private ModeAndWeaponSelection currentSelection;
     public bool gameWon = false;
-    public float time = 0f;    void Awake()
+    public float time = 0f;    
+    void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
         // If there is no instance of GameManager, set it to this and make it persist between scenes
@@ -111,7 +112,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         if (mapCompleted && !backgroundSet && enemiesParent.childCount == 0)
         {
             Debug.Log("Switching background from map " + map + " to map " + (map + 1));

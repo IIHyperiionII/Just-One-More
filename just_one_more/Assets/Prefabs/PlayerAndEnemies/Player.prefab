@@ -339,7 +339,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8494632499883071335}
   - component: {fileID: 750437169914328846}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: HandCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,12 +354,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4408613589370254789}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5913333705079489937}
+  m_Father: {fileID: 772545561132822601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &750437169914328846
 BoxCollider2D:
@@ -443,7 +443,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8494632499883071335}
   - {fileID: 2108543651848230983}
+  - {fileID: 6335784274950599171}
   - {fileID: 5913333705079489937}
   - {fileID: 4664093368800748585}
   - {fileID: 5284146855360802060}
@@ -649,6 +651,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::YOrderLayer
   spriteRenderer: {fileID: 4084593617875584895}
   positionReference: {fileID: 5636531968661668899}
+  circlePositionReference: {fileID: 0}
+  isCircle: 0
 --- !u!1 &6337134494811058766
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +741,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5913333705079489937}
   - component: {fileID: 6978818808775337427}
-  - component: {fileID: 910579046067608434}
   m_Layer: 0
   m_Name: HandAnchor
   m_TagString: Untagged
@@ -759,7 +762,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3754831443844779316}
-  - {fileID: 8494632499883071335}
   m_Father: {fileID: 772545561132822601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6978818808775337427
@@ -788,14 +790,46 @@ MonoBehaviour:
   handSwitch: 0
   spriteRenderer: {fileID: 3760618184261430844}
   positionReference: {fileID: 750437169914328846}
-  positionReference2: {fileID: 910579046067608434}
---- !u!61 &910579046067608434
+  positionReference2: {fileID: 3424526577852872704}
+--- !u!1 &8390569404106855044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6335784274950599171}
+  - component: {fileID: 3424526577852872704}
+  m_Layer: 11
+  m_Name: HandAnchorCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6335784274950599171
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8390569404106855044}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 772545561132822601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &3424526577852872704
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8369832559701972666}
+  m_GameObject: {fileID: 8390569404106855044}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
