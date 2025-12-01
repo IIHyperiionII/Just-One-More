@@ -7,7 +7,7 @@ using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerData PlayerData;
+    public PlayerData PlayerData;
     private Rigidbody2D Rigidbody;
     private Vector2 input;
     private Vector3 mousePosition;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private float startTimer = 0f;
     public PostProcessVolume postProcessVolume;
     private Vignette vignetteEffect;
-    private float multiplier = 1f; // Default multiplier value
+    public float multiplier = 1f; // Default multiplier value
     private int pulseCount = 4;
     private int sign = 1;
     private bool isReversed = false;
@@ -351,7 +351,7 @@ public class PlayerController : MonoBehaviour
     //         isAttacking = true; // for animation testing
 
     //         Quaternion rotation = UpdateAngle();
-    //         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
+            // GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
     //         bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
     //     }
 
@@ -363,29 +363,20 @@ public class PlayerController : MonoBehaviour
     // }
     void Attack()
     {
-        // Kontrola, zda držíme tlačítko a zda uběhl čas cooldownu
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            // 1. Nastavení dalšího času útoku (Logika Cooldownu)
-            // Pokud chceš použít staty:
             float delay = 1f / (PlayerData.attackSpeed * multiplier);
             
-            // POKUD chceš použít ten pevný cooldown, co jsi tam přidal minule:
-            // float delay = attackCooldown; 
-
             nextAttackTime = Time.time + delay;
 
-            // 2. Spuštění vizuální stránky (Animace)
-            if (!isAttacking) // Spustíme jen pokud už neútočíme
+            if (!isAttacking)
             {
                 StartCoroutine(ResetAttackAnimation());
             }
 
-            // 3. Vytvoření projektilu (Logika Střelby)
             Quaternion rotation = UpdateAngle();
             GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
             
-            // Kontrola null reference pro jistotu
             var bulletScript = bullet.GetComponent<PlayerBulletControllerTest>();
             if (bulletScript != null)
             {
@@ -394,18 +385,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Tato Coroutina se stará pouze o to, aby bool isAttacking byl chvíli true
     IEnumerator ResetAttackAnimation()
     {
         isAttacking = true;
         
-        // Zde nastav, jak dlouho má trvat "animace" útoku, než se může přehrát znovu/ukončit.
-        // Může to být pevné číslo (např. 0.1f) nebo závislé na rychlosti útoku.
-        yield return new WaitForSeconds(0.0000001f); 
+        yield return new WaitForSeconds(0.00001f); 
 
         isAttacking = false;
     }
-    Quaternion UpdateAngle()
+    public Quaternion UpdateAngle()
     {
         float distanceZ = Mathf.Abs(Camera.main.transform.position.z); // Distance from camera to player on Z axis
         mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceZ)); // Convert mouse position to world position
