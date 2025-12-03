@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 public class SaveData
 {
     public int map;
+    public bool isOpen;
     public int wave;
     public bool mapCompleted;
     public GameMode selectedMode;
@@ -39,6 +40,7 @@ public class PlayerSaveData
     public int blockLevel;
     public int freezeLevel;
     public int needToGamble;
+    public int numberOfSaves;
 }
 
 [Serializable]

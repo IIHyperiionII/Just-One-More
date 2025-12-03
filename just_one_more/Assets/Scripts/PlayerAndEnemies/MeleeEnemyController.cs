@@ -51,7 +51,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     void GetDirections()
     {
         playerPosition = target.position;
-        playerPosition.y -= 1.25f;
+        playerPosition.y -= 1f;
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }

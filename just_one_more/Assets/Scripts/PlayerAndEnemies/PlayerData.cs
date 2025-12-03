@@ -18,5 +18,6 @@ public class PlayerData : ScriptableObject
     public int blockLevel = 0;
     public int freezeLevel = 0;
     public int needToGamble = 0;
+    public int numberOfSaves = 1;
 
 }

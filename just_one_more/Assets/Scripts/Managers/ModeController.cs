@@ -32,6 +32,7 @@ public class ModeController : MonoBehaviour
         }
         else
         {
+            if (darknessOverlay == null || lightSource == null) return;
             darknessOverlay.SetActive(false);
             lightSource.SetActive(false);
         }

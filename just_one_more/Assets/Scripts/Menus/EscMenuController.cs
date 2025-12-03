@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class EscMenuController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class EscMenuController : MonoBehaviour
     public Button saveGameButton;
     public Button quitGameButton;
     public Button settingsButton;
+    public TextMeshProUGUI saveGameText;
 
     void Start()
     {
@@ -15,6 +17,21 @@ public class EscMenuController : MonoBehaviour
         saveGameButton.onClick.AddListener(SaveGame);
         quitGameButton.onClick.AddListener(QuitGame);
         settingsButton.onClick.AddListener(OpenSettings);
+    }
+    void Update()
+    {
+        if (saveGameText != null)
+        {
+            if (GameManager.Instance.runtimePlayerData.numberOfSaves <= 0)
+            {
+                saveGameButton.interactable = false;
+            }
+            else
+            {
+                saveGameButton.interactable = true;
+            }
+            saveGameText.text = $"Save game\n<size=50%>(Saves left: {GameManager.Instance.runtimePlayerData.numberOfSaves})</size>";
+        }
     }
 
     void BackToMainMenu()
@@ -25,6 +42,7 @@ public class EscMenuController : MonoBehaviour
     void SaveGame()
     {
         SaveSystem.Instance.SaveGame();
+        GameManager.Instance.runtimePlayerData.numberOfSaves -= 1;
     }
 
     void QuitGame()
