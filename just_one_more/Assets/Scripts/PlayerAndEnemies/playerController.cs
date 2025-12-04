@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private bool isReversed = false;
     public float slowMultiplier = 1f;
     public int numberOfSaves = 0;
+    public int hp = 100;
     
     void Start()
     {
@@ -188,14 +189,14 @@ public class PlayerController : MonoBehaviour
     void GetMovementInput()
     {
         input = new Vector2(0, 0);
-        input.x = Input.GetAxis("Horizontal"); // Get horizontal input (A/D or Left/Right arrows)
-        input.y = Input.GetAxis("Vertical"); // Get vertical input (W/S or Up/Down arrows)
+        input.x = ControlsManager.Instance.GetAxisHorizontal(); // Get horizontal input (A/D or Left/Right arrows)
+        input.y = ControlsManager.Instance.GetAxisVertical(); // Get vertical input (W/S or Up/Down arrows)
         if (input.magnitude > 1) input.Normalize(); // Normalize to prevent faster diagonal movement
     }
 
     void GetDashInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isDashing && numberOfDashes > 0 && dashReset)
+        if (ControlsManager.Instance.GetDashInputDown() && !isDashing && numberOfDashes > 0 && dashReset)
         {
             StartCoroutine(Dash(false));
             StartCoroutine(ResetDash());
@@ -211,7 +212,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("HandAnchor not found!");
             yield return null;
-        }
+        } 
 
         Transform hand = handAnchor.Find("Hand");
         if (hand == null)
@@ -358,11 +359,11 @@ public class PlayerController : MonoBehaviour
     void GetAttackInput()
     {
         // Switch for when mouse button is held down
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (ControlsManager.Instance.GetAttackInput())
         {
             MouseKeyHoldDown = true;
         }
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        else
         {
             MouseKeyHoldDown = false;
         }

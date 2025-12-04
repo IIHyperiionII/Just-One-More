@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1263144509537304355}
   m_Layer: 0
   m_Name: BackgroundToiletOpen
-  m_TagString: Untagged
+  m_TagString: Edge
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,7 +115,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 48f72dc06a6ee451298220e3871f14e5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 960616ebe94c7a64fa82062fd95e299e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -339,7 +339,7 @@ Transform:
   m_GameObject: {fileID: 3395691998993970470}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.17, y: 19.92, z: 0}
+  m_LocalPosition: {x: -0.055, y: 19.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -392,7 +392,7 @@ SpriteRenderer:
   m_SortingLayerID: 434783025
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 491ad7f811efc4004b5af8575ede795d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5d0c96d33cfde4ad3ac9c4d0ee9eca4a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -449,7 +449,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.17, y: 0}
+  m_Offset: {x: 0.055, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -540,7 +540,7 @@ SpriteRenderer:
   m_SortingLayerID: -875281327
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d2d4a5a5b4c2b40bda814df1119036b7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d9a9bd21ce89847e79ccb750a29e9b53, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

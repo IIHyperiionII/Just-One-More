@@ -10,6 +10,7 @@ public class EscMenuController : MonoBehaviour
     public Button quitGameButton;
     public Button settingsButton;
     public TextMeshProUGUI saveGameText;
+    public GameObject settingsMenu;
 
     void Start()
     {
@@ -52,6 +53,7 @@ public class EscMenuController : MonoBehaviour
 
     void OpenSettings()
     {
-        // Implement open settings functionality
+        settingsMenu.SetActive(true);
+        this.transform.parent.gameObject.SetActive(false);
     }
 }

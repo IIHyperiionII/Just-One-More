@@ -15,10 +15,16 @@ public class PlayerHudController : MonoBehaviour
     public TextMeshProUGUI coinsText;
     public TextMeshProUGUI msText;
     public TextMeshProUGUI asText;
-    public Sprite[] numbers;
-    private Dictionary<int, GameObject> numberSprites = new Dictionary<int, GameObject>();
-    public GameObject numbersParent;
+    public Sprite[] numbersCards;
+    private Dictionary<int, GameObject> numberCardsSprites = new Dictionary<int, GameObject>();
+    public GameObject numbersCardsParent;
+    public Sprite[] numbersMoney;
+    private Dictionary<int, GameObject> numberMoneySprites = new Dictionary<int, GameObject>();
+    public GameObject numbersMoneyParent;
     private ModeAndWeaponSelection currentSelection;
+    private float screenWidth;
+    private float defaultScreenWidth = 1920f;
+    private float screenWidthDifference;
 
     void Start()
     {
@@ -36,6 +42,9 @@ public class PlayerHudController : MonoBehaviour
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
+        screenWidth = Screen.width;
+        screenWidthDifference = screenWidth / defaultScreenWidth;
+        Debug.Log($"Screen width: {screenWidth}, Screen default width: {defaultScreenWidth}, Difference: {screenWidthDifference}");
         if (playerData != null)
         {
             if (playerData.hp > 0){
@@ -45,6 +54,7 @@ public class PlayerHudController : MonoBehaviour
                 }
                 GetHp();
             }
+            GetMoney();
             healthText.text = $"Health: {playerData.hp}";
             coinsText.text = $"{playerData.money}";
             msText.text = $"MS: {playerData.moveSpeed}";
@@ -68,21 +78,21 @@ public class PlayerHudController : MonoBehaviour
                     break;
                 }
             }
-            if (numberSprites.ContainsKey(index) )
+            if (numberCardsSprites.ContainsKey(index) )
             {
-                numberSprites[index].GetComponent<Image>().sprite = numbers[digit];
+                numberCardsSprites[index].GetComponent<Image>().sprite = numbersCards[digit];
             } else {
-                GameObject number = new GameObject();
-                number.AddComponent<Image>();
-                number.GetComponent<Image>().sprite = numbers[digit];
-                number.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
-                numberSprites[index] = number;
-                number.transform.SetParent(numbersParent.transform);
+                GameObject numberCard = new GameObject();
+                numberCard.AddComponent<Image>();
+                numberCard.GetComponent<Image>().sprite = numbersCards[digit];
+                numberCard.GetComponent<RectTransform>().sizeDelta = new Vector2(256 * screenWidthDifference, 256 * screenWidthDifference);
+                numberCardsSprites[index] = numberCard;
+                numberCard.transform.SetParent(numbersCardsParent.transform);
             }
             playerHp /= 10;
             index ++;
         }
-        foreach (KeyValuePair<int, GameObject> entry in numberSprites)
+        foreach (KeyValuePair<int, GameObject> entry in numberCardsSprites)
         {
             if (entry.Key >= index)
             {
@@ -94,9 +104,61 @@ public class PlayerHudController : MonoBehaviour
         int iterator = 0;
         for (int i = index-1; i > 0; i --)
         {
-            if (numberSprites.ContainsKey(i))
+            if (numberCardsSprites.ContainsKey(i))
             {
-                numberSprites[i].transform.position = new Vector3(numbersParent.transform.position.x + (numberSprites[i].GetComponent<Image>().sprite.rect.size.x/3f) * iterator, numbersParent.transform.position.y, numbersParent.transform.position.z);
+                numberCardsSprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + 95f * iterator * screenWidthDifference, numbersCardsParent.transform.position.y, numbersCardsParent.transform.position.z);
+            }
+        
+            iterator++;
+
+        }
+    }
+    void GetMoney()
+    {
+        int playerMoney = playerData.money;
+        int index = 1;
+        int digit;
+        bool willContinue = true;
+        while (willContinue)
+        {
+            digit = playerMoney % 10;
+            if (playerMoney < 10)
+            {
+                willContinue = false;
+                if (digit == 0)
+                {
+                    break;
+                }
+            }
+            if (numberMoneySprites.ContainsKey(index) )
+            {
+                numberMoneySprites[index].GetComponent<Image>().sprite = numbersMoney[digit];
+            } else {
+                GameObject numberMoney = new GameObject();
+                numberMoney.AddComponent<Image>();
+                numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
+                numberMoney.GetComponent<RectTransform>().sizeDelta = new Vector2(70f * screenWidthDifference, 128f * screenWidthDifference);
+                numberMoneySprites[index] = numberMoney;
+                numberMoney.transform.SetParent(numbersMoneyParent.transform);
+            }
+            playerMoney /= 10;
+            index ++;
+        }
+        foreach (KeyValuePair<int, GameObject> entry in numberMoneySprites)
+        {
+            if (entry.Key >= index)
+            {
+                entry.Value.SetActive(false);
+            } else {
+                entry.Value.SetActive(true);
+            }
+        }
+        int iterator = 0;
+        for (int i = index-1; i > 0; i --)
+        {
+            if (numberMoneySprites.ContainsKey(i))
+            {
+                numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + 60f * iterator * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
             }
         
             iterator++;
