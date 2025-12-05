@@ -19,7 +19,8 @@ public class Deck
         {
             foreach (Rank rank in Enum.GetValues(typeof(Rank)))
             {
-                cards.Add(new Card(suit, rank));
+                // cards.Add(new Card(suit, rank));
+                cards.Add(new Card(Suit.Clubs, Rank.Ace));
             }
         }
 

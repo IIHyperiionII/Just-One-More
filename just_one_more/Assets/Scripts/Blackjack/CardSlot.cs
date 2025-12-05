@@ -1,13 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardSlot : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
+    private Image image;
     private Vector3 originalPosition;
 
     public void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        image = GetComponent<Image>();
         originalPosition = transform.position;
     }
 
@@ -18,14 +19,14 @@ public class CardSlot : MonoBehaviour
         float randomPositionX = Random.Range(-0.1f, 0.1f);
         transform.rotation = Quaternion.Euler(0f, 0f, randomRotationZ);
         transform.position = originalPosition + new Vector3(randomPositionX, randomPositionY, 0f);
-        gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void ShowCard(Sprite cardSprite)
     {
         if (!cardSprite) return;
 
-        spriteRenderer.sprite = cardSprite;
+        image.sprite = cardSprite;
         gameObject.SetActive(true);
     }
 

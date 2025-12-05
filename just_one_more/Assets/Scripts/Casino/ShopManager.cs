@@ -136,7 +136,7 @@ public class ShopManager : MonoBehaviour
     private ShopItem GenerateRandomUpgrade()
     {
         // ??? TODO: Next choice cant be the same as the current one
-        int randomChoice = Random.Range(0, 5);
+        int randomChoice = Random.Range(0, 6);
 
         switch (randomChoice)
         {
@@ -150,6 +150,8 @@ public class ShopManager : MonoBehaviour
                 return new ShopItem("Block", StatType.BlockLevel);
             case 4:
                 return new ShopItem("Freeze", StatType.FreezeLevel);
+            case 5:
+                return new ShopItem("Save Slot", StatType.SaveSlots);
             default:
                 return new ShopItem("Piercing", StatType.PiercingLevel);
         }
@@ -204,6 +206,9 @@ public class ShopManager : MonoBehaviour
             case StatType.FreezeLevel:
                 playerData.freezeLevel += 1;
                 break;
+            case StatType.SaveSlots:
+                playerData.numberOfSaves += 1;
+                break;
         }
 
         playerStatsPanel.UpdateUI();
@@ -225,6 +230,8 @@ public class ShopManager : MonoBehaviour
                 return playerData.blockLevel;
             case StatType.FreezeLevel:
                 return playerData.freezeLevel;
+            case StatType.SaveSlots:
+                return playerData.numberOfSaves;
             default:
                 return 0;
         }

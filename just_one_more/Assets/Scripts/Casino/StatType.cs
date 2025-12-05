@@ -11,5 +11,6 @@ public enum StatType
     DashLevel,
     HpRegenLevel,
     BlockLevel,
-    FreezeLevel
+    FreezeLevel,
+    SaveSlots
 }
