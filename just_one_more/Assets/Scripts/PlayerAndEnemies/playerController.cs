@@ -52,6 +52,10 @@ public class PlayerController : MonoBehaviour
         startTimer = Time.time;
         PlayerData.damage = 1; // For testing purposes only
         numberOfSaves = PlayerData.numberOfSaves;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife && PlayerData.money == 0)
+        {
+            PlayerData.money = 100;
+        }
     }
     void Update()
     {
@@ -67,6 +71,10 @@ public class PlayerController : MonoBehaviour
             startTimer = Time.time;
             PlayerData.needToGamble ++;
             NeedToGambleEffect();
+        }
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            PlayerData.hp = PlayerData.money;
         }
     }
 
@@ -414,7 +422,13 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(ShieldUp());
             return;
         }
-        PlayerData.hp -= damage;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            PlayerData.money -= damage;
+            if (PlayerData.money < 0) PlayerData.money = 0;
+        } else {
+            PlayerData.hp -= damage;
+        }
         if (PlayerData.hp <= 0) Die();
         if (Time.timeScale > 0){
             CameraController.ShakeCamera();
@@ -483,7 +497,12 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         PlayerData.isDead = true;
-        PlayerData.hp = 0;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            PlayerData.money = 0;
+        } else {
+            PlayerData.hp = 0;
+        }
     }
     public void GetCoin(int amount)
     {
@@ -506,7 +525,6 @@ public class PlayerController : MonoBehaviour
         playerData.isMelee = PlayerData.isMelee;
         playerData.piercingLevel = PlayerData.piercingLevel;
         playerData.dashLevel = PlayerData.dashLevel;
-        playerData.hpRegenLevel = PlayerData.hpRegenLevel;
         playerData.blockLevel = PlayerData.blockLevel;
         playerData.freezeLevel = PlayerData.freezeLevel;
         playerData.needToGamble = PlayerData.needToGamble;
@@ -533,7 +551,6 @@ public class PlayerController : MonoBehaviour
             PlayerData.isMelee = playerData.isMelee;
             PlayerData.piercingLevel = playerData.piercingLevel;
             PlayerData.dashLevel = playerData.dashLevel;
-            PlayerData.hpRegenLevel = playerData.hpRegenLevel;
             PlayerData.blockLevel = playerData.blockLevel;
             PlayerData.freezeLevel = playerData.freezeLevel;
             PlayerData.needToGamble = playerData.needToGamble;

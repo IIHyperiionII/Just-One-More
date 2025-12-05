@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     private int[] KindMinCount = new int[] { 1, 1, 1 };
     public static Transform enemiesParent;
     private Vector2 spawnPosition;
-    private bool WavesIsSpawning = false;
+    private bool waveIsSpawning = false;
     //private bool isTeleporting = false;
     public bool doorsEntered = false;
     private SaveData saveData;
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
             //isTeleporting = false;
         }
         // Check if there are no enemies left
-        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !WavesIsSpawning && wave < 10 && !isTeleporting)
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !waveIsSpawning && wave < 10 && !isTeleporting)
         {
             wave++;
             StartCoroutine(SpawnWave()); // Wait for sync
@@ -203,10 +203,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        WavesIsSpawning = true;
+        waveIsSpawning = true;
         yield return new WaitForSeconds(1f); // Wait a moment before starting the next wave for sync of coroutines
         StartCoroutine(SpawnEnemies());
-        WavesIsSpawning = false;
+        waveIsSpawning = false;
     }
     IEnumerator SpawnEnemies()
     {
@@ -543,6 +543,32 @@ public class GameManager : MonoBehaviour
             return GetRandomSprite(initSprite); // Recursively get a new sprite if it's the same as the initial one
         }
         return newSprite;
+    }
+
+    public void ResetGameManager()
+    {
+        wave = 0;
+        map = 0;
+        mapCompleted = false;
+        isOpen = false;
+        gameWon = false;
+        time = 0f;
+        enemiesToSpawn.Clear();
+        foreach (Transform child in enemiesParent.transform)
+        {
+            Destroy(child.gameObject); // Clear all remaining enemies
+        }
+        foreach (Transform child in GameObject.FindGameObjectWithTag("BulletParent").transform)
+        {
+            Destroy(child.gameObject); // Clear all remaining bullets
+        }
+        backgroundSet = false;
+        isTeleporting = false;
+        KindMinCount = new int[] { 1, 1, 1 };
+        waveIsSpawning = false;
+        runtimePlayerData = Instantiate(basePlayerData);
+
+
     }
     
     /*

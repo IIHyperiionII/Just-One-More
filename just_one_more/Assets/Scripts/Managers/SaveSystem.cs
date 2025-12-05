@@ -10,6 +10,7 @@ public class SaveSystem : MonoBehaviour
     private PlayerController playerController;
     private ModeController modeController;
     public bool toLoad = false;
+    public bool isNewGame = false;
     private string fileName = "saveData.json";
 
     private void Awake()
@@ -28,6 +29,14 @@ public class SaveSystem : MonoBehaviour
     public SaveData currentSaveData = new SaveData();
     public BestTimeSaveData.BestTimeData currentBestTimeData = new BestTimeSaveData.BestTimeData();
     
+    void Update()
+    {
+        if (GameManager.Instance != null && isNewGame)
+        {
+            GameManager.Instance.ResetGameManager();
+            isNewGame = false;
+        }
+    }
 
     string GetFilePath()
     {

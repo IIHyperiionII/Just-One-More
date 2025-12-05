@@ -53,6 +53,7 @@ public class EscMenuController : MonoBehaviour
 
     void OpenSettings()
     {
+        GameModeManager.isInSettingsMenu = true;
         settingsMenu.SetActive(true);
         this.transform.parent.gameObject.SetActive(false);
     }

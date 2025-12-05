@@ -36,7 +36,6 @@ public class PlayerSaveData
     public bool isMelee;
     public int piercingLevel;
     public int dashLevel;
-    public int hpRegenLevel;
     public int blockLevel;
     public int freezeLevel;
     public int needToGamble;

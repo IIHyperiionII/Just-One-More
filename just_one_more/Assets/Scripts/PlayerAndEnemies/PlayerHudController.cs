@@ -19,12 +19,15 @@ public class PlayerHudController : MonoBehaviour
     private Dictionary<int, GameObject> numberCardsSprites = new Dictionary<int, GameObject>();
     public GameObject numbersCardsParent;
     public Sprite[] numbersMoney;
+    public Sprite dollarSignSprite;
+    GameObject dollarSign;
     private Dictionary<int, GameObject> numberMoneySprites = new Dictionary<int, GameObject>();
     public GameObject numbersMoneyParent;
     private ModeAndWeaponSelection currentSelection;
     private float screenWidth;
     private float defaultScreenWidth = 1920f;
     private float screenWidthDifference;
+    private bool isFirst = true;
 
     void Start()
     {
@@ -37,6 +40,7 @@ public class PlayerHudController : MonoBehaviour
             playerData = gameManager.GetComponent<GameManager>().runtimePlayerData;
         }
         currentSelection = ModeController.Instance.currentSelection;
+        dollarSign = new GameObject("DollarSign");
     }
 
     void Update()
@@ -137,12 +141,16 @@ public class PlayerHudController : MonoBehaviour
                 GameObject numberMoney = new GameObject();
                 numberMoney.AddComponent<Image>();
                 numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
-                numberMoney.GetComponent<RectTransform>().sizeDelta = new Vector2(70f * screenWidthDifference, 128f * screenWidthDifference);
+                numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference;
                 numberMoneySprites[index] = numberMoney;
                 numberMoney.transform.SetParent(numbersMoneyParent.transform);
             }
             playerMoney /= 10;
             index ++;
+        }
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            return;
         }
         foreach (KeyValuePair<int, GameObject> entry in numberMoneySprites)
         {
@@ -153,16 +161,32 @@ public class PlayerHudController : MonoBehaviour
                 entry.Value.SetActive(true);
             }
         }
+
         int iterator = 0;
+        float position = 0f;
         for (int i = index-1; i > 0; i --)
         {
             if (numberMoneySprites.ContainsKey(i))
             {
-                numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + 60f * iterator * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+                if (isFirst)
+                {
+                    isFirst = false;
+                    numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference)/2 + 10f;
+                } else {
+                    numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((numberMoneySprites[i].GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference) + 10f;
+                }
+                
             }
-        
             iterator++;
 
         }
+        dollarSign.AddComponent<Image>();
+        dollarSign.GetComponent<Image>().sprite = dollarSignSprite;
+        dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference;
+        dollarSign.transform.SetParent(numbersMoneyParent.transform);
+        dollarSign.transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((dollarSign.GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+        isFirst = true;
     }
 }

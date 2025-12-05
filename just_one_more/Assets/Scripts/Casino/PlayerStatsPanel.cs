@@ -209,7 +209,6 @@ public class PlayerStatsPanel : MonoBehaviour
         UpdateTextField(attackModifierText, attackModifierName, attackModifierValue);
         UpdateTextField(piercingText, "Piercing Level", playerData.piercingLevel);
         UpdateTextField(dashText, "Dash Level", playerData.dashLevel);
-        UpdateTextField(hpRegenText, "HP Regen Level", playerData.hpRegenLevel);
         UpdateTextField(blockText, "Block Level", playerData.blockLevel);
         UpdateTextField(freezeText, "Freeze Level", playerData.freezeLevel);
     }

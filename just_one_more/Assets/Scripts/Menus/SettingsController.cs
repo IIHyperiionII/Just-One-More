@@ -18,6 +18,8 @@ public class SettingsController : MonoBehaviour
     public GameObject escMenu;
     public Image waitingImage;
     public bool canSave = true;
+    public static bool isFromMainMenu = false;
+    private bool keyAssigned = false;
 
     public void Start()
     {
@@ -51,6 +53,10 @@ public class SettingsController : MonoBehaviour
             canSave = true;
         }
         saveButton.interactable = canSave;
+        if (keyAssigned && Input.GetKeyDown(KeyCode.Escape))
+        {
+            BackToEscMenu();
+        }
     }
 
     private void StartRebinding(ActionKey actionKey)
@@ -60,7 +66,7 @@ public class SettingsController : MonoBehaviour
 
     IEnumerator RebindKey(ActionKey actionKey)
     {
-        bool keyAssigned = false;
+        keyAssigned = false;
         waitingImage.gameObject.SetActive(true);
         UpdateText(actionKey, "Waiting...");
         while (!keyAssigned)
@@ -70,8 +76,14 @@ public class SettingsController : MonoBehaviour
                 if (Input.GetKeyDown(keyCode) && keyCode != KeyCode.Escape)
                 {
                     ControlsManager.Instance.RebindKey(actionKey, keyCode);
-                    keyAssigned = true;
                     UpdateText(actionKey, "");
+                    keyAssigned = true;
+                    break;
+                }
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    UpdateText(actionKey, "");
+                    keyAssigned = true;
                     break;
                 }
             }
@@ -129,8 +141,18 @@ public class SettingsController : MonoBehaviour
     }
     public void BackToEscMenu()
     {
-        escMenu.SetActive(true);
-        this.transform.parent.gameObject.SetActive(false);
+        if (isFromMainMenu)
+        {
+            GameModeManager.isInSettingsMenu = false;
+            this.transform.parent.gameObject.SetActive(false);
+            isFromMainMenu = false;
+            return;
+        }else 
+        {
+            GameModeManager.isInSettingsMenu = false;
+            escMenu.SetActive(true);
+            this.transform.parent.gameObject.SetActive(false);
+        }
     }
 
 }
