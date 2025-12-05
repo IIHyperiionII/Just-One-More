@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainMenuScene.unity
     guid: d862db563e81e4c09a614d28a27e57cc
+  - enabled: 1
+    path: Assets/Scenes/ModeAndWeaponSelectionMenu.unity
+    guid: 1e10595890b2e4852b8b3482379bf178
   - enabled: 1
     path: Assets/Scenes/tomScene.unity
     guid: 8abf742d3a4554fca9027131a110422c

@@ -29,14 +29,15 @@ public class GameManager : MonoBehaviour
     private bool WavesIsSpawning = false;
     //private bool isTeleporting = false;
     public bool doorsEntered = false;
-    private Collider2D doorsCollider;
-    private Collider2D playerCollider;
     private SaveData saveData;
     public bool isGameReadyToLoad = false;
     private bool backgroundSet = false;
     public GameObject doorClosed;
     public GameObject doorClosedLight;
     public GameObject casinoButton;
+    private ModeAndWeaponSelection currentSelection;
+    public bool gameWon = false;
+    public float time = 0f;    
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -66,27 +67,14 @@ public class GameManager : MonoBehaviour
         }
         isGameReadyToLoad = true;
         Debug.Log("GameManager is ready to load: " + isGameReadyToLoad);
+        if (ModeController.Instance != null){
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
     void Start()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
         GetCamera();
-        if (GameObject.FindGameObjectWithTag("BoundsCheckDoors").GetComponent<Collider2D>() == null)
-        {
-            Debug.LogError("Doors GameObject does not exist!");
-        }
-        else
-        {
-            doorsCollider = GameObject.FindGameObjectWithTag("BoundsCheckDoors").GetComponent<Collider2D>();
-        }
-        if (GameObject.FindGameObjectWithTag("BoundsCheckPlayer").GetComponent<Collider2D>() == null)
-        {
-            Debug.LogError("Player bounds GameObject does not exist!");
-        }
-        else
-        {
-            playerCollider = GameObject.FindGameObjectWithTag("BoundsCheckPlayer").GetComponent<Collider2D>();
-        }
         if (SaveSystem.Instance.toLoad)
         {
             SaveSystem.Instance.LoadGame();
@@ -106,7 +94,10 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
     void GetCamera()
     {
@@ -121,7 +112,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         if (mapCompleted && !backgroundSet && enemiesParent.childCount == 0)
         {
             Debug.Log("Switching background from map " + map + " to map " + (map + 1));
@@ -163,7 +154,17 @@ public class GameManager : MonoBehaviour
             doorClosedLight.SetActive(false);
             casinoButton.SetActive(false);
         }
-    
+        if ((wave == 10 && mapCompleted && map == 2) || runtimePlayerData.isDead == true)
+        {
+            if (wave == 10 && mapCompleted && map == 2){
+                if (!currentSelection.basicDeifficultyCompleted && currentSelection.selectedMode == GameMode.none){
+                    currentSelection.basicDeifficultyCompleted = true;
+                }
+                gameWon = true;
+            }
+        } else {
+            time += Time.deltaTime;
+        }
     }
     IEnumerator Teleport()
     {
@@ -397,6 +398,7 @@ public class GameManager : MonoBehaviour
         data.map = map;
         data.wave = wave;
         data.mapCompleted = mapCompleted;
+        data.time = time;
         data.enemies.Clear();
         foreach (Transform child in enemiesParent.transform)
         {
@@ -435,6 +437,7 @@ public class GameManager : MonoBehaviour
         map = data.map;
         wave = data.wave;
         mapCompleted = data.mapCompleted;
+        time = data.time;
         foreach (EnemySaveData enemyData in data.enemies)
         {
             Debug.Log("Restoring enemy of type: " + enemyData.enemyType);

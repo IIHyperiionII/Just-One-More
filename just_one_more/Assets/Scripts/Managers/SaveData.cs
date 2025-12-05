@@ -10,6 +10,10 @@ public class SaveData
     public int map;
     public int wave;
     public bool mapCompleted;
+    public GameMode selectedMode;
+    public WeaponType selectedWeapon;
+    public bool basicDifficultyCompleted;
+    public float time;
     public List<PlayerSaveData> players = new List<PlayerSaveData>();
     public List<EnemySaveData> enemies = new List<EnemySaveData>();
     public List<ProjectileSaveData> projectiles = new List<ProjectileSaveData>();
@@ -59,3 +63,4 @@ public class ProjectileSaveData
     public int damage;
     public int sign; // for wave projectiles
 }
+

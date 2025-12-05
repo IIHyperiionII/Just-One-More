@@ -18,6 +18,7 @@ public class PlayerHudController : MonoBehaviour
     public Sprite[] numbers;
     private Dictionary<int, GameObject> numberSprites = new Dictionary<int, GameObject>();
     public GameObject numbersParent;
+    private ModeAndWeaponSelection currentSelection;
 
     void Start()
     {
@@ -29,14 +30,19 @@ public class PlayerHudController : MonoBehaviour
             gameManager = GameObject.FindGameObjectWithTag("GameController");
             playerData = gameManager.GetComponent<GameManager>().runtimePlayerData;
         }
+        currentSelection = ModeController.Instance.currentSelection;
     }
 
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         if (playerData != null)
         {
             if (playerData.hp > 0){
+                if (currentSelection.selectedMode == GameMode.OneShot)
+                {
+                    playerData.hp = 1;
+                }
                 GetHp();
             }
             healthText.text = $"Health: {playerData.hp}";

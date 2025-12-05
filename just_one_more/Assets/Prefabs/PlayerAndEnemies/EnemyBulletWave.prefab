@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6403574788615969186}
   - component: {fileID: 6861017646169245740}
   - component: {fileID: -1772302051428527449}
+  - component: {fileID: -2306006294370500725}
   m_Layer: 12
   m_Name: EnemyBulletWave
   m_TagString: EnemyBulletWave
@@ -174,3 +175,19 @@ MonoBehaviour:
   damage: 0
   initialRotation: {x: 0, y: 0, z: 0, w: 0}
   sign: 0
+--- !u!114 &-2306006294370500725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432469908638311180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e30ee3c062794445d8de9c9416b4596a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YOrderLayer
+  spriteRenderer: {fileID: 692364189109575027}
+  positionReference: {fileID: 0}
+  circlePositionReference: {fileID: 6403574788615969186}
+  isCircle: 1

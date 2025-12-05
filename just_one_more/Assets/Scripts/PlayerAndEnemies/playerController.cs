@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastPosition;
     private Vector2 lastHandPosition;
     private int shieldRequests = 0;
-
     public Vector2 MovementVector => input * PlayerData.moveSpeed;
     public bool isReadyToLoad = false;
     private bool isRed = false;
@@ -33,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private int pulseCount = 4;
     private int sign = 1;
     private bool isReversed = false;
+    public float slowMultiplier = 1f;
     
     void Start()
     {
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         GetMovementInput();
         if (PlayerData.dashLevel > 0)
         {
@@ -69,9 +69,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         if (isDashing) return; // Skip normal movement while dashing
-        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier) * sign;
+        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier * slowMultiplier) * sign;
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
     }
@@ -453,10 +453,10 @@ public class PlayerController : MonoBehaviour
         isRed = false;
     }
 
-        void Die()
+    public void Die()
     {
         PlayerData.isDead = true;
-        SceneManager.LoadScene("MainMenuScene");
+        PlayerData.hp = 0;
     }
     public void GetCoin(int amount)
     {
