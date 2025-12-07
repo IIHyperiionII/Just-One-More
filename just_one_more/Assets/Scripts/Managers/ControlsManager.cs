@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class ControlsManager : MonoBehaviour
 {  
@@ -9,7 +10,11 @@ public class ControlsManager : MonoBehaviour
 
     private Dictionary<ActionKey, KeyCode> keyBindings;
     public SaveDataKeyBinds savedKeyBinds;
+    public SaveDataSound savedSoundSettings;
+    public AudioMixer mainMixer;
+    public bool soundIsLoaded = false;
     private string fileName = "keyBindsSave.json";
+    private string fileNameSounds = "soundSettings.json";
 
     void Awake()
     {
@@ -31,6 +36,7 @@ public class ControlsManager : MonoBehaviour
             keyBindings = new Dictionary<ActionKey, KeyCode>();
         }
         LoadSaved();
+        LoadSoundSettings();
     }
 
     public void LoadDefaults()
@@ -159,6 +165,47 @@ public class ControlsManager : MonoBehaviour
             seenKeys.Add(keyBinding.Value);
         }
         return false;
+    }
+
+    public void SaveSoundSettings(float musicVolume, float sfxVolume)
+    {
+        Debug.Log("Saving Sound Settings: Music Volume = " + musicVolume + ", SFX Volume = " + sfxVolume);
+        savedSoundSettings.musicVolume = musicVolume;
+        savedSoundSettings.sfxVolume = sfxVolume;
+
+        string savePath = Path.Combine(Application.persistentDataPath, fileNameSounds);
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+        }
+        string json = JsonUtility.ToJson(savedSoundSettings, true);
+
+        File.WriteAllText(savePath, json);
+    }
+
+    public void LoadSoundSettings()
+    {
+        string savePath = Path.Combine(Application.persistentDataPath, fileNameSounds);
+        if (File.Exists(savePath))
+        {
+            string json = File.ReadAllText(savePath);
+            savedSoundSettings = JsonUtility.FromJson<SaveDataSound>(json);
+            SetMusicVolume(savedSoundSettings.musicVolume);
+            SetSFXVolume(savedSoundSettings.sfxVolume);
+            soundIsLoaded = true;
+        }
+    }
+    public void SetMusicVolume(float value)
+    {
+        value = Mathf.Clamp(value, 0.001f, 1f);
+        mainMixer.SetFloat("Music", Mathf.Log10(value) * 50);
+        PlayerPrefs.SetFloat("Music", value);
+    }
+    public void SetSFXVolume(float value)
+    {
+        value = Mathf.Clamp(value, 0.001f, 1f);
+        mainMixer.SetFloat("SFX", Mathf.Log10(value) * 50);
+        PlayerPrefs.SetFloat("SFX", value);
     }
 
 }

@@ -530,6 +530,15 @@ MonoBehaviour:
   slowMultiplier: 1
   numberOfSaves: 0
   hp: 100
+  hurtSound: {fileID: 8300000, guid: 0c733aac51ebe48b883463034e44778a, type: 3}
+  footstepClip: {fileID: 8300000, guid: 2e351eeea56134c93b73bcf3cc00912f, type: 3}
+  paperFootstepClip: {fileID: 8300000, guid: e4b3fa9f6279d4316b809791d3333542, type: 3}
+  waterFootstepClip: {fileID: 8300000, guid: 88f1421e90b544183819b89d5250ba63, type: 3}
+  dashSound: {fileID: 8300000, guid: ff36ffa16f9f14bb5afdab965f1bd5f8, type: 3}
+  deathSound: {fileID: 8300000, guid: 7ee30c630837740a18b0dabce3af1226, type: 3}
+  coinSound: {fileID: 8300000, guid: 180d6a278b1db44b3a537d90b8779f9b, type: 3}
+  shieldSound: {fileID: 8300000, guid: 67433f0eed6a14fd5b556b528a4b1ce7, type: 3}
+  hearthBeatSound: {fileID: 8300000, guid: e938e759a6c7b4ddb83974896c1c88f6, type: 3}
 --- !u!50 &5946437661379280412
 Rigidbody2D:
   serializedVersion: 5
