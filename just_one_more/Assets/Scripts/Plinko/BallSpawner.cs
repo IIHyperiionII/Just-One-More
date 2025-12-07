@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class BallSpawner : MonoBehaviour 
 {
@@ -28,7 +27,7 @@ public class BallSpawner : MonoBehaviour
         currentBall = Instantiate(ballPrefab, spawnPos, Quaternion.identity);
 
         currentBall.transform.SetParent(transform);
-        currentBall.transform.localScale = transform.localScale;
+        currentBall.transform.localScale = Vector3.one;
 
         // Setup physics
         Rigidbody2D rb = currentBall.GetComponent<Rigidbody2D>();
@@ -39,7 +38,6 @@ public class BallSpawner : MonoBehaviour
 
             // Random sideways force (variety)
             float randomX = Random.Range(-initialRandomForce, initialRandomForce);
-            //rb.linearVelocity = new Vector2(randomX, 0);
             rb.AddForce(new Vector2(randomX, 0), ForceMode2D.Impulse);
         }
     }
