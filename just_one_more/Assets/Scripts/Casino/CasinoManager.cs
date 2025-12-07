@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class CasinoManager : MonoBehaviour
 {
@@ -76,6 +75,11 @@ public class CasinoManager : MonoBehaviour
         if (plinkoPanel)
         {
             plinkoPanel.SetActive(false);
+        }
+
+        if (blackjackPanel)
+        {
+            blackjackPanel.SetActive(false);
         }
 
         currentBet = minBet;

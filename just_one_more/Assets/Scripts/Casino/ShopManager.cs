@@ -19,6 +19,7 @@ public class ShopManager : MonoBehaviour
 
     private PlayerData playerData;
     private ShopItem currentItem;
+    private int previousRandomChoice = -1;
     private int rerollCount = 0;
     private int baseRerollPrice = 100;
     private int baseItemPrice = 100;
@@ -135,8 +136,14 @@ public class ShopManager : MonoBehaviour
 
     private ShopItem GenerateRandomUpgrade()
     {
-        // ??? TODO: Next choice cant be the same as the current one
-        int randomChoice = Random.Range(0, 6);
+        int randomChoice;
+
+        do
+        {
+            randomChoice = Random.Range(0, 6);
+        } while (randomChoice == previousRandomChoice);
+        
+        previousRandomChoice = randomChoice;
 
         switch (randomChoice)
         {
@@ -165,7 +172,6 @@ public class ShopManager : MonoBehaviour
         if (playerStatsPanel.SpendMoney(price))
         {
             ApplyUpgrade(currentItem);
-            Debug.Log($"Bought {currentItem.name}! Level {currentLevel} → {currentLevel + 1}");
 
             rerollCount = 0;
             RerollShop();
@@ -185,7 +191,7 @@ public class ShopManager : MonoBehaviour
     {
         if (playerData == null)
         {
-            Debug.Log("ERROR: playerData is null!");
+            Debug.LogError("PlayerData is null!");
             return;
         }
 

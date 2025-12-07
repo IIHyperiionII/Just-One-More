@@ -1,11 +1,17 @@
 using UnityEngine;
 using System;
-using UnityEditor.PackageManager;
+using TMPro;
+using System.Collections;
 
 public class BlackjackManager : MonoBehaviour
 {
     [SerializeField] private CardSlot[] playerCardSlots;
     [SerializeField] private CardSlot[] dealerCardSlots;
+    [SerializeField] private Sprite cardBackSprite;
+    [SerializeField] private TextMeshProUGUI playerScoreText;
+    [SerializeField] private TextMeshProUGUI dealerScoreText;
+    [SerializeField] private TextMeshProUGUI gameResultText;
+
     private Action<float> onGameComplete;
     private bool gameActive = false;
     private bool resultSent = false;
@@ -14,25 +20,13 @@ public class BlackjackManager : MonoBehaviour
     private Deck deck;
     private Hand playerHand;
     private Hand dealerHand;
+    private Card dealerHoleCard;
 
     void Awake()
     {
         deck = new Deck();
         playerHand = new Hand();
         dealerHand = new Hand();
-    }
-
-    void Update()
-    {
-        if (!gameActive) return;
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Hit();
-        } else if (Input.GetKeyDown(KeyCode.S))
-        {
-            Stand();
-        }
     }
 
     public void StartNewGame(Action<float> onComplete)
@@ -42,6 +36,8 @@ public class BlackjackManager : MonoBehaviour
         gameActive = true;
         resultSent = false;
         onGameComplete = onComplete;
+        gameResultText.enabled = false;
+        
 
         foreach (CardSlot pCardSlot in playerCardSlots) {
             pCardSlot.Initialize();
@@ -55,47 +51,50 @@ public class BlackjackManager : MonoBehaviour
         playerHand.Clear();
         dealerHand.Clear();
 
-        ShowPlayerCard(playerHand.AddCard(deck.DrawCard()));
-        ShowDealerCard(dealerHand.AddCard(deck.DrawCard()));
-        ShowPlayerCard(playerHand.AddCard(deck.DrawCard()));
-        ShowDealerCard(dealerHand.AddCard(deck.DrawCard()));
+        ShowCard(playerHand.AddCard(deck.DrawCard()), true);
+        ShowCard(dealerHand.AddCard(deck.DrawCard()), false);
+        ShowCard(playerHand.AddCard(deck.DrawCard()), true);
+        dealerHoleCard = deck.DrawCard();
+        dealerHand.AddCard(dealerHoleCard);
+        ShowDealerCardBack();
 
-        Debug.Log("===== NEW BLACKJACK GAME =====");
-        Debug.Log($"Player: {playerHand.GetHandString()} = {playerHand.GetValue()}");
-
-        Card dealerFirstCard = dealerHand.GetCards()[0];
-        Debug.Log($"Dealer shows: {dealerFirstCard} (2nd card hidden)");
+        UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
+        UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue() - dealerHand.GetCards()[1].GetValue());
 
         if (playerHand.IsBlackjack())
         {
+            RevealDealerHoleCard();
+
             if (dealerHand.IsBlackjack())
             {
                 // Draw
                 EndGame(1f);
+                return;
             }
             
             EndGame(3f);
+            return;
         } else if (dealerHand.IsBlackjack())
         {
             EndGame(0f);
+            return;
         }
-
-        // Wait for input
-        Debug.Log("Press H to hit and S to stand. Have fun!");
     }
 
     public void Hit()
     {
         if (!gameActive) return;
 
-        ShowPlayerCard(playerHand.AddCard(deck.DrawCard()));
-        Debug.Log("Player hits!");
-        Debug.Log($"Players new hand: {playerHand.GetHandString()} = {playerHand.GetValue()}");
+        ShowCard(playerHand.AddCard(deck.DrawCard()), true);
+
+        UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
 
         if (playerHand.IsBust())
         {
-            Debug.Log($"Player busted: {playerHand.GetValue()}");
+            RevealDealerHoleCard();
+
             EndGame(0f);
+            return;
         }
     }
 
@@ -103,18 +102,23 @@ public class BlackjackManager : MonoBehaviour
     {
         if (!gameActive) return;
 
-        Debug.Log("Player stands!");
-        Debug.Log($"Dealers reveals: {dealerHand.GetHandString()} = {dealerHand.GetValue()}");
+        StartCoroutine(DealerDrawCards());
+    }
+
+    private IEnumerator DealerDrawCards()
+    {
+        UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue());
+        RevealDealerHoleCard();
+        yield return new WaitForSeconds(1.0f);
 
         while (dealerHand.GetValue() < 17)
         {
-            ShowDealerCard(dealerHand.AddCard(deck.DrawCard()));
+            yield return new WaitForSeconds(1.0f);
 
-            Debug.Log("Dealer hits!");
-            Debug.Log($"Dealers new hand: {dealerHand.GetHandString()} = {dealerHand.GetValue()}");
+            ShowCard(dealerHand.AddCard(deck.DrawCard()), false);
+            UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue());
         }
 
-        Debug.Log("Dealer stands!");
         EvaluateGame();
     }
 
@@ -123,25 +127,36 @@ public class BlackjackManager : MonoBehaviour
         int playerValue = playerHand.GetValue();
         int dealerValue = dealerHand.GetValue();
 
-        Debug.Log($"Player = {playerValue} x {dealerValue} = Dealer");
-
         if (dealerHand.IsBust() || playerValue > dealerValue)
         {
             EndGame(2f);
+            return;
         } else if (playerValue == dealerValue)
         {
             EndGame(1f);
+            return;
         }
 
         EndGame(0f);
+        return;
     }
 
     private void EndGame(float multiplier)
     {
         if (gameActive && !resultSent)
         {
-            Debug.Log($"Player gets {multiplier} multiplier.");
-            Debug.Log("===== BLACKJACK GAME ENDS =====");
+            if (multiplier == 2f || multiplier == 3f)
+            {
+                ShowGameResultText("WIN", false);
+            }
+            else if (multiplier == 0f)
+            {
+                ShowGameResultText("LOSE", false);
+            }
+            else
+            {
+                ShowGameResultText(null, true);
+            }
             
             resultSent = true;
             gameActive = false;
@@ -151,10 +166,15 @@ public class BlackjackManager : MonoBehaviour
         }
     }
 
-    private void ShowPlayerCard(Card card)
+    private void ShowCard(Card card, bool isPlayer)
     {
         string spriteName = card.GetSpriteName();
-        Sprite sprite = Resources.Load<Sprite>($"Cards/{spriteName}");
+        string[] parts = spriteName.Split('_');
+        string suitName = parts[0];
+        string spriteIndex = parts[1];
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>($"Cards/{suitName}");
+        Sprite sprite = Array.Find(sprites, s => s.name == spriteName);
 
         if (sprite == null)
         {
@@ -162,35 +182,87 @@ public class BlackjackManager : MonoBehaviour
             return;
         }
 
-        if (playerCardIndex >= playerCardSlots.Length)
+        CardSlot[] slots = isPlayer ? playerCardSlots : dealerCardSlots;
+        int currentIndex = isPlayer ? playerCardIndex : dealerCardIndex;
+
+        if (currentIndex >= slots.Length)
         {
-            Debug.LogError("No more player card slots available!");
+            Debug.LogError($"No more {(isPlayer ? "player" : "dealer")} card slots available!");
             return;
         }
 
-        playerCardSlots[playerCardIndex].ShowCard(sprite);
-        playerCardIndex++;
+        slots[currentIndex].ShowCard(sprite);
+
+        if (isPlayer)
+            playerCardIndex++;
+        else
+            dealerCardIndex++;
     }
 
-    private void ShowDealerCard(Card card)
+    private void ShowDealerCardBack()
     {
-        string spriteName = card.GetSpriteName();
-        Sprite sprite = Resources.Load<Sprite>($"Cards/{spriteName}");
-
-        if (sprite == null)
-        {
-            Debug.LogError($"Sprite not found: Cards/{spriteName}");
-            return;
-        }
-
         if (dealerCardIndex >= dealerCardSlots.Length)
         {
             Debug.LogError("No more dealer card slots available!");
             return;
         }
 
-        dealerCardSlots[dealerCardIndex].ShowCard(sprite);
+        if (cardBackSprite == null)
+        {
+            Debug.LogError("Card back sprite not assigned! Assign it in Inspector.");
+            return;
+        }
+
+        dealerCardSlots[dealerCardIndex].ShowCard(cardBackSprite);
         dealerCardIndex++;
+    }
+
+    private void RevealDealerHoleCard()
+    {
+        int holeCardSlotIndex = 1;
+        
+        if (holeCardSlotIndex < dealerCardSlots.Length)
+        {
+            string spriteName = dealerHoleCard.GetSpriteName();
+            string[] parts = spriteName.Split('_');
+            string suitName = parts[0];
+
+            Sprite[] sprites = Resources.LoadAll<Sprite>($"Cards/{suitName}");
+            Sprite sprite = Array.Find(sprites, s => s.name == spriteName);
+
+            if (sprite != null)
+            {
+                dealerCardSlots[holeCardSlotIndex].ShowCard(sprite);
+            }
+            else
+            {
+                Debug.LogError($"Could not find sprite for hole card: {spriteName}");
+            }
+        }
+    }
+
+    private void UpdateTextField(TextMeshProUGUI textField, string label, int value)
+    {
+        if (textField)
+        {
+            textField.text = $"{label}: {value}";
+        }
+    }
+
+    private void ShowGameResultText(string label, bool draw)
+    {
+        gameResultText.enabled = true;
+        if (gameResultText)
+        {
+            if (!draw)
+            {
+                gameResultText.text = $"YOU {label}!";
+            } 
+            else
+            {
+                gameResultText.text = "IT'S A DRAW!";
+            }
+        }
     }
 
     public void ResetGame() 

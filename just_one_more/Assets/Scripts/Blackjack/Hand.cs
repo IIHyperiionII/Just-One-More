@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
-
 public class Hand
 {
     List<Card> hand = new List<Card>();
