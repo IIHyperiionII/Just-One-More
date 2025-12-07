@@ -8,6 +8,7 @@ public class MainMenuController : MonoBehaviour
     public Button loadGameButton;
     public Button settingsButton;
     public Button quitGameButton;
+    public GameObject settingsMenu;
 
     void Awake()
     {
@@ -31,6 +32,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void StartGame()
     {
+        SaveSystem.Instance.isNewGame = true;
         SceneManager.LoadScene("ModeAndWeaponSelectionMenu");
     }
     public void QuitGame()
@@ -46,6 +48,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void OpenSettings()
     {
-        // Implement open settings functionality
+        settingsMenu.SetActive(true);
+        SettingsController.isFromMainMenu = true;
     }
 }

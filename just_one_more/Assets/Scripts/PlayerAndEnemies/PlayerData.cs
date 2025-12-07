@@ -14,7 +14,6 @@ public class PlayerData : ScriptableObject
     public bool isMelee = false;
     public int piercingLevel = 0;
     public int dashLevel = 0;
-    public int hpRegenLevel = 0;
     public int blockLevel = 0;
     public int freezeLevel = 0;
     public int needToGamble = 0;

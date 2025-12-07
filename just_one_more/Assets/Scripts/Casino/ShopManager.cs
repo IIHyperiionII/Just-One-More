@@ -152,10 +152,8 @@ public class ShopManager : MonoBehaviour
             case 1:
                 return new ShopItem("Dash", StatType.DashLevel);
             case 2:
-                return new ShopItem("HP Regen", StatType.HpRegenLevel);
-            case 3:
                 return new ShopItem("Block", StatType.BlockLevel);
-            case 4:
+            case 3:
                 return new ShopItem("Freeze", StatType.FreezeLevel);
             case 5:
                 return new ShopItem("Save Slot", StatType.SaveSlots);
@@ -203,9 +201,6 @@ public class ShopManager : MonoBehaviour
             case StatType.DashLevel:
                 playerData.dashLevel += 1;  
                 break;
-            case StatType.HpRegenLevel:
-                playerData.hpRegenLevel += 1;
-                break;
             case StatType.BlockLevel:
                 playerData.blockLevel += 1;
                 break;
@@ -230,8 +225,6 @@ public class ShopManager : MonoBehaviour
                 return playerData.piercingLevel;
             case StatType.DashLevel:
                 return playerData.dashLevel;
-            case StatType.HpRegenLevel:
-                return playerData.hpRegenLevel;
             case StatType.BlockLevel:
                 return playerData.blockLevel;
             case StatType.FreezeLevel:

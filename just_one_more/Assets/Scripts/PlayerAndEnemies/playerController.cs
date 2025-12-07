@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     private int sign = 1;
     private bool isReversed = false;
     public float slowMultiplier = 1f;
+    public int numberOfSaves = 0;
+    public int hp = 100;
     
     void Start()
     {
@@ -49,6 +51,11 @@ public class PlayerController : MonoBehaviour
         }
         startTimer = Time.time;
         PlayerData.damage = 1; // For testing purposes only
+        numberOfSaves = PlayerData.numberOfSaves;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife && PlayerData.money == 0)
+        {
+            PlayerData.money = 100;
+        }
     }
     void Update()
     {
@@ -64,6 +71,10 @@ public class PlayerController : MonoBehaviour
             startTimer = Time.time;
             PlayerData.needToGamble ++;
             NeedToGambleEffect();
+        }
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            PlayerData.hp = PlayerData.money;
         }
     }
 
@@ -186,14 +197,14 @@ public class PlayerController : MonoBehaviour
     void GetMovementInput()
     {
         input = new Vector2(0, 0);
-        input.x = Input.GetAxis("Horizontal"); // Get horizontal input (A/D or Left/Right arrows)
-        input.y = Input.GetAxis("Vertical"); // Get vertical input (W/S or Up/Down arrows)
+        input.x = ControlsManager.Instance.GetAxisHorizontal(); // Get horizontal input (A/D or Left/Right arrows)
+        input.y = ControlsManager.Instance.GetAxisVertical(); // Get vertical input (W/S or Up/Down arrows)
         if (input.magnitude > 1) input.Normalize(); // Normalize to prevent faster diagonal movement
     }
 
     void GetDashInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isDashing && numberOfDashes > 0 && dashReset)
+        if (ControlsManager.Instance.GetDashInputDown() && !isDashing && numberOfDashes > 0 && dashReset)
         {
             StartCoroutine(Dash(false));
             StartCoroutine(ResetDash());
@@ -209,7 +220,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("HandAnchor not found!");
             yield return null;
-        }
+        } 
 
         Transform hand = handAnchor.Find("Hand");
         if (hand == null)
@@ -245,11 +256,34 @@ public class PlayerController : MonoBehaviour
         Vector2 target = start + dashDir * 6f; // Dash distance of 20 units
         float elapsed = 0f;
 
+        Vector2 safePosition = target;
+        Vector2 safePositionHand = lastHandPosition + dashDir * 6f;
+        Vector2 finalLength = target - start;
+        Vector2 finalLengthHand = lastHandPosition + dashDir * 6f - lastHandPosition;
+        float distance = Vector2.Distance(Rigidbody.position, target);
+
+        RaycastHit2D[] hits = new RaycastHit2D[1];
+        int count = Rigidbody.Cast(dashDir, hits, distance);
+
+
+        if (count > 0)
+        {
+            safePosition = Rigidbody.position + dashDir * (hits[0].distance - 0.01f);
+            safePositionHand = lastHandPosition + dashDir * (hits[0].distance - 0.01f);
+            finalLength = safePosition - start;
+            finalLengthHand = safePositionHand - lastHandPosition;
+            Debug.Log("Dash collision detected, adjusting target position. Length: " + finalLength.magnitude);
+
+        } else {
+            safePosition = target;
+            safePositionHand = lastHandPosition + dashDir * 6f;
+        }
+
         GameObject dashClone1 = CreateDashClone(1f, lastPosition, lastHandPosition);
         dashClone1.SetActive(false);
-        GameObject dashClone2 = CreateDashClone(2f, lastPosition + dashDir * 2f, lastHandPosition + dashDir * 2f);
+        GameObject dashClone2 = CreateDashClone(2f, lastPosition + dashDir * finalLength.magnitude/3, lastHandPosition + dashDir * finalLengthHand.magnitude/3);
         dashClone2.SetActive(false);
-        GameObject dashClone3 = CreateDashClone(3f, lastPosition + dashDir * 4f, lastHandPosition + dashDir * 4f);
+        GameObject dashClone3 = CreateDashClone(3f, lastPosition + dashDir * finalLength.magnitude * 2f/3, lastHandPosition + dashDir * finalLengthHand.magnitude * 2f/3);
         dashClone3.SetActive(false);
         StartCoroutine(CloneGeneration(dashClone1, dashClone2, dashClone3));
         while (elapsed < 0.2f) // Dash duration of 0.2 seconds
@@ -259,6 +293,7 @@ public class PlayerController : MonoBehaviour
             Vector2 newPos = Vector2.Lerp(start, target, t);
             Rigidbody.MovePosition(newPos);
             yield return new WaitForFixedUpdate(); // match physics updates
+            
         }
         isDashing = false;
     }
@@ -332,11 +367,11 @@ public class PlayerController : MonoBehaviour
     void GetAttackInput()
     {
         // Switch for when mouse button is held down
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (ControlsManager.Instance.GetAttackInput())
         {
             MouseKeyHoldDown = true;
         }
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        else
         {
             MouseKeyHoldDown = false;
         }
@@ -387,7 +422,13 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(ShieldUp());
             return;
         }
-        PlayerData.hp -= damage;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            PlayerData.money -= damage;
+            if (PlayerData.money < 0) PlayerData.money = 0;
+        } else {
+            PlayerData.hp -= damage;
+        }
         if (PlayerData.hp <= 0) Die();
         if (Time.timeScale > 0){
             CameraController.ShakeCamera();
@@ -456,7 +497,12 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         PlayerData.isDead = true;
-        PlayerData.hp = 0;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            PlayerData.money = 0;
+        } else {
+            PlayerData.hp = 0;
+        }
     }
     public void GetCoin(int amount)
     {
@@ -479,10 +525,10 @@ public class PlayerController : MonoBehaviour
         playerData.isMelee = PlayerData.isMelee;
         playerData.piercingLevel = PlayerData.piercingLevel;
         playerData.dashLevel = PlayerData.dashLevel;
-        playerData.hpRegenLevel = PlayerData.hpRegenLevel;
         playerData.blockLevel = PlayerData.blockLevel;
         playerData.freezeLevel = PlayerData.freezeLevel;
         playerData.needToGamble = PlayerData.needToGamble;
+        playerData.numberOfSaves = PlayerData.numberOfSaves;
         data.players.Clear();
         data.players.Add(playerData);
     }
@@ -505,10 +551,10 @@ public class PlayerController : MonoBehaviour
             PlayerData.isMelee = playerData.isMelee;
             PlayerData.piercingLevel = playerData.piercingLevel;
             PlayerData.dashLevel = playerData.dashLevel;
-            PlayerData.hpRegenLevel = playerData.hpRegenLevel;
             PlayerData.blockLevel = playerData.blockLevel;
             PlayerData.freezeLevel = playerData.freezeLevel;
             PlayerData.needToGamble = playerData.needToGamble;
+            PlayerData.numberOfSaves = playerData.numberOfSaves;
         }
     }
 }

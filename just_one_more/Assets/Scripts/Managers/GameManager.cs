@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public PlayerData basePlayerData;
     public PlayerData runtimePlayerData;
-    public GameObject[] background = new GameObject[6];
+    public GameObject[] background = new GameObject[3];
+    public GameObject[] backgroundOpen = new GameObject[3];
+    public bool isOpen = false;
     private  Bounds[] spawnBounds;
     private GameObject cameraObject;
     private Bounds cameraBounds;
@@ -26,7 +28,7 @@ public class GameManager : MonoBehaviour
     private int[] KindMinCount = new int[] { 1, 1, 1 };
     public static Transform enemiesParent;
     private Vector2 spawnPosition;
-    private bool WavesIsSpawning = false;
+    private bool waveIsSpawning = false;
     //private bool isTeleporting = false;
     public bool doorsEntered = false;
     private SaveData saveData;
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
     public GameObject casinoButton;
     private ModeAndWeaponSelection currentSelection;
     public bool gameWon = false;
+    public bool isTeleporting = false;
     public float time = 0f;    
     void Awake()
     {
@@ -78,19 +81,27 @@ public class GameManager : MonoBehaviour
         if (SaveSystem.Instance.toLoad)
         {
             SaveSystem.Instance.LoadGame();
+            Debug.Log("GameManager loaded save data");
             SaveSystem.Instance.toLoad = false;
-        }if (background[map] != null)
+        } 
+        if (backgroundOpen[map] != null || background[map] != null)
         {
             for (int i = 0; i < background.Length; i++)
             {
                 if (i == map)
                 {
-                    Debug.Log("Setting background active for map: " + map);
-                    background[i].SetActive(true);
+                    if (isOpen){
+                        backgroundOpen[i].SetActive(true);
+                        background[i].SetActive(false);
+                    } else {
+                        background[i].SetActive(true);
+                        backgroundOpen[i].SetActive(false);
+                    }
                 }
                 else if (background[i] != null)
                 {
                     background[i].SetActive(false);
+                    backgroundOpen[i].SetActive(false);
                 }
             }
         }
@@ -116,8 +127,9 @@ public class GameManager : MonoBehaviour
         if (mapCompleted && !backgroundSet && enemiesParent.childCount == 0)
         {
             Debug.Log("Switching background from map " + map + " to map " + (map + 1));
+            isOpen = true;
             background[map].SetActive(false);
-            background[map + 3].SetActive(true);
+            backgroundOpen[map].SetActive(true);
             backgroundSet = true;
         }
         if (runtimePlayerData == null)
@@ -135,7 +147,7 @@ public class GameManager : MonoBehaviour
             //isTeleporting = false;
         }
         // Check if there are no enemies left
-        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !WavesIsSpawning && wave < 10)
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !waveIsSpawning && wave < 10 && !isTeleporting)
         {
             wave++;
             StartCoroutine(SpawnWave()); // Wait for sync
@@ -168,19 +180,20 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Teleport()
     {
+        isTeleporting = true;
         doorsEntered = false;
         // Time.timeScale = 0f; // Pause the game
         CameraController.isTeleporting = true;
         yield return StartCoroutine(CameraController.TeleportMoveUp()); // Wait a moment before teleporting for sync of coroutines
         CameraController.isTeleporting = false;
         wave = 1;
-        background[map + 3].SetActive(false);
+        backgroundOpen[map].SetActive(false);
         map ++;
-        background[map + 3].SetActive(true);
+        backgroundOpen[map].SetActive(true);
         mapCompleted = false;
-        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("BulletParent"))
+        foreach (Transform child in GameObject.FindGameObjectWithTag("BulletParent").transform)
         {
-            Destroy(bullet); // Clear all remaining bullets
+            Destroy(child.gameObject); // Clear all remaining bullets
         }
         yield return StartCoroutine(CameraController.TeleportMoveDown());
         // Time.timeScale = 1f; // Resume the game
@@ -190,10 +203,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        WavesIsSpawning = true;
+        waveIsSpawning = true;
         yield return new WaitForSeconds(1f); // Wait a moment before starting the next wave for sync of coroutines
         StartCoroutine(SpawnEnemies());
-        WavesIsSpawning = false;
+        waveIsSpawning = false;
     }
     IEnumerator SpawnEnemies()
     {
@@ -396,6 +409,7 @@ public class GameManager : MonoBehaviour
     {
         SaveData data = SaveSystem.Instance.currentSaveData;
         data.map = map;
+        data.isOpen = isOpen;
         data.wave = wave;
         data.mapCompleted = mapCompleted;
         data.time = time;
@@ -417,6 +431,7 @@ public class GameManager : MonoBehaviour
             data.enemies.Add(enemyData);
         }
         data.projectiles.Clear();
+        if (GameObject.FindGameObjectWithTag("BulletParent").transform.childCount == 0) return;
         foreach (Transform child in GameObject.FindGameObjectWithTag("BulletParent").transform)
         {
             GameObject bullet = child.gameObject;
@@ -435,6 +450,7 @@ public class GameManager : MonoBehaviour
     {
         SaveData data = SaveSystem.Instance.currentSaveData;
         map = data.map;
+        isOpen = data.isOpen;
         wave = data.wave;
         mapCompleted = data.mapCompleted;
         time = data.time;
@@ -513,6 +529,7 @@ public class GameManager : MonoBehaviour
                     continue;
             }
         }
+        Debug.Log("GameManager applied save data ");
     }
 
     public Sprite GetRandomSprite(Sprite initSprite)
@@ -526,6 +543,32 @@ public class GameManager : MonoBehaviour
             return GetRandomSprite(initSprite); // Recursively get a new sprite if it's the same as the initial one
         }
         return newSprite;
+    }
+
+    public void ResetGameManager()
+    {
+        wave = 0;
+        map = 0;
+        mapCompleted = false;
+        isOpen = false;
+        gameWon = false;
+        time = 0f;
+        enemiesToSpawn.Clear();
+        foreach (Transform child in enemiesParent.transform)
+        {
+            Destroy(child.gameObject); // Clear all remaining enemies
+        }
+        foreach (Transform child in GameObject.FindGameObjectWithTag("BulletParent").transform)
+        {
+            Destroy(child.gameObject); // Clear all remaining bullets
+        }
+        backgroundSet = false;
+        isTeleporting = false;
+        KindMinCount = new int[] { 1, 1, 1 };
+        waveIsSpawning = false;
+        runtimePlayerData = Instantiate(basePlayerData);
+
+
     }
     
     /*

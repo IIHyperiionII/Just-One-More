@@ -7,7 +7,7 @@ public class ChallangeRunsController : MonoBehaviour
     public ModeAndWeaponSelection currentSelection;
     public Button oneShotButton;
     public Button nightRideButton;
-    public Button inflationButton;
+    public Button moneyLifeButton;
     public Button pistolButton;
     public Button shotgunButton;
     public Button meleeButton;
@@ -19,7 +19,7 @@ public class ChallangeRunsController : MonoBehaviour
     {
         oneShotButton.onClick.AddListener(SelectOneShot);
         nightRideButton.onClick.AddListener(SelectNightRide);
-        inflationButton.onClick.AddListener(SelectInflation);
+        moneyLifeButton.onClick.AddListener(SelectMoneyLife);
         pistolButton.onClick.AddListener(SelectPistol);
         shotgunButton.onClick.AddListener(SelectShotgun);
         meleeButton.onClick.AddListener(SelectMelee);
@@ -90,7 +90,7 @@ public class ChallangeRunsController : MonoBehaviour
         currentSelection.selectedMode = GameMode.OneShot;
         oneShotButton.interactable = false;
         nightRideButton.interactable = true;
-        inflationButton.interactable = true;
+        moneyLifeButton.interactable = true;
         noModeButton.interactable = true;
     }
     public void SelectNightRide()
@@ -98,14 +98,14 @@ public class ChallangeRunsController : MonoBehaviour
         currentSelection.selectedMode = GameMode.nightRide;
         oneShotButton.interactable = true;
         nightRideButton.interactable = false;
-        inflationButton.interactable = true;
+        moneyLifeButton.interactable = true;
     }
-    public void SelectInflation()
+    public void SelectMoneyLife()
     {
-        currentSelection.selectedMode = GameMode.Inflation;
+        currentSelection.selectedMode = GameMode.MoneyLife;
         oneShotButton.interactable = true;
         nightRideButton.interactable = true;
-        inflationButton.interactable = false;
+        moneyLifeButton.interactable = false;
         noModeButton.interactable = true;
     }
     public void NoMode()
@@ -114,7 +114,7 @@ public class ChallangeRunsController : MonoBehaviour
 
         oneShotButton.interactable = true;
         nightRideButton.interactable = true;
-        inflationButton.interactable = true;
+        moneyLifeButton.interactable = true;
         noModeButton.interactable = false;
     }
 }

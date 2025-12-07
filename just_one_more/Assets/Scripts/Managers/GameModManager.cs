@@ -16,6 +16,7 @@ public class GameModeManager : MonoBehaviour
     private bool deadMenuActive = false;
     public GameObject deadMenu;
     public static bool timeIsPaused;
+    public static bool isInSettingsMenu = false;
 
 
     void Start()
@@ -31,13 +32,13 @@ public class GameModeManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive)
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
         {
             escMenuActive = true;
             timeIsPaused = true;
             escMenu.SetActive(true);
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive && !inMiniGame && !gameWonMenuActive && !deadMenuActive)
+        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive && !inMiniGame && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
         {
             escMenuActive = false;
             escMenu.SetActive(false);
