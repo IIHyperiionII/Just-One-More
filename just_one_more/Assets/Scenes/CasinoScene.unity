@@ -297,11 +297,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1734856710404300394, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2052015102879981749, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -362,12 +357,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CasinoWindow
       objectReference: {fileID: 0}
-    - target: {fileID: 8840271937073135488, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: cardBackSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: ebd2e350c0e3f1945b9bcb743ba5069a,
-        type: 3}
     - target: {fileID: 9179560868838160094, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_AnchorMax.y

@@ -6263,7 +6263,7 @@ MonoBehaviour:
   - {fileID: 5133915616761449430}
   - {fileID: 1378180436446013972}
   - {fileID: 5470555653423116226}
-  cardBackSprite: {fileID: 21300000, guid: a9da9afdb1bb1411db60cb2cbe256718, type: 3}
+  cardBackSprite: {fileID: 21300000, guid: ebd2e350c0e3f1945b9bcb743ba5069a, type: 3}
   playerScoreText: {fileID: 940519081555832549}
   dealerScoreText: {fileID: 7932874293431281694}
   gameResultText: {fileID: 2339620798089262524}
@@ -13579,7 +13579,7 @@ PrefabInstance:
     - target: {fileID: 3257035357804836717, guid: 2f5b1e9ecf4155d44aeb9dc81ca91b4d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -810
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3257035357804836717, guid: 2f5b1e9ecf4155d44aeb9dc81ca91b4d,
         type: 3}
