@@ -1,12 +1,13 @@
 using UnityEngine;
 using System;
 
-public class GamblingManager : MonoBehaviour
+public class PlinkoManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private BallSpawner ballSpawner;
 
     private Action<float> onGameComplete;
+
     // gameActive prepared for future use (e.g. multiple balls)
     private bool gameActive = false;
     private bool resultSent = false;
