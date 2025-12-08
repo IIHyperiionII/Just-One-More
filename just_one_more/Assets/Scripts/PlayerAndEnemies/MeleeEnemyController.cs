@@ -17,6 +17,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private ModeAndWeaponSelection currentSelection;
     private GameObject player;
     private Transform target;
+    private bool isFrozen = false;
 
     void Start()
     {
@@ -35,6 +36,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         if (GameModeManager.timeIsPaused) return;
         Move();
+        
+        Debug.Log("Is frozen:" + isFrozen);
     }
     void Move()
     {
@@ -127,6 +130,34 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         {
             StartCoroutine(BecomeInvisible());
         }
+    }
+    public void Freeze(float duration)
+    {
+        if (isFrozen) return;
+        StartCoroutine(FreezeCoroutine(duration));
+    }
+    IEnumerator FreezeCoroutine(float duration)
+    {
+        isFrozen = true;
+        int original = runtimeEnemiesData.moveSpeed;
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = 0;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed /= 2;
+        }
+        
+        yield return new WaitForSeconds(duration);
+
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = original;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed *= 2;
+        }
+        isFrozen = false;
     }
     IEnumerator SpriteChange(Sprite newSprite)
     {

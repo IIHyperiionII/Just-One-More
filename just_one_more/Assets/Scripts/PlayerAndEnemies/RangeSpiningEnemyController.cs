@@ -19,6 +19,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     public GameObject coinPrefab;
     private string enemyType = "";
     private bool isChangingSprite = false;
+    private bool isFrozen = false;
     void Awake()
     {
         spinDirection = Random.Range(0, 2) * 2 - 1; // Randomly set to -1 or 1
@@ -148,6 +149,34 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
             StartCoroutine(SpriteChange(newSprite));
         }
+    }
+    public void Freeze(float duration)
+    {
+        if (isFrozen) return;
+        StartCoroutine(FreezeCoroutine(duration));
+    }
+    IEnumerator FreezeCoroutine(float duration)
+    {
+        isFrozen = true;
+        int original = runtimeEnemiesData.moveSpeed;
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = 0;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed /= 2;
+        }
+        
+        yield return new WaitForSeconds(duration);
+
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = original;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed *= 2;
+        }
+        isFrozen = false;
     }
     IEnumerator SpriteChange(Sprite newSprite)
     {

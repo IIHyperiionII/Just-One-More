@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 353498283}
   - component: {fileID: 353498282}
   m_Layer: 5
-  m_Name: WeaponButton2
+  m_Name: PistolButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1235,7 +1235,7 @@ GameObject:
   - component: {fileID: 840300275}
   - component: {fileID: 840300274}
   m_Layer: 5
-  m_Name: WeaponButton3
+  m_Name: MeleeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1622,7 +1622,7 @@ GameObject:
   - component: {fileID: 960741515}
   - component: {fileID: 960741514}
   m_Layer: 5
-  m_Name: WeaponButton1
+  m_Name: ShotgunButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1896,8 +1896,8 @@ MonoBehaviour:
   oneShotButton: {fileID: 1041078427}
   nightRideButton: {fileID: 960394503}
   moneyLifeButton: {fileID: 541977599}
-  pistolButton: {fileID: 960741514}
-  shotgunButton: {fileID: 353498282}
+  pistolButton: {fileID: 353498282}
+  shotgunButton: {fileID: 960741514}
   meleeButton: {fileID: 840300274}
   startButton: {fileID: 1417887347}
   mainMenuButton: {fileID: 937394681}

@@ -21,9 +21,9 @@ MonoBehaviour:
   knockback: 5
   isDead: 0
   isMelee: 0
-  piercingLevel: 0
+  piercingLevel: 4
   dashLevel: 0
   blockLevel: 0
-  freezeLevel: 0
+  freezeLevel: 4
   needToGamble: 0
   numberOfSaves: 1

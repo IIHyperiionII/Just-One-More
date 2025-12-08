@@ -20,6 +20,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     private Transform enemiesParent;
     private string enemyType = "";
     private bool isChangingSprite = false;  
+    private bool isFrozen = false;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create a runtime instance of the enemy data for this enemy only
@@ -148,6 +149,34 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
             StartCoroutine(SpriteChange(newSprite));
         }
+    }
+    public void Freeze(float duration)
+    {
+        if (isFrozen) return;
+        StartCoroutine(FreezeCoroutine(duration));
+    }
+    IEnumerator FreezeCoroutine(float duration)
+    {
+        isFrozen = true;
+        int original = runtimeEnemiesData.moveSpeed;
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = 0;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed /= 2;
+        }
+        
+        yield return new WaitForSeconds(duration);
+
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = original;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed *= 2;
+        }
+        isFrozen = false;
     }
     IEnumerator SpriteChange(Sprite newSprite)
     {

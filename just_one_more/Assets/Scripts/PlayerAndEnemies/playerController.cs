@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using NUnit.Framework;
 using UnityEngine.Rendering.PostProcessing;
-using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerController : MonoBehaviour
 {
@@ -46,11 +43,17 @@ public class PlayerController : MonoBehaviour
     public AudioClip shieldSound;
     public AudioClip hearthBeatSound;
     private float stepTimer = 0f;
+    public GameObject WeaponControllerObject;
+    private WeaponController weaponController;
     
     void Start()
     {
         if (PlayerData == null){
             PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
+        }
+        if (WeaponControllerObject != null)
+        {
+            weaponController = WeaponControllerObject.GetComponent<WeaponController>();
         }
         Rigidbody = GetComponent<Rigidbody2D>();
         Debug.Log("PlayerData initialized: " + (PlayerData != null));
@@ -442,10 +445,20 @@ public class PlayerController : MonoBehaviour
         {
             nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
             isAttacking = true; // for animation testing
-
-            Quaternion rotation = UpdateAngle();
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
-            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
+            switch (ModeController.Instance.currentSelection.selectedWeapon)
+            {
+                case WeaponType.Melee:
+                    weaponController.AttackSword(100);
+                    break;
+                case WeaponType.Pistol:
+                    weaponController.AttackGun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                    break;
+                case WeaponType.Shotgun:
+                    weaponController.AttackShotgun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                break;
+                default:
+                    break;
+            }
         }
 
         //for animation testing
@@ -453,15 +466,6 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = false;
         }
-    }
-    Quaternion UpdateAngle()
-    {
-        float distanceZ = Mathf.Abs(Camera.main.transform.position.z); // Distance from camera to player on Z axis
-        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceZ)); // Convert mouse position to world position
-        Vector2 aimDirection = (mousePosition - transform.position).normalized; // Get normalized direction vector from player to mouse position
-        float tmpAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg; // Calculate angle in degrees from radians
-        Quaternion angle = Quaternion.Euler(0f, 0f, tmpAngle); // Create rotation quaternion from angle
-        return angle;
     }
 
     public void takeDamage(int damage)

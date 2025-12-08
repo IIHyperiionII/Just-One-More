@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 3760618184261430844}
   - component: {fileID: 8235888307287582652}
   - component: {fileID: 3719900208929839630}
+  - component: {fileID: 3698987198407460865}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -251,6 +252,27 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.1, y: 0.1}
   m_EdgeRadius: 0
+--- !u!114 &3698987198407460865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273258712129342550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c79b6a1d913f4177816ad3c81e53eab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  startTimeBtwAttack: 0
+  attackRange: 1.8
+  IsEnemy:
+    serializedVersion: 2
+    m_Bits: 2048
+  attackAngle: 120
+  mouseDirection: {x: 0, y: 0, z: 0, w: 0}
+  bulletPrefab: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
+    type: 3}
 --- !u!1 &3279417198454505828
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,6 +561,7 @@ MonoBehaviour:
   coinSound: {fileID: 8300000, guid: 180d6a278b1db44b3a537d90b8779f9b, type: 3}
   shieldSound: {fileID: 8300000, guid: 67433f0eed6a14fd5b556b528a4b1ce7, type: 3}
   hearthBeatSound: {fileID: 8300000, guid: e938e759a6c7b4ddb83974896c1c88f6, type: 3}
+  WeaponControllerObject: {fileID: 273258712129342550}
 --- !u!50 &5946437661379280412
 Rigidbody2D:
   serializedVersion: 5
