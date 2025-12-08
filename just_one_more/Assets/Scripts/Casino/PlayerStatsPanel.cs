@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.PlayerLoop;
 
 public class PlayerStatsPanel : MonoBehaviour
 {
@@ -16,6 +15,7 @@ public class PlayerStatsPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI hpRegenText;
     [SerializeField] private TextMeshProUGUI blockText;
     [SerializeField] private TextMeshProUGUI freezeText;
+    [SerializeField] private TextMeshProUGUI saveSlotText;
 
     private PlayerData playerData;
     // Changes based on whether the player is melee or ranged
@@ -209,8 +209,8 @@ public class PlayerStatsPanel : MonoBehaviour
         UpdateTextField(attackModifierText, attackModifierName, attackModifierValue);
         UpdateTextField(piercingText, "Piercing Level", playerData.piercingLevel);
         UpdateTextField(dashText, "Dash Level", playerData.dashLevel);
-        UpdateTextField(hpRegenText, "HP Regen Level", playerData.hpRegenLevel);
         UpdateTextField(blockText, "Block Level", playerData.blockLevel);
         UpdateTextField(freezeText, "Freeze Level", playerData.freezeLevel);
+        UpdateTextField(saveSlotText, "Save slots", playerData.numberOfSaves);
     }
 }

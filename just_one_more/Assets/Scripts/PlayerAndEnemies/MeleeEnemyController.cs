@@ -16,26 +16,27 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private string enemyType;
     private bool isChangingSprite = false;
     private bool isInvisible = false;
-
-    // Caching the player to fix performance issues in Update
-    private Transform playerTransform; 
+    private ModeAndWeaponSelection currentSelection;
+    private GameObject player;
+    private Transform target;
 
     void Start()
     {
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
-        RigidBody = GetComponent<Rigidbody2D>();
-        runtimeEnemiesData = Instantiate(EnemiesData); 
-        RigidBody = GetComponent<Rigidbody2D>();
-        
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null) playerTransform = playerObj.transform;
+        Rigidbody = GetComponent<Rigidbody2D>();
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
+        player = GameObject.FindGameObjectWithTag("Player");
+        target = player.transform.Find("WallBoundsCheck");
     }
 
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         Move();
     }
 
@@ -64,7 +65,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
 
     void GetDirections()
     {
-        playerPosition = playerTransform.position;
+        playerPosition = target.position;
+        playerPosition.y -= 0.8f;
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; 
     }
@@ -74,7 +76,12 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
-            other.gameObject.GetComponent<PlayerController>().takeDamage(runtimeEnemiesData.damage);
+            if (currentSelection.selectedMode == GameMode.OneShot)
+            {
+                other.gameObject.GetComponent<PlayerController>().Die();
+            } else {
+                other.gameObject.GetComponent<PlayerController>().takeDamage(runtimeEnemiesData.damage);
+            }
         }
     }
 
@@ -83,7 +90,12 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
-            other.gameObject.GetComponent<PlayerController>().takeDamage(runtimeEnemiesData.damage);
+            if (currentSelection.selectedMode == GameMode.OneShot)
+            {
+                other.gameObject.GetComponent<PlayerController>().Die();
+            } else {
+                other.gameObject.GetComponent<PlayerController>().takeDamage(runtimeEnemiesData.damage);
+            }
         }
     }
 
@@ -152,5 +164,11 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         isInvisible = false;
     }
+
+    public Vector2 GetDirectionToPlayer()
+    {
+        return direction;
+    }
+
 
 }

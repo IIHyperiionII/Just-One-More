@@ -9,7 +9,7 @@ public enum StatType
     Knockback,
     PiercingLevel,
     DashLevel,
-    HpRegenLevel,
     BlockLevel,
-    FreezeLevel
+    FreezeLevel,
+    SaveSlots
 }

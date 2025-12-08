@@ -7,19 +7,25 @@ public class PlayerBulletControllerTest : MonoBehaviour
     private Rigidbody2D Rigidbody;
     private int speed;
     private int damage;
+    private ModeAndWeaponSelection currentSelection;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         direction = transform.right; // applying given rotation to world x axis
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
     public void Initialize( int bulletSpeed, int bulletDamage)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
+        currentSelection = ModeController.Instance.currentSelection;
     }
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
         
     }
@@ -32,7 +38,12 @@ public class PlayerBulletControllerTest : MonoBehaviour
         {
             if (other.gameObject.CompareTag("Enemy"))
             {
-                DoDamage(other.gameObject);
+                if (currentSelection.selectedMode == GameMode.OneShot)
+                {
+                    Destroy(other.gameObject);
+                } else {
+                    DoDamage(other.gameObject);
+                }
             } else
             {
                 Destroy(other.gameObject);

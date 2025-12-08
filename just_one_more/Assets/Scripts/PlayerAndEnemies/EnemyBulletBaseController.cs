@@ -13,10 +13,15 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
     public int GetSpeed() { return speed; }
     public int GetDamage() { return damage; }
     public int GetSign() { return 0; }
+    private ModeAndWeaponSelection currentSelection;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         direction = transform.right; // applying given rotation to world x axis
+        if (ModeController.Instance != null && currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
 
     public void Initialize( int bulletSpeed, int bulletDamage , Quaternion rotation)
@@ -24,11 +29,12 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
         speed = bulletSpeed;
         damage = bulletDamage;
         initialRotation = rotation;
+        currentSelection = ModeController.Instance.currentSelection;
     }
 
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         // Move the bullet in the set direction
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
     }
@@ -40,7 +46,12 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
         if (other.gameObject.CompareTag("Coin")) return;
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            if (currentSelection.selectedMode == GameMode.OneShot)
+            {
+                other.gameObject.GetComponent<PlayerController>().Die();
+            } else {
+                other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            }
             Destroy(gameObject);
             return;
         }

@@ -15,11 +15,16 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
     public int GetSpeed() { return speed; }
     public int GetDamage() { return damage; }
     public int GetSign() { return 0; }
+    private ModeAndWeaponSelection currentSelection;
 
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         direction = transform.right; // applying given rotation to world x axis
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
 
     public void Initialize(int bulletSpeed, int bulletDamage, Quaternion rotation)
@@ -27,10 +32,11 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
         speed = bulletSpeed;
         damage = bulletDamage;
         initialRotation = rotation;
+        currentSelection = ModeController.Instance.currentSelection;
     }
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         ScaleSize();
     }
     void FixedUpdate()
@@ -68,7 +74,12 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
         if (other.gameObject.CompareTag("Coin")) return;
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            if (currentSelection.selectedMode == GameMode.OneShot)
+            {
+                other.gameObject.GetComponent<PlayerController>().Die();
+            } else {
+                other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            }
             Destroy(gameObject);
         }
         if (other.gameObject.CompareTag("Edge"))

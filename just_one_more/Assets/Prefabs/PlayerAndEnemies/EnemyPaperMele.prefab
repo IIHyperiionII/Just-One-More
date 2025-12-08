@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 7293279234463011717}
   - component: {fileID: -2149543244922151165}
   - component: {fileID: 7681321861560697937}
-  m_Layer: 0
+  - component: {fileID: 8045807154699433998}
+  m_Layer: 11
   m_Name: EnemyPaperMele
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -85,8 +86,7 @@ SpriteRenderer:
   m_SortingLayerID: -1671810417
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
-    type: 3}
+  m_Sprite: {fileID: -1280832905, guid: 859c73849f0d80444bead548b31451fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -131,17 +131,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.05, y: -0.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 3.4133334, y: 3.4133334}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.8, y: 1.25}
   m_EdgeRadius: 0
 --- !u!50 &4205318053506470516
 Rigidbody2D:
@@ -195,7 +195,7 @@ Animator:
   m_GameObject: {fileID: 540468372576299302}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc54a908b90e13f4aa9cb3300c5cbd53, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -221,6 +221,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::YOrderLayer
   spriteRenderer: {fileID: 1047085697662210379}
   positionReference: {fileID: 6337765405601146531}
+  circlePositionReference: {fileID: 0}
+  isCircle: 0
+--- !u!114 &8045807154699433998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540468372576299302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed54464c57557d4c971c446a5bf70c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPlayerPosition
+  playerTag: Player
+  leftRightValue: 0
+  moveTowardsValue: 0
 --- !u!1 &5301312200687785638
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,7 +304,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.4}
+  m_Offset: {x: -0.05, y: -0.6}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -297,5 +314,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.2}
+  m_Size: {x: 0.65, y: 0.2}
   m_EdgeRadius: 0

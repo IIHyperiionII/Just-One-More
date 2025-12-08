@@ -13,7 +13,7 @@ public class MouseCursorController : MonoBehaviour
     // Need to be called after all player movement and rotation processes
     void LateUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         transform.position = mousePosition;
         if (player == null)
         {
