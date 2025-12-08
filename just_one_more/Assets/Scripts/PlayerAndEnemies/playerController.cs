@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
+
+    public bool gun = true; //ČERVENKA tento bool chci updatit na začátku hry přes meníčko nějaké
     public bool isAttacking = false; // for animation testing 
     private bool isDashing = false;
     private bool dashReset = true;
@@ -374,13 +376,16 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(ResetAttackAnimation());
             }
 
-            Quaternion rotation = UpdateAngle();
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-            
-            var bulletScript = bullet.GetComponent<PlayerBulletControllerTest>();
-            if (bulletScript != null)
+            if (gun) 
             {
-                bulletScript.Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier));
+                Quaternion rotation = UpdateAngle();
+                GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
+                
+                var bulletScript = bullet.GetComponent<PlayerBulletControllerTest>();
+                if (bulletScript != null)
+                {
+                    bulletScript.Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier));
+                }
             }
         }
     }
