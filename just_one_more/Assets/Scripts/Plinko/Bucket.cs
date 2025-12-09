@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+
 
 public class Bucket : MonoBehaviour
 {
@@ -39,17 +41,13 @@ public class Bucket : MonoBehaviour
 
     private Color GetMultiplierColor()
     {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
+        Image image = GetComponent<Image>();
+        if (image != null)
         {
-            return spriteRenderer.color;
+            return image.color;
         }
 
-        // Fallback
-        if (multiplier >= 2f) return Color.yellow;
-        if (multiplier >= 1f) return Color.green;
-        if (multiplier > 0f) return new Color(1f, 0.65f, 0f); // Orange
-        return Color.red;
+        return Color.white;
     }
 
     private IEnumerator ShakeBounceAnimation()

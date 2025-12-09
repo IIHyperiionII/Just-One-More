@@ -21,8 +21,8 @@ public class Ball : MonoBehaviour
         previewLine.transform.SetParent(transform);
 
         previewLine.positionCount = 2;
-        previewLine.startWidth = 0.1f;
-        previewLine.endWidth = 0.05f;
+        previewLine.startWidth = 0.15f;
+        previewLine.endWidth = 0.075f;
         previewLine.material = new Material(Shader.Find("Sprites/Default"));
         
         previewLine.material.color = Color.green;
@@ -75,8 +75,8 @@ public class Ball : MonoBehaviour
         else if (currentPushes == 2)
             previewLine.material.color = Color.red;
 
-        previewLine.SetPosition(0, transform.position + direction.normalized * 0.2f);
-        previewLine.SetPosition(1, transform.position + direction.normalized * 0.8f);
+        previewLine.SetPosition(0, transform.position + direction.normalized * 0.3f);
+        previewLine.SetPosition(1, transform.position + direction.normalized * 1.2f);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

@@ -39,7 +39,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 275}
+  m_AnchoredPosition: {x: -2.5791235, y: 279.08786}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8488405732169023887
@@ -259,7 +259,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Time: 0.8
+  m_Time: 1.2
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -269,9 +269,18 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.2
+        value: 0.3
         inSlope: 0
         outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.36673617
+        value: 0.25066853
+        inSlope: -0.3969151
+        outSlope: -0.3969151
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334

@@ -39,8 +39,7 @@ public class CasinoManager : MonoBehaviour
     private StatType currentStatType = StatType.Money;
     private bool gambleGameInProgress = false;
     private Color selectedColor = Color.green;
-    private Color normalColor = Color.white;
-    private string attackModifierName;
+    private Color normalColor = new Color(0f, 0.65f, 0.7f, 1f);
     private StatType attackModifierStatType = StatType.BulletSpeed;
 
     void Start()
@@ -63,12 +62,14 @@ public class CasinoManager : MonoBehaviour
         if (playerStatsPanel && playerData != null)
         {
             playerStatsPanel.SetPlayerData(playerData);
-            attackModifierName = playerStatsPanel.GetAttackModifierName();
             attackModifierStatType = playerStatsPanel.GetAttackModifierStatType();
 
             if (attackModifierButtonText)
             {
-                attackModifierButtonText.text = attackModifierName;
+                if (playerStatsPanel.GetAttackModifierName() == "Bullet Speed")
+                    attackModifierButtonText.text = "Bullet Speed";
+                else
+                    attackModifierButtonText.text = "Knock back";
             }
         }
 
@@ -238,7 +239,6 @@ public class CasinoManager : MonoBehaviour
             case StatType.BulletSpeed:
                 return playerData.bulletSpeed;
             default:
-
                 return minBet;
         }
     }
@@ -489,17 +489,32 @@ public class CasinoManager : MonoBehaviour
         if (betAmountText)
             betAmountText.text = $"Bet: {currentBet}";
 
-        if (selectedStatText)
+        switch (currentStatType)
         {
-            if (currentStatType == attackModifierStatType)
-            {
-                selectedStatText.text = $"Betting: {attackModifierName}";
-            }
-            else
-            {
+            case StatType.Money:
+                selectedStatText.text = "Betting: Money";
+                break;
+            case StatType.HP:
+                selectedStatText.text = "Betting: HP";
+                break;
+            case StatType.Dmg:
+                selectedStatText.text = "Betting: Dmg";
+                break;
+            case StatType.MoveSpeed:
+                selectedStatText.text = "Betting: Move Speed";
+                break;
+            case StatType.AttackSpeed:
+                selectedStatText.text = "Betting: Attack Speed";
+                break;
+            case StatType.BulletSpeed:
+                selectedStatText.text = $"Betting: Bullet Speed";
+                break;
+            case StatType.Knockback:
+                selectedStatText.text = $"Betting: Knockback";
+                break;
+            default:
                 selectedStatText.text = $"Betting: {currentStatType}";
-            }
-
+                break;
         }
 
         if (betSlider)
