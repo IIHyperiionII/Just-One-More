@@ -6,11 +6,9 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private Vector2 playerPosition;
     private Vector2 enemyPosition;
     private Vector2 direction;
-    
-    // Variable References
     public EnemyData EnemiesData;
     private EnemyData runtimeEnemiesData;
-    private Rigidbody2D rigidBody;
+    private Rigidbody2D Rigidbody;
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private string enemyType;
@@ -19,13 +17,20 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private ModeAndWeaponSelection currentSelection;
     private GameObject player;
     private Transform target;
+    private bool isFrozen = false;
+    private bool isKnockbacked = false;
+    private bool hitColorActive = false;
+    private bool freezeColorActive = false;
+    private Color flashColor = new Color(1f, 0.4f, 0.4f);
+    private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
+    private Color originalColor = Color.white;
 
     void Start()
     {
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
-        rigidBody = GetComponent<Rigidbody2D>();
+        Rigidbody = GetComponent<Rigidbody2D>();
         if (currentSelection == null)
         {
             currentSelection = ModeController.Instance.currentSelection;
@@ -33,36 +38,37 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         player = GameObject.FindGameObjectWithTag("Player");
         target = player.transform.Find("WallBoundsCheck");
     }
-
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (isKnockbacked) return;
         Move();
+        
+        Debug.Log("Is frozen:" + isFrozen);
     }
-
     void Move()
     {
-        
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player does not exist in the scene.");
         } else {
-        GetDirections();
-        Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
-        rigidBody.MovePosition(rigidBody.position + movement);
+            GetDirections(0.8f);
+            Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
+            Rigidbody.MovePosition(Rigidbody.position + movement);
         }
     }
 
-    void GetDirections()
+    void GetDirections(float offset)
     {
         playerPosition = target.position;
-        playerPosition.y -= 0.8f;
+        playerPosition.y -= offset;
         enemyPosition = transform.position;
-        direction = (playerPosition - enemyPosition).normalized; 
+        direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        // Check if the collided object has the "Player" tag
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
@@ -74,9 +80,9 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             }
         }
     }
-
     void OnCollisionStay2D(Collision2D other)
     {
+        // Check if the collided object that is staying in contact has the "Player" tag
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
@@ -88,11 +94,11 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             }
         }
     }
-
     void OnDestroy()
     {
+        // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         if (!gameObject.scene.isLoaded) return;
-        Instantiate(coinPrefab, transform.position, Quaternion.identity); 
+        Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
     }
 
     public EnemyData GetEnemyData()
@@ -122,6 +128,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         {
             Destroy(gameObject);
         }
+        HitColorChange();
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -132,6 +139,85 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             StartCoroutine(BecomeInvisible());
         }
     }
+    void HitColorChange()
+    {
+        if (hitColorActive) return;
+        StartCoroutine(HitColor());
+    }
+    IEnumerator HitColor()
+    {
+        hitColorActive = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = flashColor; // Change color to red on hit
+        yield return new WaitForSeconds(0.2f);
+        if (isFrozen)
+        {
+            spriteRenderer.color = freezeFlashColor; // Keep freeze color if frozen
+        } else {
+            spriteRenderer.color = originalColor; // Restore original color
+        }
+        hitColorActive = false;
+    }
+    void FreezeColorChange(float duration)
+    {
+        if (freezeColorActive) return;
+        StartCoroutine(FreezeColor(duration));
+    }
+    IEnumerator FreezeColor(float duration)
+    {
+        freezeColorActive = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = freezeFlashColor; // Change color to blue on freeze
+        yield return new WaitForSeconds(duration);
+        spriteRenderer.color = originalColor; // Restore original color
+        freezeColorActive = false;
+    }
+
+    public void Freeze(float duration)
+    {
+        if (isFrozen) return;
+        StartCoroutine(FreezeCoroutine(duration));
+    }
+    IEnumerator FreezeCoroutine(float duration)
+    {
+        isFrozen = true;
+        FreezeColorChange(duration);
+        int original = runtimeEnemiesData.moveSpeed;
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = 0;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed /= 2;
+        }
+        
+        yield return new WaitForSeconds(duration);
+
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = original;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed *= 2;
+        }
+        isFrozen = false;
+    }
+    public void Knockback(float time)
+    {
+        if (isKnockbacked) return;
+        StartCoroutine(KnockbackCoroutine(time));
+    }
+    IEnumerator KnockbackCoroutine(float time)
+    {
+        isKnockbacked = true;
+        GetDirections(0f);
+        Vector2 knockbackDirection = GetDirectionToPlayer(); // Get direction away from player
+        Rigidbody.AddForce(knockbackDirection * 100 * -1, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(time); // Duration of knockback effect
+        Rigidbody.linearVelocity = Vector2.zero;
+        isKnockbacked = false;
+    }
+    
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);

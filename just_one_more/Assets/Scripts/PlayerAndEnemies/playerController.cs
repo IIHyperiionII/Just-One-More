@@ -4,7 +4,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerController : MonoBehaviour
 {
-    public PlayerData PlayerData;
+    private PlayerData PlayerData;
     private Rigidbody2D Rigidbody;
     private Vector2 input;
     private Vector3 mousePosition;
@@ -25,18 +25,35 @@ public class PlayerController : MonoBehaviour
     private float startTimer = 0f;
     public PostProcessVolume postProcessVolume;
     private Vignette vignetteEffect;
-    public float multiplier = 1f; // Default multiplier value
+    private float multiplier = 1f; // Default multiplier value
     private int pulseCount = 4;
     private int sign = 1;
     private bool isReversed = false;
     public float slowMultiplier = 1f;
     public int numberOfSaves = 0;
     public int hp = 100;
+    private bool isMoving = false;
+    public AudioClip hurtSound;
+    public AudioClip footstepClip;
+    public AudioClip paperFootstepClip;
+    public AudioClip waterFootstepClip;
+    public AudioClip dashSound;
+    public AudioClip deathSound;
+    public AudioClip coinSound;
+    public AudioClip shieldSound;
+    public AudioClip hearthBeatSound;
+    private float stepTimer = 0f;
+    public GameObject WeaponControllerObject;
+    private WeaponController weaponController;
     
     void Start()
     {
         if (PlayerData == null){
             PlayerData = GameManager.Instance.runtimePlayerData; // Access the runtime player data from GameManager
+        }
+        if (WeaponControllerObject != null)
+        {
+            weaponController = WeaponControllerObject.GetComponent<WeaponController>();
         }
         Rigidbody = GetComponent<Rigidbody2D>();
         Debug.Log("PlayerData initialized: " + (PlayerData != null));
@@ -73,6 +90,43 @@ public class PlayerController : MonoBehaviour
         {
             PlayerData.hp = PlayerData.money;
         }
+        if (isMoving)
+        
+        {
+            HandleFootsteps();
+        }
+        else
+        {
+            stepTimer = 0.3f; // reset when stopping
+        }
+    }
+
+    void HandleFootsteps()
+    {
+
+        stepTimer += Time.deltaTime * multiplier * slowMultiplier;
+
+        if (stepTimer >= 0.4f && slowMultiplier == 1f)
+        {
+            float pitch = Random.Range(0.95f, 1.1f);
+            SoundController.Instance.PlaySound(footstepClip, 0.85f, pitch);
+
+            stepTimer = 0f;
+        }
+        else if (stepTimer >= 0.4f && slowMultiplier < 1f)
+        {
+            float pitch = Random.Range(0.95f, 1.1f);
+            if (GameManager.Instance.map == 0) // paper
+            {
+                SoundController.Instance.PlaySound(paperFootstepClip, 0.35f, pitch);
+            }
+            else
+            {
+                SoundController.Instance.PlaySound(waterFootstepClip, 0.35f, pitch);
+            }
+
+            stepTimer = 0f;
+        }
     }
 
     void FixedUpdate()
@@ -80,6 +134,14 @@ public class PlayerController : MonoBehaviour
         if (GameModeManager.timeIsPaused) return;
         if (isDashing) return; // Skip normal movement while dashing
         Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier * slowMultiplier) * sign;
+        if (movement.magnitude > 0)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
+        }
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
     }
@@ -96,6 +158,7 @@ public class PlayerController : MonoBehaviour
                 if (pulseCount % 3 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
@@ -118,6 +181,7 @@ public class PlayerController : MonoBehaviour
                 if (pulseCount % 4 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
@@ -134,6 +198,7 @@ public class PlayerController : MonoBehaviour
                 if (pulseCount % 5 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
@@ -283,6 +348,7 @@ public class PlayerController : MonoBehaviour
         GameObject dashClone3 = CreateDashClone(3f, lastPosition + dashDir * finalLength.magnitude * 2f/3, lastHandPosition + dashDir * finalLengthHand.magnitude * 2f/3);
         dashClone3.SetActive(false);
         StartCoroutine(CloneGeneration(dashClone1, dashClone2, dashClone3));
+        SoundController.Instance.PlaySound(dashSound, 0.3f, 1.0f);
         while (elapsed < 0.2f) // Dash duration of 0.2 seconds
         {
             elapsed += Time.deltaTime;
@@ -373,34 +439,35 @@ public class PlayerController : MonoBehaviour
             MouseKeyHoldDown = false;
         }
     }
-    // void Attack()
-    // {
-    //     if (MouseKeyHoldDown && Time.time >= nextAttackTime)
-    //     {
-    //         nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
-    //         isAttacking = true; // for animation testing
-
-    //         Quaternion rotation = UpdateAngle();
-            // GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
-    //         bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
-    //     }
-
-    //     //for animation testing
-    //     if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
-    //     {
-    //         isAttacking = false;
-    //     }
-    // }
     void Attack()
     {
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
             isAttacking = true; // for animation testing
-
-            Quaternion rotation = UpdateAngle();
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
-            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
+            switch (ModeController.Instance.currentSelection.selectedWeapon)
+            {
+                case WeaponType.Melee:
+                    float rawKnockback = PlayerData.knockback;
+                    if (PlayerData.knockback > 1000)
+                    {
+                        rawKnockback = 1000;
+                    }
+                    float knockback =Mathf.Lerp(0.1f, 1f,Mathf.Sqrt(Mathf.InverseLerp(1f, 1000f, rawKnockback)));
+                    Debug.Log("Calculated knockback: " + knockback);
+                    if (knockback < 0.1f) knockback = 0.1f;
+                    if (knockback > 1f) knockback = 1f;
+                    weaponController.AttackSword((int)(PlayerData.damage * multiplier), knockback);
+                    break;
+                case WeaponType.Pistol:
+                    weaponController.AttackGun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                    break;
+                case WeaponType.Shotgun:
+                    weaponController.AttackShotgun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                break;
+                default:
+                    break;
+            }
         }
 
         //for animation testing
@@ -410,18 +477,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public Quaternion UpdateAngle()
-    {
-        float distanceZ = Mathf.Abs(Camera.main.transform.position.z); // Distance from camera to player on Z axis
-        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceZ)); // Convert mouse position to world position
-        Vector2 aimDirection = (mousePosition - transform.position).normalized; // Get normalized direction vector from player to mouse position
-        float tmpAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg; // Calculate angle in degrees from radians
-        Quaternion angle = Quaternion.Euler(0f, 0f, tmpAngle); // Create rotation quaternion from angle
-        return angle;
-    }
-
     public void takeDamage(int damage)
     {
+        if (PlayerData.isDead) return;
         int blockChance = 0;
         if (PlayerData.blockLevel > 0 && PlayerData.blockLevel < 4)
         {
@@ -445,7 +503,12 @@ public class PlayerController : MonoBehaviour
         } else {
             PlayerData.hp -= damage;
         }
-        if (PlayerData.hp <= 0) Die();
+        if (PlayerData.hp <= 0)
+        {
+            Die();
+        } else {
+            SoundController.Instance.PlaySound(hurtSound, 0.4f, 1.0f);  
+        }
         if (Time.timeScale > 0){
             CameraController.ShakeCamera();
         }
@@ -459,6 +522,7 @@ public class PlayerController : MonoBehaviour
         GameObject shield = transform.Find("Shield").gameObject;
         shield.SetActive(true);
         shieldRequests++;
+        SoundController.Instance.PlaySound(shieldSound, 0.3f, 1.0f);
         yield return new WaitForSeconds(0.2f);
         if (shieldRequests > 1)
         {
@@ -512,6 +576,7 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
+        SoundController.Instance.PlaySound(deathSound, 0.4f, 1.0f);
         PlayerData.isDead = true;
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
@@ -523,6 +588,7 @@ public class PlayerController : MonoBehaviour
     public void GetCoin(int amount)
     {
         PlayerData.money += amount;
+        SoundController.Instance.PlaySound(coinSound, 0.6f, 1.0f);
     }
 
     public void GetSaveData()

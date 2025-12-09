@@ -19,6 +19,16 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     public GameObject coinPrefab;
     private string enemyType = "";
     private bool isChangingSprite = false;
+    private bool isFrozen = false;
+    private bool isInvisible = false;
+    private bool isKnockbacked = false;
+    private GameObject player;
+    private Transform target;
+    private bool hitColorActive = false;
+    private bool freezeColorActive = false;
+    private Color flashColor = new Color(1f, 0.4f, 0.4f);
+    private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
+    private Color originalColor = Color.white;
     void Awake()
     {
         spinDirection = Random.Range(0, 2) * 2 - 1; // Randomly set to -1 or 1
@@ -27,10 +37,13 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         Rigidbody = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        target = player.transform.Find("WallBoundsCheck");
     }
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (isKnockbacked) return;
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player does not exist in the scene.");
@@ -143,14 +156,97 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         {
             Destroy(gameObject);
         }
+        HitColorChange();
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
             StartCoroutine(SpriteChange(newSprite));
         }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isInvisible)
+        {
+            StartCoroutine(BecomeInvisible());
+        }
     }
+    void HitColorChange()
+    {
+        if (hitColorActive) return;
+        StartCoroutine(HitColor());
+    }
+    IEnumerator HitColor()
+    {
+        hitColorActive = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = flashColor; // Change color to red on hit
+        yield return new WaitForSeconds(0.2f);
+        if (isFrozen)
+        {
+            spriteRenderer.color = freezeFlashColor; // Keep freeze color if frozen
+        } else {
+            spriteRenderer.color = originalColor; // Restore original color
+        }
+        hitColorActive = false;
+    }
+    void FreezeColorChange(float duration)
+    {
+        if (freezeColorActive) return;
+        StartCoroutine(FreezeColor(duration));
+    }
+    IEnumerator FreezeColor(float duration)
+    {
+        freezeColorActive = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = freezeFlashColor; // Change color to blue on freeze
+        yield return new WaitForSeconds(duration);
+        spriteRenderer.color = originalColor; // Restore original color
+        freezeColorActive = false;
+    }
+    public void Freeze(float duration)
+    {
+        if (isFrozen) return;
+        StartCoroutine(FreezeCoroutine(duration));
+    }
+    IEnumerator FreezeCoroutine(float duration)
+    {
+        isFrozen = true;
+        FreezeColorChange(duration);
+        int original = runtimeEnemiesData.moveSpeed;
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = 0;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed /= 2;
+        }
+        
+        yield return new WaitForSeconds(duration);
+
+        if (duration == 2)
+        {
+            runtimeEnemiesData.moveSpeed = original;
+        } else
+        {
+            runtimeEnemiesData.moveSpeed *= 2;
+        }
+        isFrozen = false;
+    }
+    public void Knockback(float time)
+    {
+        StartCoroutine(KnockbackCoroutine(time));
+    }
+    IEnumerator KnockbackCoroutine(float time)
+    {
+        isKnockbacked = true;
+        GetDirections(0f);
+        Vector2 knockbackDirection = GetDirectionToPlayer(); // Get direction away from player
+        Rigidbody.AddForce(knockbackDirection * 100 * -1, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(time); // Duration of knockback effect
+        Rigidbody.linearVelocity = Vector2.zero;
+        isKnockbacked = false;
+    }
+    
     IEnumerator SpriteChange(Sprite newSprite)
     {
+        Debug.Log("Changing sprite to " + newSprite.name);
         isChangingSprite = true;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         Sprite originalSprite = spriteRenderer.sprite;
@@ -159,4 +255,28 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    IEnumerator BecomeInvisible()
+    {
+        Debug.Log("Becoming invisible");
+        isInvisible = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f); // Set alpha to 0.0 for invisibility
+        yield return new WaitForSeconds(3f);
+        spriteRenderer.color = originalColor; // Restore original color
+        isInvisible = false;
+    }
+
+    public Vector2 GetDirectionToPlayer()
+    {
+        return direction;
+    }
+    void GetDirections(float offset)
+    {
+        playerPosition = target.position;
+        playerPosition.y -= offset;
+        enemyPosition = transform.position;
+        direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
+    }
+
 }

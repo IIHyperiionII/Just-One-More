@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 3760618184261430844}
   - component: {fileID: 8235888307287582652}
   - component: {fileID: 3719900208929839630}
+  - component: {fileID: 3698987198407460865}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -172,7 +173,7 @@ SpriteRenderer:
   m_SortingLayerID: -1671810417
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5d0e36a6a76ca3449b4ff8e489a738dd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 67f61e906e695834399d4e1bc7f50c2b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -242,7 +243,7 @@ BoxCollider2D:
   m_Offset: {x: 0.24, y: -0.8}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.562, y: 0.57}
+    pivot: {x: 0.562, y: 0.84}
     oldSize: {x: 3.4133334, y: 3.4133334}
     newSize: {x: 3.4133334, y: 3.4133334}
     adaptiveTilingThreshold: 0.5
@@ -251,6 +252,27 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.1, y: 0.1}
   m_EdgeRadius: 0
+--- !u!114 &3698987198407460865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273258712129342550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c79b6a1d913f4177816ad3c81e53eab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  startTimeBtwAttack: 0
+  attackRange: 1.8
+  IsEnemy:
+    serializedVersion: 2
+    m_Bits: 2048
+  attackAngle: 120
+  mouseDirection: {x: 0, y: 0, z: 0, w: 0}
+  bulletPrefab: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
+    type: 3}
 --- !u!1 &3279417198454505828
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,17 +543,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87c042efeb43d4630af57b82889b3b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerController
-  PlayerData: {fileID: 0}
   MouseKeyHoldDown: 0
   bulletPrefab: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
     type: 3}
   isAttacking: 0
   isReadyToLoad: 0
   postProcessVolume: {fileID: 0}
-  multiplier: 1
   slowMultiplier: 1
   numberOfSaves: 0
   hp: 100
+  hurtSound: {fileID: 8300000, guid: 0c733aac51ebe48b883463034e44778a, type: 3}
+  footstepClip: {fileID: 8300000, guid: 2e351eeea56134c93b73bcf3cc00912f, type: 3}
+  paperFootstepClip: {fileID: 8300000, guid: e4b3fa9f6279d4316b809791d3333542, type: 3}
+  waterFootstepClip: {fileID: 8300000, guid: 88f1421e90b544183819b89d5250ba63, type: 3}
+  dashSound: {fileID: 8300000, guid: ff36ffa16f9f14bb5afdab965f1bd5f8, type: 3}
+  deathSound: {fileID: 8300000, guid: 7ee30c630837740a18b0dabce3af1226, type: 3}
+  coinSound: {fileID: 8300000, guid: 180d6a278b1db44b3a537d90b8779f9b, type: 3}
+  shieldSound: {fileID: 8300000, guid: 67433f0eed6a14fd5b556b528a4b1ce7, type: 3}
+  hearthBeatSound: {fileID: 8300000, guid: e938e759a6c7b4ddb83974896c1c88f6, type: 3}
+  WeaponControllerObject: {fileID: 273258712129342550}
 --- !u!50 &5946437661379280412
 Rigidbody2D:
   serializedVersion: 5
