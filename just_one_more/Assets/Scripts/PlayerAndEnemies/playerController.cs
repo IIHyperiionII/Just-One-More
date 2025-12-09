@@ -37,6 +37,17 @@ public class PlayerController : MonoBehaviour
     public float slowMultiplier = 1f;
     public int numberOfSaves = 0;
     public int hp = 100;
+    private bool isMoving = false;
+    public AudioClip hurtSound;
+    public AudioClip footstepClip;
+    public AudioClip paperFootstepClip;
+    public AudioClip waterFootstepClip;
+    public AudioClip dashSound;
+    public AudioClip deathSound;
+    public AudioClip coinSound;
+    public AudioClip shieldSound;
+    public AudioClip hearthBeatSound;
+    private float stepTimer = 0f;
     
     void Start()
     {
@@ -78,6 +89,43 @@ public class PlayerController : MonoBehaviour
         {
             PlayerData.hp = PlayerData.money;
         }
+        if (isMoving)
+        
+        {
+            HandleFootsteps();
+        }
+        else
+        {
+            stepTimer = 0.3f; // reset when stopping
+        }
+    }
+
+    void HandleFootsteps()
+    {
+
+        stepTimer += Time.deltaTime * multiplier * slowMultiplier;
+
+        if (stepTimer >= 0.4f && slowMultiplier == 1f)
+        {
+            float pitch = Random.Range(0.95f, 1.1f);
+            SoundController.Instance.PlaySound(footstepClip, 0.85f, pitch);
+
+            stepTimer = 0f;
+        }
+        else if (stepTimer >= 0.4f && slowMultiplier < 1f)
+        {
+            float pitch = Random.Range(0.95f, 1.1f);
+            if (GameManager.Instance.map == 0) // paper
+            {
+                SoundController.Instance.PlaySound(paperFootstepClip, 0.35f, pitch);
+            }
+            else
+            {
+                SoundController.Instance.PlaySound(waterFootstepClip, 0.35f, pitch);
+            }
+
+            stepTimer = 0f;
+        }
     }
 
     void FixedUpdate()
@@ -85,6 +133,14 @@ public class PlayerController : MonoBehaviour
         if (GameModeManager.timeIsPaused) return;
         if (isDashing) return; // Skip normal movement while dashing
         Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier * slowMultiplier) * sign;
+        if (movement.magnitude > 0)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
+        }
         Rigidbody.MovePosition(Rigidbody.position + movement);
         
     }
@@ -101,6 +157,7 @@ public class PlayerController : MonoBehaviour
                 if (pulseCount % 3 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
@@ -123,6 +180,7 @@ public class PlayerController : MonoBehaviour
                 if (pulseCount % 4 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
@@ -139,6 +197,7 @@ public class PlayerController : MonoBehaviour
                 if (pulseCount % 5 == 0){
                     StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
                     StartCoroutine(VignettePulse());
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
@@ -288,6 +347,7 @@ public class PlayerController : MonoBehaviour
         GameObject dashClone3 = CreateDashClone(3f, lastPosition + dashDir * finalLength.magnitude * 2f/3, lastHandPosition + dashDir * finalLengthHand.magnitude * 2f/3);
         dashClone3.SetActive(false);
         StartCoroutine(CloneGeneration(dashClone1, dashClone2, dashClone3));
+        SoundController.Instance.PlaySound(dashSound, 0.3f, 1.0f);
         while (elapsed < 0.2f) // Dash duration of 0.2 seconds
         {
             elapsed += Time.deltaTime;
@@ -443,6 +503,7 @@ public class PlayerController : MonoBehaviour
 
     public void takeDamage(int damage)
     {
+        if (PlayerData.isDead) return;
         int blockChance = 0;
         if (PlayerData.blockLevel > 0 && PlayerData.blockLevel < 4)
         {
@@ -466,7 +527,12 @@ public class PlayerController : MonoBehaviour
         } else {
             PlayerData.hp -= damage;
         }
-        if (PlayerData.hp <= 0) Die();
+        if (PlayerData.hp <= 0)
+        {
+            Die();
+        } else {
+            SoundController.Instance.PlaySound(hurtSound, 0.4f, 1.0f);  
+        }
         if (Time.timeScale > 0){
             CameraController.ShakeCamera();
         }
@@ -480,6 +546,7 @@ public class PlayerController : MonoBehaviour
         GameObject shield = transform.Find("Shield").gameObject;
         shield.SetActive(true);
         shieldRequests++;
+        SoundController.Instance.PlaySound(shieldSound, 0.3f, 1.0f);
         yield return new WaitForSeconds(0.2f);
         if (shieldRequests > 1)
         {
@@ -533,6 +600,7 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
+        SoundController.Instance.PlaySound(deathSound, 0.4f, 1.0f);
         PlayerData.isDead = true;
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
@@ -544,6 +612,7 @@ public class PlayerController : MonoBehaviour
     public void GetCoin(int amount)
     {
         PlayerData.money += amount;
+        SoundController.Instance.PlaySound(coinSound, 0.6f, 1.0f);
     }
 
     public void GetSaveData()
