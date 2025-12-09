@@ -448,7 +448,16 @@ public class PlayerController : MonoBehaviour
             switch (ModeController.Instance.currentSelection.selectedWeapon)
             {
                 case WeaponType.Melee:
-                    weaponController.AttackSword(100);
+                    float rawKnockback = PlayerData.knockback;
+                    if (PlayerData.knockback > 1000)
+                    {
+                        rawKnockback = 1000;
+                    }
+                    float knockback =Mathf.Lerp(0.1f, 1f,Mathf.Sqrt(Mathf.InverseLerp(1f, 1000f, rawKnockback)));
+                    Debug.Log("Calculated knockback: " + knockback);
+                    if (knockback < 0.1f) knockback = 0.1f;
+                    if (knockback > 1f) knockback = 1f;
+                    weaponController.AttackSword((int)(PlayerData.damage * multiplier), knockback);
                     break;
                 case WeaponType.Pistol:
                     weaponController.AttackGun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);

@@ -21,7 +21,7 @@ public class WeaponController : MonoBehaviour
     {
         mouseDirection = UpdateAngle();
     }
-    public void AttackSword(int damage)
+    public void AttackSword(int damage, float knockback)
     {
 
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRange, IsEnemy);
@@ -36,6 +36,7 @@ public class WeaponController : MonoBehaviour
             if (angleToEnemy < attackAngle / 2f)
             {
                 enemiesToDamage[i].GetComponent<IEnemy>().TakeDamage(damage);
+                enemiesToDamage[i].GetComponent<IEnemy>().Knockback(knockback);
             }
         }
     }

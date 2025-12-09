@@ -21,12 +21,23 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     private string enemyType = "";
     private bool isChangingSprite = false;  
     private bool isFrozen = false;
+    private bool isInvisible = false;
+    private bool isKnockbacked = false;
+    private GameObject player;
+    private Transform target;
+    private bool hitColorActive = false;
+    private bool freezeColorActive = false;
+    private Color flashColor = new Color(1f, 0.4f, 0.4f);
+    private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
+    private Color originalColor = Color.white;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create a runtime instance of the enemy data for this enemy only
         Rigidbody = GetComponent<Rigidbody2D>();
         GetSpawningRadius(); // Calculate the spawning radius based on the collider size
         enemiesParent = GameManager.enemiesParent;
+        player = GameObject.FindGameObjectWithTag("Player");
+        target = player.transform.Find("WallBoundsCheck");
     }
 
     void GetSpawningRadius()
@@ -40,6 +51,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (isKnockbacked) return;
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player object not found in the scene.");
@@ -137,18 +149,56 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     {
         return enemyType;
     }
-    public void TakeDamage(int damage)
+   public void TakeDamage(int damage)
     {
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
             Destroy(gameObject);
         }
+        HitColorChange();
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
             StartCoroutine(SpriteChange(newSprite));
         }
+        if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isInvisible)
+        {
+            StartCoroutine(BecomeInvisible());
+        }
+    }
+    void HitColorChange()
+    {
+        if (hitColorActive) return;
+        StartCoroutine(HitColor());
+    }
+    IEnumerator HitColor()
+    {
+        hitColorActive = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = flashColor; // Change color to red on hit
+        yield return new WaitForSeconds(0.2f);
+        if (isFrozen)
+        {
+            spriteRenderer.color = freezeFlashColor; // Keep freeze color if frozen
+        } else {
+            spriteRenderer.color = originalColor; // Restore original color
+        }
+        hitColorActive = false;
+    }
+    void FreezeColorChange(float duration)
+    {
+        if (freezeColorActive) return;
+        StartCoroutine(FreezeColor(duration));
+    }
+    IEnumerator FreezeColor(float duration)
+    {
+        freezeColorActive = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = freezeFlashColor; // Change color to blue on freeze
+        yield return new WaitForSeconds(duration);
+        spriteRenderer.color = originalColor; // Restore original color
+        freezeColorActive = false;
     }
     public void Freeze(float duration)
     {
@@ -158,6 +208,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     IEnumerator FreezeCoroutine(float duration)
     {
         isFrozen = true;
+        FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
         if (duration == 2)
         {
@@ -178,8 +229,25 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         }
         isFrozen = false;
     }
+    public void Knockback(float time)
+    {
+        if (isKnockbacked) return;
+        StartCoroutine(KnockbackCoroutine(time));
+    }
+    IEnumerator KnockbackCoroutine(float time)
+    {
+        isKnockbacked = true;
+        GetDirections(0f);
+        Vector2 knockbackDirection = GetDirectionToPlayer(); // Get direction away from player
+        Rigidbody.AddForce(knockbackDirection * 100 * -1, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(time); // Duration of knockback effect
+        Rigidbody.linearVelocity = Vector2.zero;
+        isKnockbacked = false;
+    }
+    
     IEnumerator SpriteChange(Sprite newSprite)
     {
+        Debug.Log("Changing sprite to " + newSprite.name);
         isChangingSprite = true;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         Sprite originalSprite = spriteRenderer.sprite;
@@ -187,6 +255,29 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         yield return new WaitForSeconds(2f);
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
+    }
+    IEnumerator BecomeInvisible()
+    {
+        Debug.Log("Becoming invisible");
+        isInvisible = true;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f); // Set alpha to 0.0 for invisibility
+        yield return new WaitForSeconds(3f);
+        spriteRenderer.color = originalColor; // Restore original color
+        isInvisible = false;
+    }
+
+    public Vector2 GetDirectionToPlayer()
+    {
+        return direction;
+    }
+    void GetDirections(float offset)
+    {
+        playerPosition = target.position;
+        playerPosition.y -= offset;
+        enemyPosition = transform.position;
+        direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
 
 }
