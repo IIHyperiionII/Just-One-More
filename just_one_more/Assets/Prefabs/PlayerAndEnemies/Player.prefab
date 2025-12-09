@@ -122,8 +122,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5223293473683743507}
+  m_Children: []
   m_Father: {fileID: 5913333705079489937}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3760618184261430844
@@ -243,7 +242,7 @@ BoxCollider2D:
   m_Offset: {x: 0.24, y: -0.8}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.562, y: 0.84}
+    pivot: {x: 0.562, y: 0.57}
     oldSize: {x: 3.4133334, y: 3.4133334}
     newSize: {x: 3.4133334, y: 3.4133334}
     adaptiveTilingThreshold: 0.5
@@ -522,12 +521,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87c042efeb43d4630af57b82889b3b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerController
+  PlayerData: {fileID: 0}
   MouseKeyHoldDown: 0
   bulletPrefab: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
     type: 3}
   isAttacking: 0
   isReadyToLoad: 0
   postProcessVolume: {fileID: 0}
+  multiplier: 1
   slowMultiplier: 1
   numberOfSaves: 0
   hp: 100
@@ -873,77 +874,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.1}
   m_EdgeRadius: 0
---- !u!1001 &1343310031602396644
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 3754831443844779316}
-    m_Modifications:
-    - target: {fileID: 4655307399472632654, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_Name
-      value: PenSword
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.25656033
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.1301403
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 14692a133e9d0a448859bd4e37717cad, type: 3}
---- !u!4 &5223293473683743507 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6546185357177130743, guid: 14692a133e9d0a448859bd4e37717cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1343310031602396644}
-  m_PrefabAsset: {fileID: 0}

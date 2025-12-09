@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using NUnit.Framework;
 using UnityEngine.Rendering.PostProcessing;
-using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,8 +11,6 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
-
-    public bool gun = true; //ČERVENKA tento bool chci updatit na začátku hry přes meníčko nějaké
     public bool isAttacking = false; // for animation testing 
     private bool isDashing = false;
     private bool dashReset = true;
@@ -400,37 +395,21 @@ public class PlayerController : MonoBehaviour
     {
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            float delay = 1f / (PlayerData.attackSpeed * multiplier);
-            
-            nextAttackTime = Time.time + delay;
+            nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
+            isAttacking = true; // for animation testing
 
-            if (!isAttacking)
-            {
-                StartCoroutine(ResetAttackAnimation());
-            }
+            Quaternion rotation = UpdateAngle();
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at player position with calculated rotation
+            bullet.GetComponent<PlayerBulletControllerTest>().Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier)); // Initialize bullet with player stats
+        }
 
-            if (gun) 
-            {
-                Quaternion rotation = UpdateAngle();
-                GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-                
-                var bulletScript = bullet.GetComponent<PlayerBulletControllerTest>();
-                if (bulletScript != null)
-                {
-                    bulletScript.Initialize(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier));
-                }
-            }
+        //for animation testing
+        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
+        {
+            isAttacking = false;
         }
     }
 
-    IEnumerator ResetAttackAnimation()
-    {
-        isAttacking = true;
-        
-        yield return new WaitForSeconds(0.00001f); 
-
-        isAttacking = false;
-    }
     public Quaternion UpdateAngle()
     {
         float distanceZ = Mathf.Abs(Camera.main.transform.position.z); // Distance from camera to player on Z axis

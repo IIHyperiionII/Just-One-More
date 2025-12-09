@@ -10,7 +10,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     // Variable References
     public EnemyData EnemiesData;
     private EnemyData runtimeEnemiesData;
-    private Rigidbody2D RigidBody; // Renamed to standard 'rb' convention
+    private Rigidbody2D rigidBody;
     public GameObject coinPrefab;
     private float nextAttackTime = 0f;
     private string enemyType;
@@ -25,7 +25,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
-        Rigidbody = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
         if (currentSelection == null)
         {
             currentSelection = ModeController.Instance.currentSelection;
@@ -40,27 +40,17 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         Move();
     }
 
-    void Die()
-    {
-        // Destroy creates the "OnDestroy" event, which will spawn your coin
-        Destroy(gameObject);
-    }
-    // --- NEW METHOD END ---
-
     void Move()
     {
-        // Using cached transform is much faster than GameObject.Find in FixedUpdate
-        if (playerTransform == null)
-        {
-            // Try to find player again if lost (optional)
-            GameObject p = GameObject.FindGameObjectWithTag("Player");
-            if (p) playerTransform = p.transform;
-            return; 
-        }
         
+        if (GameObject.FindGameObjectWithTag("Player") == null)
+        {
+            Debug.LogError("Player does not exist in the scene.");
+        } else {
         GetDirections();
         Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
-        RigidBody.MovePosition(RigidBody.position + movement);
+        rigidBody.MovePosition(rigidBody.position + movement);
+        }
     }
 
     void GetDirections()
