@@ -10,6 +10,5 @@ public enum StatType
     PiercingLevel,
     DashLevel,
     BlockLevel,
-    FreezeLevel,
-    SaveSlots
+    FreezeLevel
 }

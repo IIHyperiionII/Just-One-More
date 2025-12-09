@@ -19,7 +19,6 @@ public class ShopManager : MonoBehaviour
 
     private PlayerData playerData;
     private ShopItem currentItem;
-    private int previousRandomChoice = -1;
     private int rerollCount = 0;
     private int baseRerollPrice = 100;
     private int baseItemPrice = 100;
@@ -136,14 +135,8 @@ public class ShopManager : MonoBehaviour
 
     private ShopItem GenerateRandomUpgrade()
     {
-        int randomChoice;
-
-        do
-        {
-            randomChoice = Random.Range(0, 6);
-        } while (randomChoice == previousRandomChoice);
-        
-        previousRandomChoice = randomChoice;
+        // ??? TODO: Next choice cant be the same as the current one
+        int randomChoice = Random.Range(0, 5);
 
         switch (randomChoice)
         {
@@ -155,8 +148,6 @@ public class ShopManager : MonoBehaviour
                 return new ShopItem("Block", StatType.BlockLevel);
             case 3:
                 return new ShopItem("Freeze", StatType.FreezeLevel);
-            case 5:
-                return new ShopItem("Save Slot", StatType.SaveSlots);
             default:
                 return new ShopItem("Piercing", StatType.PiercingLevel);
         }
@@ -170,6 +161,7 @@ public class ShopManager : MonoBehaviour
         if (playerStatsPanel.SpendMoney(price))
         {
             ApplyUpgrade(currentItem);
+            Debug.Log($"Bought {currentItem.name}! Level {currentLevel} → {currentLevel + 1}");
 
             rerollCount = 0;
             RerollShop();
@@ -189,7 +181,7 @@ public class ShopManager : MonoBehaviour
     {
         if (playerData == null)
         {
-            Debug.LogError("PlayerData is null!");
+            Debug.Log("ERROR: playerData is null!");
             return;
         }
 
@@ -206,9 +198,6 @@ public class ShopManager : MonoBehaviour
                 break;
             case StatType.FreezeLevel:
                 playerData.freezeLevel += 1;
-                break;
-            case StatType.SaveSlots:
-                playerData.numberOfSaves += 1;
                 break;
         }
 
@@ -229,8 +218,6 @@ public class ShopManager : MonoBehaviour
                 return playerData.blockLevel;
             case StatType.FreezeLevel:
                 return playerData.freezeLevel;
-            case StatType.SaveSlots:
-                return playerData.numberOfSaves;
             default:
                 return 0;
         }
