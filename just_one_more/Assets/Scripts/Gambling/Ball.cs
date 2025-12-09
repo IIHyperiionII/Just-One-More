@@ -6,6 +6,7 @@ public class Ball : MonoBehaviour
     private float lifetime = 30f;
     private float destroyDelay = 0.2f;
     private bool scoreRegistered = false;
+
     private float pushForce = 40f;
     private int maxPushes = 3;
     private int currentPushes;
@@ -25,10 +26,12 @@ public class Ball : MonoBehaviour
         previewLine.endWidth = 0.05f;
         previewLine.material = new Material(Shader.Find("Sprites/Default"));
         
-        previewLine.material.color = Color.green;
-
+        // Zelená s gradientem
+        previewLine.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+        previewLine.endColor = new Color(0.8f, 0.8f, 0.8f, 0.3f);
+        
         previewLine.sortingOrder = 15;
-        previewLine.enabled = true;
+        previewLine.enabled = true; // ZAPNUTÉ od začátku
 
         // Schedule the ball for destruction after its lifetime expires
         Destroy(gameObject, lifetime);
@@ -62,21 +65,16 @@ public class Ball : MonoBehaviour
 
     void UpdatePushPreview() 
     {
+        // ??? TODO: Change color based on pushCount?
+
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
     
         Vector3 direction = mousePos - transform.position;
         direction.z = 0;
         
-        if (currentPushes == 0)
-            previewLine.material.color = Color.green;
-        else if (currentPushes == 1)
-            previewLine.material.color = Color.orange;
-        else if (currentPushes == 2)
-            previewLine.material.color = Color.red;
-
-        previewLine.SetPosition(0, transform.position + direction.normalized * 0.2f);
-        previewLine.SetPosition(1, transform.position + direction.normalized * 0.8f);
+        previewLine.SetPosition(0, transform.position + direction.normalized * 0.1f);
+        previewLine.SetPosition(1, transform.position + direction.normalized * 0.4f);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

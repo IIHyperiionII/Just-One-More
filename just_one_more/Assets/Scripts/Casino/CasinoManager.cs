@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CasinoManager : MonoBehaviour
 {
@@ -23,15 +24,13 @@ public class CasinoManager : MonoBehaviour
 
     [Header("Panels")]
     [SerializeField] private GameObject casinoPanel;
-    [SerializeField] private GameObject plinkoPanel;
-    [SerializeField] private GameObject blackjackPanel;
+    [SerializeField] private GameObject gamblingPanel;
 
     [Header("Data")]
     [SerializeField] private PlayerStatsPanel playerStatsPanel;
 
     [Header("Game References")]
-    [SerializeField] private PlinkoManager plinkoManager;
-    [SerializeField] private BlackjackManager blackjackManager;
+    [SerializeField] private GamblingManager gamblingManager;
 
     private int minBet = 1;
     private PlayerData playerData;
@@ -72,14 +71,9 @@ public class CasinoManager : MonoBehaviour
             }
         }
 
-        if (plinkoPanel)
+        if (gamblingPanel)
         {
-            plinkoPanel.SetActive(false);
-        }
-
-        if (blackjackPanel)
-        {
-            blackjackPanel.SetActive(false);
+            gamblingPanel.SetActive(false);
         }
 
         currentBet = minBet;
@@ -328,7 +322,7 @@ public class CasinoManager : MonoBehaviour
 
     // ========== GAME CONTROL ==========
 
-    public void StartPlinko()
+    public void StartGambleGame()
     {
         if (gambleGameInProgress)
         {
@@ -354,58 +348,17 @@ public class CasinoManager : MonoBehaviour
             gambleGameInProgress = true;
             UpdateUI();
 
-            if (plinkoPanel)
-                plinkoPanel.SetActive(true);
+            if (gamblingPanel)
+                gamblingPanel.SetActive(true);
 
-            if (plinkoManager)
+            if (gamblingManager)
             {
                 // Give callback function OnGameComplete to be called when game ends
-                plinkoManager.StartNewGame(OnGameComplete);
+                gamblingManager.StartNewGame(OnGameComplete);
             }
             else
             {
-                Debug.LogWarning("plinkoManager not assigned!");
-            }
-        }
-    }
-
-    public void StartBlackjack()
-    {
-         if (gambleGameInProgress)
-        {
-            Debug.LogWarning("Game already in progress!");
-            return;
-        }
-
-        if (!playerData)
-        {
-            Debug.LogError("PlayerData not assigned!");
-            return;
-        }
-
-        if (!CanAffordBet())
-        {
-            // Player doesn't have enough stats
-            // TODO: UI feedback
-            return;
-        }
-
-        if (SpendStat())
-        {
-            gambleGameInProgress = true;
-            UpdateUI();
-
-            if (blackjackPanel)
-                blackjackPanel.SetActive(true);
-
-            if (blackjackManager)
-            {
-                // Give callback function OnGameComplete to be called when game ends
-                blackjackManager.StartNewGame(OnGameComplete);
-            }
-            else
-            {
-                Debug.LogWarning("plinkoManager not assigned!");
+                Debug.LogWarning("GamblingManager not assigned!");
             }
         }
     }
@@ -436,24 +389,22 @@ public class CasinoManager : MonoBehaviour
     IEnumerator CloseAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay); // ignores Time.timeScale
-        CloseGamblePanel();
+        CloseGamblingPanel();
     }
 
 
-    public void CloseGamblePanel()
+    public void CloseGamblingPanel()
     {
         if (!gambleGameInProgress)
         {
-            if (plinkoPanel) plinkoPanel.SetActive(false);
-            if (plinkoManager) plinkoManager.ResetGame();
-            if (blackjackPanel) blackjackPanel.SetActive(false);
-            if (blackjackManager) blackjackManager.ResetGame();
+            if (gamblingPanel) gamblingPanel.SetActive(false);
+            if (gamblingManager) gamblingManager.ResetGame();
         }
     }
 
     // Close for EXIT button in gambling panel
     // PROBLEM - TODO: Player can now rig the game by exiting before a bad outcome
-    public void ForceCloseGamblePanel()
+    public void ForceCloseGamblingPanel()
     {
         // Return bet to player
         if (gambleGameInProgress && playerData != null)
@@ -464,17 +415,11 @@ public class CasinoManager : MonoBehaviour
 
         gambleGameInProgress = false;
 
-        if (plinkoPanel)
-            plinkoPanel.SetActive(false);
+        if (gamblingPanel)
+            gamblingPanel.SetActive(false);
 
-        if (plinkoManager)
-            plinkoManager.ResetGame();
-
-        if (blackjackPanel)
-            blackjackPanel.SetActive(false);
-        
-        if (blackjackManager)
-            blackjackManager.ResetGame();
+        if (gamblingManager)
+            gamblingManager.ResetGame();
 
         UpdateUI();
         playerStatsPanel.UpdateUI();
