@@ -23,7 +23,6 @@ MonoBehaviour:
   isMelee: 0
   piercingLevel: 4
   dashLevel: 0
-  hpRegenLevel: 0
   blockLevel: 0
   freezeLevel: 4
   needToGamble: 0
