@@ -40,9 +40,7 @@ public class GameManager : MonoBehaviour
     private ModeAndWeaponSelection currentSelection;
     public bool gameWon = false;
     public bool isTeleporting = false;
-    public float time = 0f;   
-    public AudioClip  ElevatorOpenSound;
-    public AudioClip WaveCompleteSound;
+    public float time = 0f;    
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -133,7 +131,6 @@ public class GameManager : MonoBehaviour
             background[map].SetActive(false);
             backgroundOpen[map].SetActive(true);
             backgroundSet = true;
-            SoundController.Instance.PlaySound(ElevatorOpenSound, 0.3f, 1.0f);
         }
         if (runtimePlayerData == null)
         {
@@ -154,9 +151,6 @@ public class GameManager : MonoBehaviour
         {
             wave++;
             StartCoroutine(SpawnWave()); // Wait for sync
-            if (wave > 1){
-                SoundController.Instance.PlaySound(WaveCompleteSound, 0.3f, 1.0f);
-            }
         } else if ( wave > 10 && !mapCompleted ) {
             mapCompleted = true;
         }
