@@ -471,7 +471,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //for animation testing
-        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
+        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.05f)
         {
             isAttacking = false;
         }

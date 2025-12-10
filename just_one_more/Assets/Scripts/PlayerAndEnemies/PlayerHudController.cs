@@ -28,6 +28,12 @@ public class PlayerHudController : MonoBehaviour
     private float defaultScreenWidth = 1920f;
     private float screenWidthDifference;
     private bool isFirst = true;
+    public Sprite[] needToGambleBarSprites;
+    public Sprite[] needToGambleHeadSprites;
+    public GameObject needToGambleBarImage;
+    public GameObject needToGambleHeadImage;
+    public int needToGambleLevel = 0;
+    public float multiplier = 0.75f;
 
     void Start()
     {
@@ -64,6 +70,22 @@ public class PlayerHudController : MonoBehaviour
             msText.text = $"MS: {playerData.moveSpeed}";
             asText.text = $"AS: {playerData.attackSpeed}";
         }
+        needToGambleLevel = playerData.needToGamble/10;
+        needToGambleBarImage.GetComponent<Image>().sprite = needToGambleBarSprites[needToGambleLevel];
+        if (needToGambleLevel < 5)
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[0];
+        } else if (needToGambleLevel < 6)
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[1];
+        } else if (needToGambleLevel < 7)
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[2];
+        } else 
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[3];
+        }
+
     }
     void GetHp()
     {
@@ -89,7 +111,7 @@ public class PlayerHudController : MonoBehaviour
                 GameObject numberCard = new GameObject();
                 numberCard.AddComponent<Image>();
                 numberCard.GetComponent<Image>().sprite = numbersCards[digit];
-                numberCard.GetComponent<RectTransform>().sizeDelta = new Vector2(256 * screenWidthDifference, 256 * screenWidthDifference);
+                numberCard.GetComponent<RectTransform>().sizeDelta = new Vector2(256 * screenWidthDifference * multiplier, 256 * screenWidthDifference * multiplier);
                 numberCardsSprites[index] = numberCard;
                 numberCard.transform.SetParent(numbersCardsParent.transform);
             }
@@ -110,7 +132,7 @@ public class PlayerHudController : MonoBehaviour
         {
             if (numberCardsSprites.ContainsKey(i))
             {
-                numberCardsSprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + 95f * iterator * screenWidthDifference, numbersCardsParent.transform.position.y, numbersCardsParent.transform.position.z);
+                numberCardsSprites[i].transform.position = new Vector3(numbersCardsParent.transform.position.x + 95f * iterator * screenWidthDifference * multiplier, numbersCardsParent.transform.position.y, numbersCardsParent.transform.position.z);
             }
         
             iterator++;
@@ -141,7 +163,7 @@ public class PlayerHudController : MonoBehaviour
                 GameObject numberMoney = new GameObject();
                 numberMoney.AddComponent<Image>();
                 numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
-                numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference;
+                numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
                 numberMoneySprites[index] = numberMoney;
                 numberMoney.transform.SetParent(numbersMoneyParent.transform);
             }
@@ -172,10 +194,10 @@ public class PlayerHudController : MonoBehaviour
                 {
                     isFirst = false;
                     numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
-                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference)/2 + 10f;
+                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference * multiplier)/2 + 7.5f;
                 } else {
-                    numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((numberMoneySprites[i].GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
-                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference) + 10f;
+                    numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((numberMoneySprites[i].GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference * multiplier, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference * multiplier) + 7.5f;
                 }
                 
             }
@@ -184,9 +206,9 @@ public class PlayerHudController : MonoBehaviour
         }
         dollarSign.AddComponent<Image>();
         dollarSign.GetComponent<Image>().sprite = dollarSignSprite;
-        dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference;
+        dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference * multiplier;
         dollarSign.transform.SetParent(numbersMoneyParent.transform);
-        dollarSign.transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((dollarSign.GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+        dollarSign.transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((dollarSign.GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference * multiplier, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
         isFirst = true;
     }
 }
