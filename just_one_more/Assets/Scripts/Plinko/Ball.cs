@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Mathematics;
+
 
 public class Ball : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class Ball : MonoBehaviour
     private int currentPushes;
     private Rigidbody2D rb;
     private LineRenderer previewLine;
+    private Vector2 savedDirection;
+    private bool isChargingPush;
 
     void Start()
     {
@@ -37,12 +41,14 @@ public class Ball : MonoBehaviour
     void Update()
     {
         if (currentPushes < maxPushes && !scoreRegistered)
-        {
+        {   
             UpdatePushPreview();
 
-            if (Input.GetMouseButtonDown(0)) 
+            if (Input.GetMouseButtonDown(0) && !isChargingPush)
             {
-                PushTowardsMouse();
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                savedDirection = (mousePos - transform.position).normalized;
+                StartCoroutine(PushTowardsMouse());
             }
         } 
         else 
@@ -51,13 +57,20 @@ public class Ball : MonoBehaviour
         }
     }
 
-    void PushTowardsMouse() 
+    IEnumerator PushTowardsMouse()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = (mousePos - transform.position).normalized;
+        isChargingPush = true;
 
-        rb.AddForce(direction * pushForce, ForceMode2D.Impulse);
+        if (previewLine != null)
+            previewLine.material.color = Color.white;
+
+        yield return new WaitForSeconds(0.5f);
+
+        rb.AddForce(savedDirection * pushForce, ForceMode2D.Impulse);
+
         currentPushes++;
+
+        isChargingPush = false;
     }
 
     void UpdatePushPreview() 
@@ -68,12 +81,14 @@ public class Ball : MonoBehaviour
         Vector3 direction = mousePos - transform.position;
         direction.z = 0;
         
-        if (currentPushes == 0)
-            previewLine.material.color = Color.green;
-        else if (currentPushes == 1)
-            previewLine.material.color = Color.orange;
-        else if (currentPushes == 2)
-            previewLine.material.color = Color.red;
+        if (!isChargingPush) {
+            if (currentPushes == 0)
+                previewLine.material.color = Color.green;
+            else if (currentPushes == 1)
+                previewLine.material.color = Color.orange;
+            else if (currentPushes == 2)
+                previewLine.material.color = Color.red;
+        }
 
         previewLine.SetPosition(0, transform.position + direction.normalized * 0.3f);
         previewLine.SetPosition(1, transform.position + direction.normalized * 1.2f);

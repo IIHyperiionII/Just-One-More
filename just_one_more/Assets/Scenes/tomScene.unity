@@ -6931,7 +6931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7226387067479047742, guid: b6db91108a3c74bbc8bb9c4e3cff9091,
         type: 3}
-      propertyPath: Casino
+      propertyPath: casino
       value: 
       objectReference: {fileID: 643607029}
     - target: {fileID: 7226387067479047742, guid: b6db91108a3c74bbc8bb9c4e3cff9091,
@@ -6959,11 +6959,6 @@ PrefabInstance:
       propertyPath: gameLoopParent
       value: 
       objectReference: {fileID: 683894556}
-    - target: {fileID: 7226387067479047742, guid: b6db91108a3c74bbc8bb9c4e3cff9091,
-        type: 3}
-      propertyPath: miniGameParent
-      value: 
-      objectReference: {fileID: 643607029}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

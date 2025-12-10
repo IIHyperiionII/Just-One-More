@@ -11,6 +11,7 @@ public class CasinoManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI betAmountText;
     [SerializeField] private TextMeshProUGUI selectedStatText;
     [SerializeField] private Slider betSlider;
+    [SerializeField] private TextMeshProUGUI remainingGamblesText;
 
     [Header("Stat Selection Buttons")]
     [SerializeField] private Button moneyButton;
@@ -41,7 +42,10 @@ public class CasinoManager : MonoBehaviour
     private Color selectedColor = Color.green;
     private Color normalColor = new Color(0f, 0.65f, 0.7f, 1f);
     private StatType attackModifierStatType = StatType.BulletSpeed;
-
+    private int remainingGambles = 3;
+    private float minigameStartTime;
+    private const float MIN_MINIGAME_DURATION = 30f;
+    private int needToGambleReduction = 15;
     void Start()
     {
 #if UNITY_EDITOR
@@ -154,7 +158,12 @@ public class CasinoManager : MonoBehaviour
         }
     }
 #endif
-    
+
+    void OnEnable()
+    {
+        remainingGambles = 3;     
+    }
+
     private void SetupSlider()
     {
         if (betSlider)
@@ -291,7 +300,6 @@ public class CasinoManager : MonoBehaviour
         switch (currentStatType)
         {
             case StatType.Money:
-                // TODO: (playerData.money + amount) > max ? max : playerData.money + amount
                 playerData.money = Mathf.Max(0, playerData.money + amount);
                 break;
             case StatType.HP:
@@ -330,6 +338,10 @@ public class CasinoManager : MonoBehaviour
 
     public void StartPlinko()
     {
+        // UI ?
+        if (remainingGambles == 0)
+            return;
+
         if (gambleGameInProgress)
         {
             Debug.LogWarning("Game already in progress!");
@@ -344,14 +356,13 @@ public class CasinoManager : MonoBehaviour
 
         if (!CanAffordBet())
         {
-            // Player doesn't have enough stats
-            // TODO: UI feedback
             return;
         }
 
         if (SpendStat())
         {
             gambleGameInProgress = true;
+            minigameStartTime = Time.time;
             UpdateUI();
 
             if (plinkoPanel)
@@ -371,7 +382,11 @@ public class CasinoManager : MonoBehaviour
 
     public void StartBlackjack()
     {
-         if (gambleGameInProgress)
+        // UI ?
+        if (remainingGambles == 0)
+            return;
+
+        if (gambleGameInProgress)
         {
             Debug.LogWarning("Game already in progress!");
             return;
@@ -385,14 +400,13 @@ public class CasinoManager : MonoBehaviour
 
         if (!CanAffordBet())
         {
-            // Player doesn't have enough stats
-            // TODO: UI feedback
             return;
         }
 
         if (SpendStat())
         {
             gambleGameInProgress = true;
+            minigameStartTime = Time.time;
             UpdateUI();
 
             if (blackjackPanel)
@@ -426,6 +440,9 @@ public class CasinoManager : MonoBehaviour
 #endif
 
         gambleGameInProgress = false;
+        remainingGambles--;
+        playerData.needToGamble = Mathf.Max(0, playerData.needToGamble -= needToGambleReduction);
+
         UpdateUI();
         playerStatsPanel.UpdateUI();
 
@@ -452,9 +469,32 @@ public class CasinoManager : MonoBehaviour
     }
 
     // Close for EXIT button in gambling panel
-    // PROBLEM - TODO: Player can now rig the game by exiting before a bad outcome
     public void ForceCloseGamblePanel()
     {
+        bool canForceClose;
+
+        if (gambleGameInProgress)
+        {
+            float timeSinceStart = Time.time - minigameStartTime;
+
+            // Allow force close only if:
+
+            // 1. Enough time has passed
+            bool timeCondition = timeSinceStart >= MIN_MINIGAME_DURATION;
+
+            // 2. Plinko ball is under Y threshold under buckets
+            bool ballCondition = false;
+            if (plinkoPanel != null && plinkoPanel.activeSelf && plinkoManager != null)
+                ballCondition = plinkoManager.IsBallStuck();
+
+            canForceClose = timeCondition || ballCondition;
+
+            if (!canForceClose) {
+                Debug.Log($"Cannot force close yet. Time elapsed: {timeSinceStart:F1}s / {MIN_MINIGAME_DURATION}s");
+                return;
+            }
+        }
+
         // Return bet to player
         if (gambleGameInProgress && playerData != null)
         {
@@ -488,6 +528,9 @@ public class CasinoManager : MonoBehaviour
 
         if (betAmountText)
             betAmountText.text = $"Bet: {currentBet}";
+
+        if (remainingGamblesText)
+            remainingGamblesText.text = $"Remaining gambles: {remainingGambles}";
 
         switch (currentStatType)
         {

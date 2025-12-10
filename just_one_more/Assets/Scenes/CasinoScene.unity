@@ -362,11 +362,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 157298569185900344, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 157298569185900344, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
@@ -432,17 +427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9179560868838160094, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179560868838160094, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179560868838160094, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
