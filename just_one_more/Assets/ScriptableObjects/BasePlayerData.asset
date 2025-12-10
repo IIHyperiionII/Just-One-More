@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   hp: 100
   moveSpeed: 10
-  attackSpeed: 10
+  attackSpeed: 1
   damage: 40
-  money: 1000
+  money: 7345
   bulletSpeed: 10
-  knockback: 5
+  knockback: 1
   isDead: 0
   isMelee: 0
-  piercingLevel: 0
-  dashLevel: 4
-  hpRegenLevel: 0
-  blockLevel: 4
-  freezeLevel: 0
+  piercingLevel: 4
+  dashLevel: 0
+  blockLevel: 0
+  freezeLevel: 4
+  needToGamble: 0
+  numberOfSaves: 1

@@ -24,6 +24,7 @@ TagManager:
   - Background3
   - EnemyBulletWave
   - EnemyBulletScaling
+  - ModeController
   layers:
   - Default
   - TransparentFX

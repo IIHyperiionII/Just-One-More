@@ -22,6 +22,7 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
     public int GetSpeed() { return speed; }
     public int GetDamage() { return damage; }
     public int GetSign() { return sign; }
+    private ModeAndWeaponSelection currentSelection;
 
     void Awake()
     {
@@ -30,6 +31,10 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         startPosition = Rigidbody.position;
         frequency = UnityEngine.Random.Range(5f, 15f); // random frequency for wave motion
         amplitude = UnityEngine.Random.Range(0.5f, 5f); // random amplitude for wave motion
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
 
     public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign, Quaternion rotation)
@@ -38,10 +43,11 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         damage = bulletDamage;
         sign = bulletSign;
         initialRotation = rotation;
+        currentSelection = ModeController.Instance.currentSelection;
     }
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         GetWaveMovement();
             Rigidbody.MovePosition(motionForward + waveMovement);
     }
@@ -61,7 +67,12 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         if (other.gameObject.CompareTag("Coin")) return;
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            if (currentSelection.selectedMode == GameMode.OneShot)
+            {
+                other.gameObject.GetComponent<PlayerController>().Die();
+            } else {
+                other.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            }
             Destroy(gameObject);
         }
         if (other.gameObject.CompareTag("Edge"))

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameModeManager : MonoBehaviour
 {
@@ -9,7 +10,14 @@ public class GameModeManager : MonoBehaviour
     public GameObject escMenu;
     private bool inMiniGame = false;
     private bool escMenuActive = false;
-    public static bool playerInCasino;
+    public Button casinoButton;
+    private bool gameWonMenuActive = false;
+    public GameObject gameWonMenu;
+    private bool deadMenuActive = false;
+    public GameObject deadMenu;
+    public static bool timeIsPaused;
+    public static bool isInSettingsMenu = false;
+
 
     void Start()
     {
@@ -19,21 +27,39 @@ public class GameModeManager : MonoBehaviour
             Casino = GameObject.FindGameObjectWithTag("Casino");
         }
         ExitMiniGame();
+        casinoButton.onClick.AddListener(EnterMiniGame);
     }
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive)
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
         {
             escMenuActive = true;
-            Time.timeScale = 0f;
+            timeIsPaused = true;
             escMenu.SetActive(true);
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive)
+        else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive && !inMiniGame && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
         {
             escMenuActive = false;
             escMenu.SetActive(false);
-            Time.timeScale = 1f;
+            timeIsPaused = false;
+        }
+        if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive)
+        {
+            casinoButton.interactable = false;
+        } else
+        {
+            casinoButton.interactable = true;
+        }
+        if (GameManager.Instance != null && GameManager.Instance.gameWon && !inMiniGame && !escMenuActive && !deadMenuActive)
+        {
+            gameWonMenuActive = true;
+            GameWonMenu();
+        }
+        if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData.isDead && !inMiniGame && !escMenuActive)
+        {
+            deadMenuActive = true;
+            DeadMenu();
         }
     }
 
@@ -42,7 +68,7 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = true;
         gameLoopParent.SetActive(false);
         miniGameParent.SetActive(true);
-        playerInCasino = true;
+        timeIsPaused = true;
     }
 
     public void ExitMiniGame()
@@ -50,7 +76,19 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = false;
         gameLoopParent.SetActive(true);
         miniGameParent.SetActive(false);
-        playerInCasino = false;
+        timeIsPaused = false;
+    }
+
+    void GameWonMenu()
+    {
+        gameWonMenu.SetActive(true);
+        timeIsPaused = true;
+    }
+
+    void DeadMenu()
+    {
+        deadMenu.SetActive(true);
+        timeIsPaused = true;
     }
 
 }

@@ -8,7 +8,9 @@ public class SaveSystem : MonoBehaviour
     public static SaveSystem Instance;
     private GameManager gameManager;
     private PlayerController playerController;
+    private ModeController modeController;
     public bool toLoad = false;
+    public bool isNewGame = false;
     private string fileName = "saveData.json";
 
     private void Awake()
@@ -25,7 +27,16 @@ public class SaveSystem : MonoBehaviour
     }
 
     public SaveData currentSaveData = new SaveData();
+    public BestTimeSaveData.BestTimeData currentBestTimeData = new BestTimeSaveData.BestTimeData();
     
+    void Update()
+    {
+        if (GameManager.Instance != null && isNewGame)
+        {
+            GameManager.Instance.ResetGameManager();
+            isNewGame = false;
+        }
+    }
 
     string GetFilePath()
     {
@@ -36,6 +47,7 @@ public class SaveSystem : MonoBehaviour
         Debug.Log("Saving Game...");
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        modeController = GameObject.FindGameObjectWithTag("ModeController").GetComponent<ModeController>();
         UpdateSaveData();
 
         string savePath = GetFilePath();
@@ -57,6 +69,7 @@ public class SaveSystem : MonoBehaviour
     {
         gameManager.GetSaveData();
         playerController.GetSaveData();
+        modeController.GetSaveData();
     }
 
     public void LoadGame()
@@ -64,6 +77,7 @@ public class SaveSystem : MonoBehaviour
         Debug.Log("Loading Game...");
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        modeController = GameObject.FindGameObjectWithTag("ModeController").GetComponent<ModeController>();
     
         Time.timeScale = 0f;
         string savePath = GetFilePath();
@@ -82,11 +96,39 @@ public class SaveSystem : MonoBehaviour
         }
         playerController.ApplySaveData();
         gameManager.ApplySaveData();
+        modeController.ApplySaveData();
         Time.timeScale = 1f;
     }
 
     IEnumerator WaitForSync()
     {
         yield return new WaitUntil(() => gameManager.isGameReadyToLoad && playerController.isReadyToLoad);
+    }
+
+    public void LoadBestTime()
+    {
+        string savePath = Path.Combine(Application.persistentDataPath, "BestTime.json");
+        if (File.Exists(savePath))
+        {
+            string json = File.ReadAllText(savePath);
+            currentBestTimeData = JsonUtility.FromJson<BestTimeSaveData.BestTimeData>(json);
+        }
+        else
+        {
+            Debug.LogWarning("Best Time file not found!");
+            currentBestTimeData = new BestTimeSaveData.BestTimeData();
+        }
+    }
+
+    public void SaveBestTime()
+    {
+        string savePath = Path.Combine(Application.persistentDataPath, "BestTime.json");
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log("Best Time file deleted");
+        }
+        string json = JsonUtility.ToJson(currentBestTimeData, true);
+        File.WriteAllText(savePath, json);
     }
 }

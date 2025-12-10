@@ -8,6 +8,7 @@ public class MainMenuController : MonoBehaviour
     public Button loadGameButton;
     public Button settingsButton;
     public Button quitGameButton;
+    public GameObject settingsMenu;
 
     void Awake()
     {
@@ -27,10 +28,12 @@ public class MainMenuController : MonoBehaviour
         {
             loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         }
+        SaveSystem.Instance.LoadBestTime();
     }
     public void StartGame()
     {
-        SceneManager.LoadScene("tomScene");
+        SaveSystem.Instance.isNewGame = true;
+        SceneManager.LoadScene("ModeAndWeaponSelectionMenu");
     }
     public void QuitGame()
     {
@@ -45,6 +48,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void OpenSettings()
     {
-        // Implement open settings functionality
+        settingsMenu.SetActive(true);
+        SettingsController.isFromMainMenu = true;
     }
 }

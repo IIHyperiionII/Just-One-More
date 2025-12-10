@@ -33,9 +33,8 @@ public class PlayerLookDirection : MonoBehaviour
 
     void Update()
     {
-        if (GameModeManager.playerInCasino) return;
-        if (playerAnimator == null) return;         
-        if (Time.timeScale == 0f) return;
+        if (GameModeManager.timeIsPaused) return;
+        if (playerAnimator == null) return;
 
         // Handle attacking animation
         if (playerController != null && playerController.isAttacking)

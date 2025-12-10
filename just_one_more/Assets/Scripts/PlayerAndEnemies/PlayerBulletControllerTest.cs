@@ -7,19 +7,30 @@ public class PlayerBulletControllerTest : MonoBehaviour
     private Rigidbody2D Rigidbody;
     private int speed;
     private int damage;
+    private int piercingLevel;
+    private int freezeLevel;
+    private int piercedEnemies = 0;
+    private ModeAndWeaponSelection currentSelection;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         direction = transform.right; // applying given rotation to world x axis
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
     }
-    public void Initialize( int bulletSpeed, int bulletDamage)
+    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
+        piercingLevel = bulletPiercingLevel;
+        freezeLevel = bulletFreezeLevel;
+        currentSelection = ModeController.Instance.currentSelection;
     }
     void FixedUpdate()
     {
-        if (GameModeManager.playerInCasino) return;
+        if (GameModeManager.timeIsPaused) return;
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
         
     }
@@ -32,12 +43,25 @@ public class PlayerBulletControllerTest : MonoBehaviour
         {
             if (other.gameObject.CompareTag("Enemy"))
             {
-                DoDamage(other.gameObject);
+                if (currentSelection.selectedMode == GameMode.OneShot)
+                {
+                    Destroy(other.gameObject);
+                } else {
+                    if (freezeLevel > 0)
+                    {
+                        Freeze(other.gameObject);
+                    }
+                    DoDamage(other.gameObject);
+                }
             } else
             {
                 Destroy(other.gameObject);
             }
-            Destroy(gameObject);
+            piercedEnemies++;
+            if (piercedEnemies > piercingLevel && piercingLevel != 4)
+            {
+                Destroy(gameObject);
+            }
             return;
         }
         if (other.gameObject.CompareTag("Edge"))
@@ -50,6 +74,13 @@ public class PlayerBulletControllerTest : MonoBehaviour
     void DoDamage(GameObject target)
     {
         target.GetComponent<IEnemy>().TakeDamage(damage);
+    }
+    void Freeze(GameObject target)
+    {
+        if (Random.Range(0,2) == 0)
+        {
+            target.GetComponent<IEnemy>().Freeze(0.5f * freezeLevel);
+        }
     }
 
 }
