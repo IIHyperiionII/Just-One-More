@@ -28,7 +28,7 @@ public class PlayerLookDirection : MonoBehaviour
         if (handScript == null && transform.Find("HandAnchor") != null)
             handScript = transform.Find("HandAnchor").GetComponent<HandFollowCursor>();
 
-        handAnimator.SetInteger("Weapon", 1);
+        handAnimator.SetInteger("Weapon", 2);
     }
 
     void Update()
