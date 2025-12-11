@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1220093505262473783}
   - component: {fileID: 8011564887003155591}
   - component: {fileID: 3199395629140233314}
+  - component: {fileID: 370529195650167119}
   m_Layer: 11
   m_Name: EnemyPrinterSpawner
   m_TagString: Enemy
@@ -135,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063f48f543aad49619306a3a58f04ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawningEnemyController
-  EnemiesData: {fileID: 11400000, guid: 25244fe84183c4041aa4e40b7b6c906f, type: 2}
+  EnemiesData: {fileID: 11400000, guid: e8af19178d368439cbb01cf9786b2988, type: 2}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
   childEnemyPrefab: {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239,
@@ -223,6 +224,22 @@ MonoBehaviour:
   playerTag: Player
   leftRightValue: 0
   moveTowardsValue: 0
+--- !u!114 &370529195650167119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6980090010355112472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e30ee3c062794445d8de9c9416b4596a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YOrderLayer
+  spriteRenderer: {fileID: 5437912915850044240}
+  positionReference: {fileID: 3041546342203684938}
+  circlePositionReference: {fileID: 0}
+  isCircle: 0
 --- !u!1 &8734201554303877750
 GameObject:
   m_ObjectHideFlags: 0

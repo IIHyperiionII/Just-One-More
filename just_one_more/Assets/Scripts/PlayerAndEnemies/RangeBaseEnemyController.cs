@@ -88,7 +88,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1 / runtimeEnemiesData.attackSpeed; // Set next attack time based on attack speed
+            nextAttackTime = Time.time + 1.5f / runtimeEnemiesData.attackSpeed; // Set next attack time based on attack speed
             Quaternion rotation = UpdateAngle();
             SpawnBullet(rotation); // Spawn bullet towards player
         }
@@ -109,7 +109,8 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
-        Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn coin at enemy position
+        GameObject coinInstance = Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn coin at enemy position
+        coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
     public EnemyData GetEnemyData()
     {

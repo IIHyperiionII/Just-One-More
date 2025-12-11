@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b005c7bccb2d84783b97af65b5596a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedEnemyControllerTest
-  EnemiesData: {fileID: 11400000, guid: 25244fe84183c4041aa4e40b7b6c906f, type: 2}
+  EnemiesData: {fileID: 11400000, guid: 7e2eca46334724bfbba0565a79dac7a7, type: 2}
   bulletPrefab: {fileID: 1432469908638311180, guid: 2f4161520e9284bf2b7df5a177359e55,
     type: 3}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,

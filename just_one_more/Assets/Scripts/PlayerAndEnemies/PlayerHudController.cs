@@ -159,11 +159,24 @@ public class PlayerHudController : MonoBehaviour
             if (numberMoneySprites.ContainsKey(index) )
             {
                 numberMoneySprites[index].GetComponent<Image>().sprite = numbersMoney[digit];
+                numberMoneySprites[index].GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
+                if (digit == 5)
+                {
+                    numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                } else {
+                    numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                }
             } else {
                 GameObject numberMoney = new GameObject();
                 numberMoney.AddComponent<Image>();
                 numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
                 numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
+                if (digit == 5)
+                {
+                    numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                } else {
+                    numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                }
                 numberMoneySprites[index] = numberMoney;
                 numberMoney.transform.SetParent(numbersMoneyParent.transform);
             }

@@ -30,6 +30,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
+        Debug.Log("Enemy AS: " + runtimeEnemiesData.attackSpeed);
         Rigidbody = GetComponent<Rigidbody2D>();
         if (currentSelection == null)
         {
@@ -70,8 +71,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         // Check if the collided object has the "Player" tag
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
-        {
-            nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
+        {    
+            nextAttackTime = Time.time + 2f / runtimeEnemiesData.attackSpeed;
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
                 other.gameObject.GetComponent<PlayerController>().Die();
@@ -85,7 +86,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         // Check if the collided object that is staying in contact has the "Player" tag
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
+            nextAttackTime = Time.time + 2f / runtimeEnemiesData.attackSpeed;
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
                 other.gameObject.GetComponent<PlayerController>().Die();
@@ -98,7 +99,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         if (!gameObject.scene.isLoaded) return;
-        Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        GameObject coinInstance = Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
 
     public EnemyData GetEnemyData()
