@@ -463,7 +463,7 @@ public class PlayerController : MonoBehaviour
                     weaponController.AttackGun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
                     break;
                 case WeaponType.Shotgun:
-                    weaponController.AttackShotgun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                    weaponController.AttackShotgun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel, PlayerData.projectileCount);
                 break;
                 default:
                     break;

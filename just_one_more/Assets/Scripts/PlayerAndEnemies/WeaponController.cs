@@ -49,18 +49,47 @@ public class WeaponController : MonoBehaviour
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
 
-    public void AttackShotgun(int bulletSpeed, int damage , int piercingLevel, int freezeLevel)
+    // public void AttackShotgun(int bulletSpeed, int damage , int piercingLevel, int freezeLevel, int projectileCount)
+    // {
+    //     Quaternion rotation = UpdateAngle();
+    //     GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation); // Spawn bullet at player position with calculated rotation
+    //     bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
+    //     GameObject bullet2 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation * Quaternion.Euler(0, 0, 20)); // Spawn bullet at player position with calculated rotation
+    //     bullet2.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
+    //     GameObject bullet3 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation * Quaternion.Euler(0, 0, -20)); // Spawn bullet at player position with calculated rotation
+    //     bullet3.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
+    //     bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+    //     bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+    //     bullet3.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+    // }
+
+    public void AttackShotgun(int bulletSpeed, int damage, int piercingLevel, int freezeLevel, int projectileCount)
     {
         Quaternion rotation = UpdateAngle();
-        GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation); // Spawn bullet at player position with calculated rotation
-        bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        GameObject bullet2 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation * Quaternion.Euler(0, 0, 20)); // Spawn bullet at player position with calculated rotation
-        bullet2.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        GameObject bullet3 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation * Quaternion.Euler(0, 0, -20)); // Spawn bullet at player position with calculated rotation
-        bullet3.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
-        bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
-        bullet3.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+
+        float totalSpreadAngle = 40f; 
+
+        // 3. Najdeme rodiče pro kulky (OPTIMALIZACE: Toto je lepší dělat v Start(), ne při každém výstřelu)
+        Transform bulletParent = GameObject.FindGameObjectWithTag("BulletParent")?.transform;
+
+        float angleStep = (projectileCount > 1) ? totalSpreadAngle / (projectileCount - 1) : 0;
+        float startAngle = -totalSpreadAngle / 2f;
+        for (int i = 0; i < projectileCount; i++)
+        {
+            float currentAngleOffset = (projectileCount > 1) ? startAngle + (angleStep * i) : 0;
+            Quaternion bulletRotation = rotation * Quaternion.Euler(0, 0, currentAngleOffset);
+            GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, bulletRotation);
+
+            var bulletController = bullet.GetComponent<PlayerBulletControllerTest>();
+            if (bulletController != null)
+            {
+                bulletController.Initialize(bulletSpeed, damage, piercingLevel, freezeLevel);
+            }
+            if (bulletParent != null)
+            {
+                bullet.transform.SetParent(bulletParent);
+            }
+        }
     }
 
     Quaternion UpdateAngle()
