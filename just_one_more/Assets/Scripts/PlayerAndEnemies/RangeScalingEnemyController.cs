@@ -79,6 +79,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
     {
         float distanceToPlayer = Vector2.Distance(playerPosition, enemyPosition);
         if (distanceToPlayer < 10f && sign == 1) return;
+        if (distanceToPlayer > 20f && sign == -1) return; // Do not move away if beyond 20 units
         Vector2 movement = sign * direction * Time.deltaTime * runtimeEnemiesData.moveSpeed; 
         Rigidbody.MovePosition(Rigidbody.position + movement);
     }

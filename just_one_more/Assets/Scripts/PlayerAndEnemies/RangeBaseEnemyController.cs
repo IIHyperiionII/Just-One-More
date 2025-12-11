@@ -60,6 +60,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
 
     void Move()
     {
+        
         // Calculate dot product to determine if player is moving towards or away from enemy and move accordingly
         float dotProduct = GetDotProduct();
         if (dotProduct > 0.5f)
@@ -73,6 +74,9 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     }
     void UpdatePosition(int sign)
     {
+        float distanceToPlayer = Vector2.Distance(playerPosition, enemyPosition);
+        if (distanceToPlayer < 10f && sign == 1) return; // Do not move closer if within 10 units
+        if (distanceToPlayer > 20f && sign == -1) return; // Do not move away if beyond 20 units
         // Move enemy towards or away from player based on sign
         Vector2 movement = sign * direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
         Rigidbody.MovePosition(Rigidbody.position + movement);
