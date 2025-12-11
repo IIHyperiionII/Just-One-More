@@ -266,5 +266,5 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
-
+    
 }
