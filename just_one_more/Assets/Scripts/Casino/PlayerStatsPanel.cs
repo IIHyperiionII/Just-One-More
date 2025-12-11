@@ -12,7 +12,6 @@ public class PlayerStatsPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI attackModifierText;
     [SerializeField] private TextMeshProUGUI piercingText;
     [SerializeField] private TextMeshProUGUI dashText;
-    [SerializeField] private TextMeshProUGUI hpRegenText;
     [SerializeField] private TextMeshProUGUI blockText;
     [SerializeField] private TextMeshProUGUI freezeText;
     [SerializeField] private TextMeshProUGUI saveSlotText;
@@ -119,7 +118,7 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         if (playerData != null)
         {
-            return playerData.isMelee ? "Knockback" : "BulletSpeed";
+            return playerData.isMelee ? "Knockback" : "Bullet Speed";
         }
         return "Attack Modifier";
     }
