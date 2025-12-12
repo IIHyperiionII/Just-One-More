@@ -420,6 +420,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1929464716}
+    - target: {fileID: 6578980645443658267, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: attackModifierButtonText
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7733288476956803336, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_Name

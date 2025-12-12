@@ -21,6 +21,9 @@ public class CasinoManager : MonoBehaviour
     [SerializeField] private Button attackSpeedButton;
     [SerializeField] private Button attackModifierButton;
     [SerializeField] private TextMeshProUGUI attackModifierButtonText;
+    [SerializeField] private Image attackModifierButtonImage;
+    [SerializeField] private Sprite bulletSpeedSprite;
+    [SerializeField] private Sprite knockbackSprite;
 
     [Header("Panels")]
     [SerializeField] private GameObject casinoPanel;
@@ -71,9 +74,9 @@ public class CasinoManager : MonoBehaviour
             if (attackModifierButtonText)
             {
                 if (playerStatsPanel.GetAttackModifierName() == "Bullet Speed")
-                    attackModifierButtonText.text = "Bullet Speed";
+                    attackModifierButtonImage.sprite = bulletSpeedSprite;
                 else
-                    attackModifierButtonText.text = "Knock back";
+                    attackModifierButtonImage.sprite = knockbackSprite;
             }
         }
 
@@ -161,7 +164,10 @@ public class CasinoManager : MonoBehaviour
 
     void OnEnable()
     {
-        remainingGambles = 3;     
+        remainingGambles = 3;
+        if (playerStatsPanel != null)
+            playerStatsPanel.UpdateUI();
+        UpdateUI();
     }
 
     private void SetupSlider()
