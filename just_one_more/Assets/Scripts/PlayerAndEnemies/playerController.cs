@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
-    public bool isAttacking = false; // for animation testing 
+    public bool isAttacking = false; // for animation
+    float attackAnimationDuration = 0.2f; // 
+    private float attackStartTime = 0f; //
     private bool isDashing = false;
     private bool dashReset = true;
     private Vector2 dashDir;
@@ -444,7 +446,10 @@ public class PlayerController : MonoBehaviour
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
-            isAttacking = true; // for animation testing
+
+            isAttacking = true; // for animation
+            attackStartTime = Time.time; //
+
             switch (ModeController.Instance.currentSelection.selectedWeapon)
             {
                 case WeaponType.Melee:
@@ -470,8 +475,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //for animation testing
-        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.2f)
+        //for animation
+        if (isAttacking && Time.time >= attackStartTime + attackAnimationDuration)
         {
             isAttacking = false;
         }
