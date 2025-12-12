@@ -592,6 +592,7 @@ public class PlayerController : MonoBehaviour
     }
     public void GetCoin(int amount)
     {
+        Debug.Log("Collected coin worth: " + amount);
         PlayerData.money += amount;
         SoundController.Instance.PlaySound(coinSound, 0.6f, 1.0f);
     }

@@ -73,6 +73,9 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
     }
     void UpdatePosition(int sign)
     {
+        float distanceToPlayer = Vector2.Distance(playerPosition, enemyPosition);
+        if (distanceToPlayer < 10f && sign == 1) return; // Do not move closer if within 10 units
+        if (distanceToPlayer > 20f && sign == -1) return; // Do not move away if beyond 20 units
         Vector2 movement = sign * direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
         Rigidbody.MovePosition(Rigidbody.position + movement);
     }
@@ -87,7 +90,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
     {
         if (Time.time >= nextAttackTime)
         { 
-            nextAttackTime = Time.time + 1 / runtimeEnemiesData.attackSpeed; // Set the next attack time based on attack speed
+            nextAttackTime = Time.time + 1.5f / runtimeEnemiesData.attackSpeed; // Set the next attack time based on attack speed
             Quaternion rotation = UpdateAngle();
             SpawnBullet(rotation);
         }
@@ -109,7 +112,8 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
-        Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        GameObject coinInstance = Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
     public EnemyData GetEnemyData()
     {

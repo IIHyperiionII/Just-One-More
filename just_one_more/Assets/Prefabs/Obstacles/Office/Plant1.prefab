@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 2694542510725472158}
   - component: {fileID: 2701158553006210392}
   - component: {fileID: 222471528901941438}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: Plant1
   m_TagString: Edge
   m_Icon: {fileID: 0}

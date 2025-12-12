@@ -44,7 +44,7 @@ public class WeaponController : MonoBehaviour
     public void AttackGun(int bulletSpeed, int damage, int piercingLevel, int freezeLevel)
     {
         Quaternion rotation = UpdateAngle();
-        GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation); // Spawn bullet at player position with calculated rotation
+        GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation); // Spawn bullet at player position with calculated rotation
         bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
@@ -52,11 +52,11 @@ public class WeaponController : MonoBehaviour
     public void AttackShotgun(int bulletSpeed, int damage , int piercingLevel, int freezeLevel)
     {
         Quaternion rotation = UpdateAngle();
-        GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation); // Spawn bullet at player position with calculated rotation
+        GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation); // Spawn bullet at player position with calculated rotation
         bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        GameObject bullet2 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation * Quaternion.Euler(0, 0, 20)); // Spawn bullet at player position with calculated rotation
+        GameObject bullet2 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation * Quaternion.Euler(0, 0, 20)); // Spawn bullet at player position with calculated rotation
         bullet2.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        GameObject bullet3 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.8f, rotation * Quaternion.Euler(0, 0, -20)); // Spawn bullet at player position with calculated rotation
+        GameObject bullet3 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation * Quaternion.Euler(0, 0, -20)); // Spawn bullet at player position with calculated rotation
         bullet3.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
         bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
@@ -80,7 +80,7 @@ public class WeaponController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.blueViolet;
-        Gizmos.DrawWireSphere(transform.position + mouseDirection * Vector3.right * 0.8f, 0.2f);
+        Gizmos.DrawWireSphere(transform.position + mouseDirection * Vector3.right * 0.5f, 0.2f);
 
         Gizmos.color = Color.red;
         

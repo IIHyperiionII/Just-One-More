@@ -50,4 +50,9 @@ public class BallSpawner : MonoBehaviour
             currentBall = null;
         }
     }
+
+    public GameObject GetCurrentBall()
+    {
+        return currentBall;
+    }
 }

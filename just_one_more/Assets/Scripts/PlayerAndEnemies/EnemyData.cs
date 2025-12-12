@@ -9,4 +9,5 @@ public class EnemyData : ScriptableObject
     public int damage = 10;
     public int attackSpeed = 10;
     public int bulletSpeed = 5;
+    public int value = 1;
 }

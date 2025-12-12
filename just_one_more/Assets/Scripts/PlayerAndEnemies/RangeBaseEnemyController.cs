@@ -60,6 +60,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
 
     void Move()
     {
+        
         // Calculate dot product to determine if player is moving towards or away from enemy and move accordingly
         float dotProduct = GetDotProduct();
         if (dotProduct > 0.5f)
@@ -73,6 +74,9 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     }
     void UpdatePosition(int sign)
     {
+        float distanceToPlayer = Vector2.Distance(playerPosition, enemyPosition);
+        if (distanceToPlayer < 10f && sign == 1) return; // Do not move closer if within 10 units
+        if (distanceToPlayer > 20f && sign == -1) return; // Do not move away if beyond 20 units
         // Move enemy towards or away from player based on sign
         Vector2 movement = sign * direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
         Rigidbody.MovePosition(Rigidbody.position + movement);
@@ -88,7 +92,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1 / runtimeEnemiesData.attackSpeed; // Set next attack time based on attack speed
+            nextAttackTime = Time.time + 1.5f / runtimeEnemiesData.attackSpeed; // Set next attack time based on attack speed
             Quaternion rotation = UpdateAngle();
             SpawnBullet(rotation); // Spawn bullet towards player
         }
@@ -109,7 +113,8 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
-        Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn coin at enemy position
+        GameObject coinInstance = Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn coin at enemy position
+        coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
     public EnemyData GetEnemyData()
     {
@@ -261,5 +266,5 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
-
+    
 }

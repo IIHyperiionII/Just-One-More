@@ -5,8 +5,7 @@ using UnityEngine.UI;
 public class GameModeManager : MonoBehaviour
 {
     public GameObject gameLoopParent;
-    public GameObject miniGameParent;
-    public GameObject Casino;
+    public GameObject casino;
     public GameObject escMenu;
     private bool inMiniGame = false;
     private bool escMenuActive = false;
@@ -22,9 +21,9 @@ public class GameModeManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 100;
-        if (Casino == null)
+        if (casino == null)
         {
-            Casino = GameObject.FindGameObjectWithTag("Casino");
+            casino = GameObject.FindGameObjectWithTag("Casino");
         }
         ExitMiniGame();
         casinoButton.onClick.AddListener(EnterMiniGame);
@@ -67,7 +66,7 @@ public class GameModeManager : MonoBehaviour
     {
         inMiniGame = true;
         gameLoopParent.SetActive(false);
-        miniGameParent.SetActive(true);
+        casino.SetActive(true);
         timeIsPaused = true;
     }
 
@@ -75,7 +74,7 @@ public class GameModeManager : MonoBehaviour
     {
         inMiniGame = false;
         gameLoopParent.SetActive(true);
-        miniGameParent.SetActive(false);
+        casino.SetActive(false);
         timeIsPaused = false;
     }
 

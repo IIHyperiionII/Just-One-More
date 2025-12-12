@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 7543865275630645929}
   - component: {fileID: 1210835840676813601}
   - component: {fileID: 4972444635260142911}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: CabinetFrontClose
   m_TagString: Edge
   m_Icon: {fileID: 0}

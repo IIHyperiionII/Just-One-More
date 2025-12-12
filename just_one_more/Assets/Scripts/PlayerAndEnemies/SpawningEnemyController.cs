@@ -84,7 +84,10 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         }
     }
     void UpdatePosition(int sign)
-    {
+    {   
+        float distanceToPlayer = Vector2.Distance(playerPosition, enemyPosition);
+        if (distanceToPlayer < 10f && sign == 1) return;
+        if (distanceToPlayer > 20f && sign == -1) return; // Do not move away if beyond 20 units
         Vector2 movement = sign * direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
         Rigidbody.MovePosition(Rigidbody.position + movement);
     }
@@ -101,7 +104,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1 / 0.5f; // Set the next attack time (spawning interval)
+            nextAttackTime = Time.time + 5f / runtimeEnemiesData.attackSpeed; // Set the next attack time (spawning interval)
             SpawnChild(); // Spawn a child enemy
         }
     }
@@ -128,6 +131,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        coinPrefab.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
     public EnemyData GetEnemyData()
     {

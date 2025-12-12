@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1327841456283934260}
   m_Layer: 12
   m_Name: EnemyBulletScaling
-  m_TagString: EnemyBulletScaling
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 2782029958964060794}
   positionReference: {fileID: 11515614810336051}
   circlePositionReference: {fileID: 0}
-  isCircle: 1
+  isCircle: 0
 --- !u!1 &5384695135227804767
 GameObject:
   m_ObjectHideFlags: 0
