@@ -46,6 +46,28 @@ public class PlayerLookDirection : MonoBehaviour
         }
     }
 
+    private void OnEnable() // used after returning from casino
+    {
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
+        switch (currentSelection.selectedWeapon)
+        {
+            case WeaponType.Melee:
+                handAnimator.SetInteger("Weapon", 1);
+                break;
+            case WeaponType.Pistol:
+                handAnimator.SetInteger("Weapon", 2);
+                break;
+            case WeaponType.Shotgun:
+                handAnimator.SetInteger("Weapon", 3);
+                break;
+            default:
+                break;
+
+        }
+    }
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
