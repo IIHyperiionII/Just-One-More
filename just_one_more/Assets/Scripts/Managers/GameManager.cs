@@ -183,6 +183,7 @@ public class GameManager : MonoBehaviour
         } else {
             time += Time.deltaTime;
         }
+        Debug.Log("Current Money: " + runtimePlayerData.money);
     }
     IEnumerator Teleport()
     {

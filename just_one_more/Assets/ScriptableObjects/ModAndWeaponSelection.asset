@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e8f4aca7c830435ba0392f3f1943d24, type: 3}
   m_Name: ModAndWeaponSelection
   m_EditorClassIdentifier: Assembly-CSharp::ModeAndWeaponSelection
-  selectedMod: 3
-  selectedWeapon: 0
+  selectedMode: 3
+  selectedWeapon: 2
+  basicDeifficultyCompleted: 0
