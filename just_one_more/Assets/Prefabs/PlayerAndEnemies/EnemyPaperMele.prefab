@@ -190,7 +190,7 @@ MonoBehaviour:
     m_Bits: 8192
   obstacleCheckDistance: 1
   movementCheckRadius: 0.4
-  timeBetweenDirectionChecks: 0.3
+  timeBetweenDirectionChecks: 0.5
   offsetHeight: -0.6
 --- !u!95 &-2149543244922151165
 Animator:

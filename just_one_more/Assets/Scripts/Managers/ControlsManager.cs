@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine.UI;
 using UnityEngine.Audio;
 
 public class ControlsManager : MonoBehaviour
@@ -50,9 +49,18 @@ public class ControlsManager : MonoBehaviour
         keyBindings[ActionKey.Help] = KeyCode.H;
     }
 
-    string GetFilePath()
+    string GetFilePath(string fileName)
     {
-        return Path.Combine(Application.persistentDataPath, fileName);
+        string folderPath = Application.persistentDataPath;
+
+        if (!Application.isEditor)
+        {
+            folderPath = Path.Combine(folderPath, "BuildSaves");
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+        }
+
+        return Path.Combine(folderPath, fileName);
     }
 
     public void SaveKeyBinds()
@@ -65,7 +73,7 @@ public class ControlsManager : MonoBehaviour
         savedKeyBinds.attack = keyBindings[ActionKey.Attack];
         savedKeyBinds.help = keyBindings[ActionKey.Help];
 
-        string savePath = GetFilePath();
+        string savePath = GetFilePath(fileName);
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
@@ -80,7 +88,7 @@ public class ControlsManager : MonoBehaviour
     }
     public void LoadSaved()
     {
-        string savePath = GetFilePath();
+        string savePath = GetFilePath(fileName);
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);
@@ -173,7 +181,7 @@ public class ControlsManager : MonoBehaviour
         savedSoundSettings.musicVolume = musicVolume;
         savedSoundSettings.sfxVolume = sfxVolume;
 
-        string savePath = Path.Combine(Application.persistentDataPath, fileNameSounds);
+        string savePath = GetFilePath(fileNameSounds);
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
@@ -185,7 +193,7 @@ public class ControlsManager : MonoBehaviour
 
     public void LoadSoundSettings()
     {
-        string savePath = Path.Combine(Application.persistentDataPath, fileNameSounds);
+        string savePath = GetFilePath(fileNameSounds);
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);

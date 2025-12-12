@@ -94,6 +94,11 @@ public class SettingsController : MonoBehaviour
         sfxValueText.text = $"SFX: {(sfxSlider.value * 100).ToString("0")}%";
     }
 
+    private void OnEnable()
+    {
+        ShowControlls();
+    }
+
     private void StartRebinding(ActionKey actionKey)
     {
         StartCoroutine(RebindKey(actionKey));
@@ -137,6 +142,7 @@ public class SettingsController : MonoBehaviour
         UpdateText(ActionKey.Dash, "");
         UpdateText(ActionKey.Attack, "");
         UpdateText(ActionKey.Help, "");
+        SaveKeyBinds();
     }
     private void SaveKeyBinds()
     {
