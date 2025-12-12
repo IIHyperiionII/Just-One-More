@@ -16,6 +16,8 @@ public class GameModeManager : MonoBehaviour
     public GameObject deadMenu;
     public static bool timeIsPaused;
     public static bool isInSettingsMenu = false;
+    public Button continueButton;
+    public GameObject cameraDisortionEffect;
 
 
     void Start()
@@ -27,21 +29,18 @@ public class GameModeManager : MonoBehaviour
         }
         ExitMiniGame();
         casinoButton.onClick.AddListener(EnterMiniGame);
+        continueButton.onClick.AddListener(CloseEscMenu);
     }
     
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
         {
-            escMenuActive = true;
-            timeIsPaused = true;
-            escMenu.SetActive(true);
+            OpenEscMenu();
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && escMenuActive && !inMiniGame && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
         {
-            escMenuActive = false;
-            escMenu.SetActive(false);
-            timeIsPaused = false;
+            CloseEscMenu();
         }
         if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive)
         {
@@ -61,11 +60,25 @@ public class GameModeManager : MonoBehaviour
             DeadMenu();
         }
     }
+    public void OpenEscMenu()
+    {
+        escMenuActive = true;
+        escMenu.SetActive(true);
+        timeIsPaused = true;
+    }
+
+    public void CloseEscMenu()
+    {
+        escMenuActive = false;
+        escMenu.SetActive(false);
+        timeIsPaused = false;
+    }
 
     public void EnterMiniGame()
     {
         inMiniGame = true;
         gameLoopParent.SetActive(false);
+        cameraDisortionEffect.SetActive(false);
         casino.SetActive(true);
         timeIsPaused = true;
     }
@@ -75,6 +88,7 @@ public class GameModeManager : MonoBehaviour
         inMiniGame = false;
         gameLoopParent.SetActive(true);
         casino.SetActive(false);
+        cameraDisortionEffect.SetActive(true);
         timeIsPaused = false;
     }
 

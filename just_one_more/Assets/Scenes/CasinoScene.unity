@@ -360,11 +360,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 157298569185900344, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2052015102879981749, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -424,11 +419,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CasinoWindow
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179560868838160094, guid: f494c2b3225244b6783fd1d9dd8cb200,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

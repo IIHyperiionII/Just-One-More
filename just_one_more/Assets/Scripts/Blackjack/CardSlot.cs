@@ -4,21 +4,24 @@ using UnityEngine.UI;
 public class CardSlot : MonoBehaviour
 {
     private Image image;
-    private Vector3 originalPosition;
+
+    private RectTransform rectTransform;
+    private Vector2 originalAnchoredPosition;
 
     public void Awake()
     {
         image = GetComponent<Image>();
-        originalPosition = transform.position;
+        rectTransform = GetComponent<RectTransform>();
+        originalAnchoredPosition = rectTransform.anchoredPosition;
     }
 
     public void Initialize()
     {
         float randomRotationZ = Random.Range(-10, 10);
-        float randomPositionY = Random.Range(-0.2f, 0.2f);
-        float randomPositionX = Random.Range(-0.1f, 0.1f);
-        transform.rotation = Quaternion.Euler(0f, 0f, randomRotationZ);
-        transform.position = originalPosition + new Vector3(randomPositionX, randomPositionY, 0f);
+        float randomPositionY = Random.Range(-20f, 20f);
+        float randomPositionX = Random.Range(-10f, 10f);
+        rectTransform.rotation = Quaternion.Euler(0f, 0f, randomRotationZ);
+        rectTransform.anchoredPosition = originalAnchoredPosition + new Vector2(randomPositionX, randomPositionY);
         gameObject.SetActive(false);
     }
 

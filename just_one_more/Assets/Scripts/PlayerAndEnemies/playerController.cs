@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private float stepTimer = 0f;
     public GameObject WeaponControllerObject;
     private WeaponController weaponController;
+    public int needToGamble = 0;
     
     void Start()
     {
@@ -83,9 +84,11 @@ public class PlayerController : MonoBehaviour
         }
         GetAttackInput(); // Just for testing will be removed after weapons are implemented
         Attack(); // Just for testing will be removed after weapons are implemented
-        if (Time.time - startTimer >= 1f) {
+        if (Time.time - startTimer >= 2f) {
             startTimer = Time.time;
-            PlayerData.needToGamble ++;
+            if (PlayerData.needToGamble < 100){
+                PlayerData.needToGamble ++;
+            }
             NeedToGambleEffect();
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
@@ -101,6 +104,7 @@ public class PlayerController : MonoBehaviour
         {
             stepTimer = 0.3f; // reset when stopping
         }
+        needToGamble = PlayerData.needToGamble;
     }
 
     void HandleFootsteps()
@@ -150,7 +154,7 @@ public class PlayerController : MonoBehaviour
 
     void NeedToGambleEffect()
     {
-        if (PlayerData.needToGamble >= 70)
+        if (PlayerData.needToGamble >= 80)
         {
             if (vignetteEffect != null)
             {
@@ -173,7 +177,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Dash(true));
                 StartCoroutine(ResetDash());
             }
-        } else if (PlayerData.needToGamble >= 60)
+        } else if (PlayerData.needToGamble >= 70)
         {
             if (vignetteEffect != null)
             {

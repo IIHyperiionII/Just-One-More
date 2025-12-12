@@ -75,10 +75,10 @@ public class PlayerHudController : MonoBehaviour
         if (needToGambleLevel < 5)
         {
             needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[0];
-        } else if (needToGambleLevel < 6)
+        } else if (needToGambleLevel < 7)
         {
             needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[1];
-        } else if (needToGambleLevel < 7)
+        } else if (needToGambleLevel < 8)
         {
             needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[2];
         } else 
@@ -145,43 +145,65 @@ public class PlayerHudController : MonoBehaviour
         int index = 1;
         int digit;
         bool willContinue = true;
-        while (willContinue)
+        if (playerData.money != 0)
         {
-            digit = playerMoney % 10;
-            if (playerMoney < 10)
+            while (willContinue)
             {
-                willContinue = false;
-                if (digit == 0)
+                digit = playerMoney % 10;
+                if (playerMoney < 10)
                 {
-                    break;
+                    willContinue = false;
+                    if (digit == 0)
+                    {
+                        break;
+                    }
                 }
-            }
-            if (numberMoneySprites.ContainsKey(index) )
-            {
-                numberMoneySprites[index].GetComponent<Image>().sprite = numbersMoney[digit];
-                numberMoneySprites[index].GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
-                if (digit == 5)
+                if (numberMoneySprites.ContainsKey(index) )
                 {
-                    numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                    numberMoneySprites[index].GetComponent<Image>().sprite = numbersMoney[digit];
+                    numberMoneySprites[index].GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
+                    if (digit == 5)
+                    {
+                        numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                    } else {
+                        numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    }
                 } else {
-                    numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    GameObject numberMoney = new GameObject();
+                    numberMoney.AddComponent<Image>();
+                    numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
+                    numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
+                    if (digit == 5)
+                    {
+                        numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                    } else {
+                        numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    }
+                    numberMoneySprites[index] = numberMoney;
+                    numberMoney.transform.SetParent(numbersMoneyParent.transform);
                 }
-            } else {
+                playerMoney /= 10;
+                index ++;
+            }
+        } else {
+            if (numberMoneySprites.ContainsKey(1))
+            {
+                numberMoneySprites[1].GetComponent<Image>().sprite = numbersMoney[0];
+                numberMoneySprites[1].GetComponent<RectTransform>().sizeDelta =
+                    numbersMoney[0].rect.size * screenWidthDifference * multiplier;
+            }
+            else
+            {
                 GameObject numberMoney = new GameObject();
                 numberMoney.AddComponent<Image>();
-                numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
-                numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
-                if (digit == 5)
-                {
-                    numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
-                } else {
-                    numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                }
-                numberMoneySprites[index] = numberMoney;
+                numberMoney.GetComponent<Image>().sprite = numbersMoney[0];
+                numberMoney.GetComponent<RectTransform>().sizeDelta =
+                    numbersMoney[0].rect.size * screenWidthDifference * multiplier;
+                numberMoneySprites[1] = numberMoney;
                 numberMoney.transform.SetParent(numbersMoneyParent.transform);
             }
-            playerMoney /= 10;
-            index ++;
+
+            index = 2;
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
