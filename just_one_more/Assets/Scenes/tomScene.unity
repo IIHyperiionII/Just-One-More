@@ -871,7 +871,7 @@ MonoBehaviour:
   bestTimeText: {fileID: 363205905}
   isReady: 0
   isBestTime: 0
-  currentSelection: {fileID: 0}
+  currentSelection: {fileID: 11400000, guid: 3c9fc14f864cc4240beaeef36670a21f, type: 2}
 --- !u!1001 &767786683
 PrefabInstance:
   m_ObjectHideFlags: 0

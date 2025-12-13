@@ -77,7 +77,6 @@ public class ControlsManager : MonoBehaviour
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
-            Debug.Log("Save file deleted");
         }
         // Convert the SaveData object to JSON
         string json = JsonUtility.ToJson(savedKeyBinds, true);
@@ -177,7 +176,6 @@ public class ControlsManager : MonoBehaviour
 
     public void SaveSoundSettings(float musicVolume, float sfxVolume)
     {
-        Debug.Log("Saving Sound Settings: Music Volume = " + musicVolume + ", SFX Volume = " + sfxVolume);
         savedSoundSettings.musicVolume = musicVolume;
         savedSoundSettings.sfxVolume = sfxVolume;
 

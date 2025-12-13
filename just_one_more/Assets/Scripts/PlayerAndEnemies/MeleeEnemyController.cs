@@ -59,7 +59,6 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (isKnockbacked) return;
         Move();
         
-        Debug.Log("Is frozen:" + isFrozen);
     }
     void Move()
     {
@@ -91,21 +90,18 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         RaycastHit2D hitright = Physics2D.CircleCast(enemyPos, movementCheckRadius, right75, obstacleCheckDistance, obstacleMask);
         if(hit)
         {
-            Debug.Log("Front hit: " + hit.collider.name);
             checks[0] = true;
         } else {
             checks[0] = false;
         }
         if (hitleft)
         {
-            Debug.Log("Left hit: " + hitleft.collider.name);
             checks[1] = true;
         } else {
             checks[1] = false;
         }
         if (hitright)
         {
-            Debug.Log("Right hit: " + hitright.collider.name);
             checks[2] = true;
         } else {
             checks[2] = false;

@@ -50,6 +50,7 @@ public class PlayerLookDirection : MonoBehaviour
     {
         if (currentSelection == null)
         {
+            if (ModeController.Instance == null) return;
             currentSelection = ModeController.Instance.currentSelection;
         }
         switch (currentSelection.selectedWeapon)

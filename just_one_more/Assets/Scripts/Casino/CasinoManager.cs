@@ -62,10 +62,10 @@ public class CasinoManager : MonoBehaviour
         EnsureGameManagerForTesting();
 #endif
 
-        if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null)
+        if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null){
             // Get the runtime PlayerData from GameManager
             playerData = GameManager.Instance.runtimePlayerData;
-
+        }
         if (playerStatsPanel && playerData != null)
         {
             playerStatsPanel.SetPlayerData(playerData);
@@ -167,6 +167,7 @@ public class CasinoManager : MonoBehaviour
         remainingGambles = 5;
         if (playerStatsPanel != null)
             playerStatsPanel.UpdateUI();
+            
         UpdateUI();
     }
 

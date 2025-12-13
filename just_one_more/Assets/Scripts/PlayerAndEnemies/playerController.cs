@@ -67,7 +67,6 @@ public class PlayerController : MonoBehaviour
             postProcessVolume.profile.TryGetSettings(out vignetteEffect);
         }
         startTimer = Time.time;
-        PlayerData.damage = 1; // For testing purposes only
         numberOfSaves = PlayerData.numberOfSaves;
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife && PlayerData.money == 0)
         {
@@ -77,6 +76,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
+        PlayerData = GameManager.Instance.runtimePlayerData; // Ensure PlayerData is always up-to-date
         GetMovementInput();
         if (PlayerData.dashLevel > 0)
         {
@@ -87,13 +87,13 @@ public class PlayerController : MonoBehaviour
         if (Time.time - startTimer >= 2f) {
             startTimer = Time.time;
             if (PlayerData.needToGamble < 100){
-                PlayerData.needToGamble ++;
+                GameManager.Instance.runtimePlayerData.needToGamble ++;
             }
             NeedToGambleEffect();
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
-            PlayerData.hp = PlayerData.money;
+            GameManager.Instance.runtimePlayerData.hp = GameManager.Instance.runtimePlayerData.money;
         }
         if (isMoving)
         
@@ -507,10 +507,10 @@ public class PlayerController : MonoBehaviour
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
-            PlayerData.money -= damage;
+            GameManager.Instance.runtimePlayerData.money -= damage;
             if (PlayerData.money < 0) PlayerData.money = 0;
         } else {
-            PlayerData.hp -= damage;
+            GameManager.Instance.runtimePlayerData.hp -= damage;
         }
         if (PlayerData.hp <= 0)
         {
@@ -586,18 +586,18 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         SoundController.Instance.PlaySound(deathSound, 0.4f, 1.0f);
-        PlayerData.isDead = true;
+        GameManager.Instance.runtimePlayerData.isDead = true;
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
-            PlayerData.money = 0;
+            GameManager.Instance.runtimePlayerData.money = 0;
         } else {
-            PlayerData.hp = 0;
+            GameManager.Instance.runtimePlayerData.hp = 0;
         }
     }
     public void GetCoin(int amount)
     {
         Debug.Log("Collected coin worth: " + amount);
-        PlayerData.money += amount;
+        GameManager.Instance.runtimePlayerData.money += amount;
         SoundController.Instance.PlaySound(coinSound, 0.6f, 1.0f);
     }
 
@@ -648,5 +648,6 @@ public class PlayerController : MonoBehaviour
             PlayerData.needToGamble = playerData.needToGamble;
             PlayerData.numberOfSaves = playerData.numberOfSaves;
         }
+        GameManager.Instance.runtimePlayerData = PlayerData;
     }
 }

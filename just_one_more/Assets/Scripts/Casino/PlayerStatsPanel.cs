@@ -26,7 +26,7 @@ public class PlayerStatsPanel : MonoBehaviour
         {
             attackModifierName = GetAttackModifierName();
             UpdateUI();
-        } 
+        }
     }
 
     public void SetPlayerData(PlayerData pd)
@@ -198,7 +198,6 @@ public class PlayerStatsPanel : MonoBehaviour
             Debug.LogError("PlayerData not assigned to PlayerStatsPanel!");
             return;
         }
-
         UpdateTextField(moneyText, "Money", playerData.money);
         UpdateTextField(hpText, "HP", playerData.hp);
         UpdateTextField(dmgText, "Damage", playerData.damage);

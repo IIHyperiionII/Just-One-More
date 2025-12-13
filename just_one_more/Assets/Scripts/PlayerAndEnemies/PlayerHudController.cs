@@ -34,6 +34,7 @@ public class PlayerHudController : MonoBehaviour
     public GameObject needToGambleHeadImage;
     public int needToGambleLevel = 0;
     public float multiplier = 0.75f;
+    private bool isFirstSign = true;
 
     void Start()
     {
@@ -52,9 +53,9 @@ public class PlayerHudController : MonoBehaviour
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
+        playerData = GameManager.Instance.runtimePlayerData;
         screenWidth = Screen.width;
         screenWidthDifference = screenWidth / defaultScreenWidth;
-        Debug.Log($"Screen width: {screenWidth}, Screen default width: {defaultScreenWidth}, Difference: {screenWidthDifference}");
         if (playerData != null)
         {
             if (playerData.hp > 0){
@@ -239,10 +240,14 @@ public class PlayerHudController : MonoBehaviour
             iterator++;
 
         }
-        dollarSign.AddComponent<Image>();
-        dollarSign.GetComponent<Image>().sprite = dollarSignSprite;
-        dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference * multiplier;
-        dollarSign.transform.SetParent(numbersMoneyParent.transform);
+        if (isFirstSign)
+        {
+            dollarSign.AddComponent<Image>();
+            dollarSign.GetComponent<Image>().sprite = dollarSignSprite;
+            dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference * multiplier;
+            dollarSign.transform.SetParent(numbersMoneyParent.transform);
+            isFirstSign = false;
+        }
         dollarSign.transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((dollarSign.GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference * multiplier, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
         isFirst = true;
     }
