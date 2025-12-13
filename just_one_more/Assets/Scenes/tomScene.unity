@@ -3919,6 +3919,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Edge
       objectReference: {fileID: 0}
+    - target: {fileID: 1265937797966478787, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1771646598350586232, guid: 960b2659088734727b6d3cb1e6173d3a,
         type: 3}
       propertyPath: m_Name

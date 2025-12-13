@@ -155,6 +155,11 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     }
    public void TakeDamage(int damage)
     {
+        if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
+        {
+            Destroy(gameObject);
+            return;
+        }
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
@@ -178,6 +183,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     }
     IEnumerator HitColor()
     {
+        
         hitColorActive = true;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = flashColor; // Change color to red on hit

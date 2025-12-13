@@ -165,9 +165,14 @@ public class CasinoManager : MonoBehaviour
     void OnEnable()
     {
         remainingGambles = 5;
-        if (playerStatsPanel != null)
+         if (playerStatsPanel != null){
+            if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null && playerData == null){
+                playerData = GameManager.Instance.runtimePlayerData;
+            }
+            playerStatsPanel.SetPlayerData(playerData);
             playerStatsPanel.UpdateUI();
-            
+        }
+
         UpdateUI();
     }
 

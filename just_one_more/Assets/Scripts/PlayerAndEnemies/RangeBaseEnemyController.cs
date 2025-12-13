@@ -138,6 +138,11 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
+        {
+            Destroy(gameObject);
+            return;
+        }
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
