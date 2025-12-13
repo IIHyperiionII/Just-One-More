@@ -876,7 +876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Eazy
+  m_text: 'Easy
 
     (Shotgun)'
   m_isRightToLeft: 0
@@ -1015,7 +1015,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Darknes
+  m_text: Darkness
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -3636,7 +3636,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Hard
 
-    (Mele)'
+    (Melee)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
