@@ -45,7 +45,7 @@ public class CasinoManager : MonoBehaviour
     private Color selectedColor = Color.green;
     private Color normalColor = new Color(0f, 0.65f, 0.7f, 1f);
     private StatType attackModifierStatType = StatType.BulletSpeed;
-    private int remainingGambles = 3;
+    private int remainingGambles = 5;
     private float minigameStartTime;
     private const float MIN_MINIGAME_DURATION = 30f;
     private int needToGambleReduction = 15;
@@ -164,15 +164,10 @@ public class CasinoManager : MonoBehaviour
 
     void OnEnable()
     {
-        
-        remainingGambles = 3;
-        if (playerStatsPanel != null){
-            if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null && playerData == null){
-                playerData = GameManager.Instance.runtimePlayerData;
-            }
-            playerStatsPanel.SetPlayerData(playerData);
+        remainingGambles = 5;
+        if (playerStatsPanel != null)
             playerStatsPanel.UpdateUI();
-        }
+            
         UpdateUI();
     }
 

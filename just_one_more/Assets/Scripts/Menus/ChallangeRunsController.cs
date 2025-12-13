@@ -55,7 +55,7 @@ public class ChallangeRunsController : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("tomScene");
+        FindFirstObjectByType<SceneLoader>().LoadGameplayScene();
     } 
     public void ReturnToMainMenu()
     {

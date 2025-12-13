@@ -1158,7 +1158,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1.5x
+  m_text: 2.5x
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -1428,7 +1428,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0.3x
+  m_text: 0.5x
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -4294,7 +4294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0.8x
+  m_text: 1x
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -4786,7 +4786,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1.5x
+  m_text: 2.5x
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -5615,7 +5615,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0.3x
+  m_text: 0.5x
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -7924,7 +7924,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0.8x
+  m_text: 1x
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9, type: 2}
   m_sharedMaterial: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
@@ -10659,7 +10659,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 1.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -12457,7 +12457,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -14077,7 +14077,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -14478,7 +14478,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -17048,7 +17048,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
@@ -17449,7 +17449,7 @@ PrefabInstance:
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
       propertyPath: multiplier
-      value: 1.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7642583146802207125, guid: c1e184521b4b1524bb25a9ab32d70106,
         type: 3}
