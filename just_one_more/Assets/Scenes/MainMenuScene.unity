@@ -883,6 +883,29 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 154698286151907456, guid: 687d2ec2f5ed448678aa49df6c3442e9,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 505506127376107782, guid: 687d2ec2f5ed448678aa49df6c3442e9,
+        type: 3}
+      propertyPath: m_text
+      value: 'Controls
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 505506127376107782, guid: 687d2ec2f5ed448678aa49df6c3442e9,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -8332474713927308070, guid: c7cad8ffa2cc043aca60c4e9e9bc4cf9,
+        type: 2}
+    - target: {fileID: 505506127376107782, guid: 687d2ec2f5ed448678aa49df6c3442e9,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1876360778974795215, guid: 687d2ec2f5ed448678aa49df6c3442e9,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1017,6 +1040,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033952747408829638, guid: 687d2ec2f5ed448678aa49df6c3442e9,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 6125485561123590422, guid: 687d2ec2f5ed448678aa49df6c3442e9,
         type: 3}
