@@ -65,6 +65,7 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         if (other.gameObject.CompareTag("Enemy")) return;
         if (other.gameObject.CompareTag("EnemyBullet")) return;
         if (other.gameObject.CompareTag("Coin")) return;
+        if (other.gameObject.CompareTag("EdgeBulletsFree")) return;
         if (other.gameObject.CompareTag("Player"))
         {
             if (currentSelection.selectedMode == GameMode.OneShot)

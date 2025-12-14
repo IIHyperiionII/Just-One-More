@@ -1,9 +1,13 @@
 using UnityEngine;
 
-public class CoinController : MonoBehaviour
+public class CoinController : MonoBehaviour, ICoin
 {
     int value;
 
+    void Start()
+    {
+      this.transform.SetParent(GameObject.FindGameObjectWithTag("MoneyParent").transform);  
+    }
     public void SetValue(int val)
     {
         Debug.Log("Setting coin value to: " + val);
@@ -17,5 +21,9 @@ public class CoinController : MonoBehaviour
             other.gameObject.GetComponent<PlayerController>().GetCoin(value);
             Destroy(gameObject);
         }
+    }
+    public int GetValue()
+    {
+        return value;
     }
 }

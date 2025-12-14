@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR;
 
 public class PlayerLookDirection : MonoBehaviour
 {
@@ -73,6 +72,26 @@ public class PlayerLookDirection : MonoBehaviour
     {
         if (GameModeManager.timeIsPaused) return;
         if (playerAnimator == null) return;
+        if (ModeController.Instance.wasLoadedFromSave)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+            switch (currentSelection.selectedWeapon)
+            {
+                case WeaponType.Melee:
+                    handAnimator.SetInteger("Weapon", 1);
+                    break;
+                case WeaponType.Pistol:
+                    handAnimator.SetInteger("Weapon", 2);
+                    break;
+                case WeaponType.Shotgun:
+                    handAnimator.SetInteger("Weapon", 3);
+                    break;
+                default:
+                    break;
+
+            }
+            ModeController.Instance.wasLoadedFromSave = false;
+        }
 
         // Handle attacking animation
         if (playerController != null && playerController.isAttacking)

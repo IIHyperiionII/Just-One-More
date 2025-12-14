@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.IO;
-using UnityEngine.UI;
 using System.Collections;
 
 public class SaveSystem : MonoBehaviour
@@ -54,9 +53,7 @@ public class SaveSystem : MonoBehaviour
     public void SaveGame()
     {
         Debug.Log("Saving Game...");
-        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        modeController = GameObject.FindGameObjectWithTag("ModeController").GetComponent<ModeController>();
         UpdateSaveData();
 
         string savePath = GetFilePath(fileName);
@@ -76,9 +73,9 @@ public class SaveSystem : MonoBehaviour
 
     private void UpdateSaveData()
     {
-        gameManager.GetSaveData();
+        GameManager.Instance.GetSaveData();
         playerController.GetSaveData();
-        modeController.GetSaveData();
+        ModeController.Instance.GetSaveData();
     }
 
     public void LoadGame()
@@ -140,5 +137,16 @@ public class SaveSystem : MonoBehaviour
         }
         string json = JsonUtility.ToJson(currentBestTimeData, true);
         File.WriteAllText(savePath, json);
+    }
+
+    public void ResetGameData()
+    {
+        string savePath = GetFilePath(fileName);
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log("Save file deleted for reset");
+        }
+        currentSaveData = new SaveData();
     }
 }

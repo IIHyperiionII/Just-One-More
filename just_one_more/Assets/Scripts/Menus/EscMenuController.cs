@@ -9,6 +9,7 @@ public class EscMenuController : MonoBehaviour
     public Button saveGameButton;
     public Button quitGameButton;
     public Button settingsButton;
+    public Button resetButton; // For testing purposes
     public TextMeshProUGUI saveGameText;
     public GameObject settingsMenu;
 
@@ -18,6 +19,8 @@ public class EscMenuController : MonoBehaviour
         saveGameButton.onClick.AddListener(SaveGame);
         quitGameButton.onClick.AddListener(QuitGame);
         settingsButton.onClick.AddListener(OpenSettings);
+        resetButton.onClick.AddListener(ResetButton); // For testing purposes
+
     }
     void Update()
     {
@@ -37,13 +40,14 @@ public class EscMenuController : MonoBehaviour
 
     void BackToMainMenu()
     {
+        ModeController.Instance.ResetSettingsToDefault();
         SceneManager.LoadScene("MainMenuScene");
     }
 
     void SaveGame()
     {
-        SaveSystem.Instance.SaveGame();
         GameManager.Instance.runtimePlayerData.numberOfSaves -= 1;
+        SaveSystem.Instance.SaveGame();
     }
 
     void QuitGame()
@@ -56,5 +60,10 @@ public class EscMenuController : MonoBehaviour
         GameModeManager.isInSettingsMenu = true;
         settingsMenu.SetActive(true);
         this.transform.parent.gameObject.SetActive(false);
+    }
+    // For testing purposes
+    void ResetButton()
+    {
+        SaveSystem.Instance.ResetGameData();
     }
 }

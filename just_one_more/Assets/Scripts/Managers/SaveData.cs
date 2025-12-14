@@ -1,8 +1,6 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Runtime.CompilerServices;
 
 [Serializable]
 public class SaveData
@@ -18,6 +16,8 @@ public class SaveData
     public List<PlayerSaveData> players = new List<PlayerSaveData>();
     public List<EnemySaveData> enemies = new List<EnemySaveData>();
     public List<ProjectileSaveData> projectiles = new List<ProjectileSaveData>();
+    public List<CoinsSaveData> coins = new List<CoinsSaveData>();
+    public List<ProjectilePlayerSaveData> playerProjectiles = new List<ProjectilePlayerSaveData>();
 
 }
 
@@ -65,3 +65,20 @@ public class ProjectileSaveData
     public int sign; // for wave projectiles
 }
 
+[Serializable]
+public class CoinsSaveData
+{
+    public Vector3 position;
+    public int value;
+}
+
+[Serializable]
+public class ProjectilePlayerSaveData
+{
+    public Vector3 position;
+    public Quaternion initialRotation;
+    public int speed;
+    public int damage;
+    public int freezeLevel;
+    public int piercingLevel;
+}

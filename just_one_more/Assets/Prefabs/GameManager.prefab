@@ -46,10 +46,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   basePlayerData: {fileID: 11400000, guid: 090639ed8209b4818b3aa880d3efd296, type: 2}
   runtimePlayerData: {fileID: 0}
-  backgroundBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  wave: 1
+  background:
+  - {fileID: 5558711367320229470, guid: d49bb5887ad084622881de113c09e1f8, type: 3}
+  - {fileID: 5558711367320229470, guid: edf3d14d5cbb74be5a27995cf42a1748, type: 3}
+  - {fileID: 5558711367320229470, guid: 4cea3e3dbc58549fa823b787beabfab3, type: 3}
+  backgroundOpen:
+  - {fileID: 118990970339897067, guid: 98ef701ea16f84e44ae81a65d51027de, type: 3}
+  - {fileID: 118990970339897067, guid: 55caae132b27044c6b4d201bdc5c0c95, type: 3}
+  - {fileID: 118990970339897067, guid: d12d76e08074d47e4aea19f0f0b603bf, type: 3}
+  isOpen: 0
+  wave: 0
+  map: 0
+  mapCompleted: 0
   officePrefabs:
   - {fileID: 540468372576299302, guid: a497efb13f4c24abd9f2e7b8f8c27239, type: 3}
   - {fileID: 762159802268367773, guid: 52c0c5926fb9b46ae8af94d5b80e8954, type: 3}
@@ -68,3 +76,14 @@ MonoBehaviour:
   - {fileID: 2814504955684298624, guid: 704c74363284c4b289d350abd3440f2e, type: 3}
   doorsEntered: 0
   isGameReadyToLoad: 0
+  doorClosed: {fileID: 0}
+  doorClosedLight: {fileID: 0}
+  casinoButton: {fileID: 0}
+  gameWon: 0
+  isTeleporting: 0
+  time: 0
+  ElevatorOpenSound: {fileID: 8300000, guid: dfb60ac0dc2cf4bf4b94a8c5e6fcf22a, type: 3}
+  WaveCompleteSound: {fileID: 8300000, guid: 4865ec2d414864d7091c07c733f3140e, type: 3}
+  coin: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa, type: 3}
+  playerBullet: {fileID: 1432469908638311180, guid: 93a68023d2d574de3a44b40581e777b0,
+    type: 3}

@@ -45,22 +45,22 @@ public class WeaponController : MonoBehaviour
     {
         Quaternion rotation = UpdateAngle();
         GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation); // Spawn bullet at player position with calculated rotation
-        bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+        bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel, rotation); // Initialize bullet with player stats
+        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
     }
 
     public void AttackShotgun(int bulletSpeed, int damage , int piercingLevel, int freezeLevel)
     {
         Quaternion rotation = UpdateAngle();
         GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation); // Spawn bullet at player position with calculated rotation
-        bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
+        bullet.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel, rotation); // Initialize bullet with player stats
         GameObject bullet2 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation * Quaternion.Euler(0, 0, 20)); // Spawn bullet at player position with calculated rotation
-        bullet2.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
+        bullet2.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel, rotation * Quaternion.Euler(0, 0, 20)); // Initialize bullet with player stats
         GameObject bullet3 = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation * Quaternion.Euler(0, 0, -20)); // Spawn bullet at player position with calculated rotation
-        bullet3.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel); // Initialize bullet with player stats
-        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
-        bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
-        bullet3.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+        bullet3.GetComponent<PlayerBulletControllerTest>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel, rotation * Quaternion.Euler(0, 0, -20)); // Initialize bullet with player stats
+        bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
+        bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
+        bullet3.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
     }
 
     Quaternion UpdateAngle()

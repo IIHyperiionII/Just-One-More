@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ModeController : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class ModeController : MonoBehaviour
     public ModeAndWeaponSelection currentSelection;
     public GameObject darknessOverlay;
     public GameObject lightSource;
+    public bool wasLoadedFromSave;
     void Awake()
     {
         if (Instance == null)
@@ -21,11 +23,15 @@ public class ModeController : MonoBehaviour
 
     void Update()
     {
+        if (lightSource == null && GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            lightSource = GameObject.FindGameObjectWithTag("Player").transform.Find("Flashlight").gameObject;
+        }
         if (currentSelection == null)
             {
                 Debug.LogError("Current Selection ScriptableObject is not assigned.");
             }
-        if (currentSelection.selectedMode == GameMode.nightRide)
+        if (currentSelection.selectedMode == GameMode.nightRide && SceneManager.GetActiveScene().name == "tomScene")
         {
             darknessOverlay.SetActive(true);
             lightSource.SetActive(true);
@@ -40,6 +46,7 @@ public class ModeController : MonoBehaviour
 
     public void GetSaveData()
     {
+        Debug.Log("Getting Mode and Weapon Selection Save Data...");
         SaveData data = SaveSystem.Instance.currentSaveData;
         data.selectedMode = currentSelection.selectedMode;
         data.selectedWeapon = currentSelection.selectedWeapon;
@@ -51,6 +58,16 @@ public class ModeController : MonoBehaviour
         SaveData data = SaveSystem.Instance.currentSaveData;
         currentSelection.selectedMode = data.selectedMode;
         currentSelection.selectedWeapon = data.selectedWeapon;
+        currentSelection.basicDeifficultyCompleted = data.basicDifficultyCompleted;
+        wasLoadedFromSave = true;
+    }
+    public void ResetSettingsToDefault()
+    {
+        currentSelection.selectedMode = GameMode.none;
+        currentSelection.selectedWeapon = WeaponType.none;
+        wasLoadedFromSave = false;
+        darknessOverlay.SetActive(false);
+        lightSource.SetActive(false);
     }
     
 }

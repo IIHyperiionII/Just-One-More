@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -19,17 +20,30 @@ public class MainMenuController : MonoBehaviour
     }
     void Start()
     {
-        string savePath = Application.persistentDataPath + "/saveData.json";
-        if ( System.IO.File.Exists(savePath) )
-        {
-            loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-        }
-        else
-        {
-            loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-        }
+        string savePath = GetSavePath();
+        loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath);
         SaveSystem.Instance.LoadBestTime();
     }
+
+    void Update()
+    {
+        string savePath = GetSavePath();
+        loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath);
+    }
+
+    string GetSavePath()
+    {
+        string fileName = "saveData.json";
+        string folderPath = Application.persistentDataPath;
+
+        if (!Application.isEditor)
+        {
+            folderPath = Path.Combine(folderPath, "BuildSaves");
+        }
+
+        return Path.Combine(folderPath, fileName);
+    }
+
     public void StartGame()
     {
         SaveSystem.Instance.isNewGame = true;
