@@ -116,10 +116,11 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Peg"))
         {
-            float randVol = Random.Range(0.5f, 0.8f);
+            float impact = collision.relativeVelocity.magnitude;
+            float volume = Mathf.Clamp(impact * 0.1f, 0.1f, 0.4f);
             float randPitch = Random.Range(0.75f, 1.25f);
 
-            SoundController.Instance.PlaySound(pegHitSound, randVol, randPitch);
+            SoundController.Instance.PlaySound(pegHitSound, volume, randPitch);
         }
     }
 

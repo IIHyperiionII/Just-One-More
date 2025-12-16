@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ModAndWeaponSelection
   m_EditorClassIdentifier: Assembly-CSharp::ModeAndWeaponSelection
   selectedMode: 3
-  selectedWeapon: 0
+  selectedWeapon: 2
   basicDeifficultyCompleted: 0

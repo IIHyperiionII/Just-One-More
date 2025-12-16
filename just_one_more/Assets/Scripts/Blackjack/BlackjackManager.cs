@@ -11,6 +11,7 @@ public class BlackjackManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerScoreText;
     [SerializeField] private TextMeshProUGUI dealerScoreText;
     [SerializeField] private TextMeshProUGUI gameResultText;
+    [SerializeField] private AudioClip cardFlip;
 
     private Action<float> onGameComplete;
     private bool gameActive = false;
@@ -51,9 +52,26 @@ public class BlackjackManager : MonoBehaviour
         playerHand.Clear();
         dealerHand.Clear();
 
-        ShowCard(playerHand.AddCard(deck.DrawCard()), true);
-        ShowCard(dealerHand.AddCard(deck.DrawCard()), false);
-        ShowCard(playerHand.AddCard(deck.DrawCard()), true);
+        UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
+        UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue());
+
+        StartCoroutine(DealInitialCards());
+    }
+
+    private IEnumerator DealInitialCards()
+    {
+        RevealCard(playerHand.AddCard(deck.DrawCard()), true);
+        UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
+        yield return new WaitForSeconds(0.6f);
+        
+        RevealCard(dealerHand.AddCard(deck.DrawCard()), false);
+        UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue());
+        yield return new WaitForSeconds(0.6f);
+
+        RevealCard(playerHand.AddCard(deck.DrawCard()), true);
+        UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
+        yield return new WaitForSeconds(0.6f);
+        
         dealerHoleCard = deck.DrawCard();
         dealerHand.AddCard(dealerHoleCard);
         ShowDealerCardBack();
@@ -69,15 +87,17 @@ public class BlackjackManager : MonoBehaviour
             {
                 // Draw
                 EndGame(1f);
-                return;
+                yield break;
             }
             
             EndGame(3f);
-            return;
+            yield break;
         } else if (dealerHand.IsBlackjack())
         {
+            RevealDealerHoleCard();
+            
             EndGame(0f);
-            return;
+            yield break;
         }
     }
 
@@ -85,7 +105,7 @@ public class BlackjackManager : MonoBehaviour
     {
         if (!gameActive) return;
 
-        ShowCard(playerHand.AddCard(deck.DrawCard()), true);
+        RevealCard(playerHand.AddCard(deck.DrawCard()), true);
 
         UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
 
@@ -115,7 +135,7 @@ public class BlackjackManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1.0f);
 
-            ShowCard(dealerHand.AddCard(deck.DrawCard()), false);
+            RevealCard(dealerHand.AddCard(deck.DrawCard()), false);
             UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue());
         }
 
@@ -166,7 +186,7 @@ public class BlackjackManager : MonoBehaviour
         }
     }
 
-    private void ShowCard(Card card, bool isPlayer)
+    private void RevealCard(Card card, bool isPlayer)
     {
         string spriteName = card.GetSpriteName();
         string[] parts = spriteName.Split('_');
@@ -193,6 +213,10 @@ public class BlackjackManager : MonoBehaviour
 
         slots[currentIndex].ShowCard(sprite);
 
+        float volume = UnityEngine.Random.Range(0.25f, 0.45f);
+        float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
+        SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
+
         if (isPlayer)
             playerCardIndex++;
         else
@@ -215,6 +239,10 @@ public class BlackjackManager : MonoBehaviour
 
         dealerCardSlots[dealerCardIndex].ShowCard(cardBackSprite);
         dealerCardIndex++;
+
+        float volume = UnityEngine.Random.Range(0.25f, 0.45f);
+        float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
+        SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
     }
 
     private void RevealDealerHoleCard()
@@ -230,6 +258,10 @@ public class BlackjackManager : MonoBehaviour
             Sprite[] sprites = Resources.LoadAll<Sprite>($"Cards/{suitName}");
             Sprite sprite = Array.Find(sprites, s => s.name == spriteName);
 
+            float volume = UnityEngine.Random.Range(0.25f, 0.45f);
+            float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
+            SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
+            
             if (sprite != null)
             {
                 dealerCardSlots[holeCardSlotIndex].ShowCard(sprite);

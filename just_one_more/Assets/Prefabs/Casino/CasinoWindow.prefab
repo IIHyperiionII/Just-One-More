@@ -2942,7 +2942,7 @@ RectTransform:
   m_Father: {fileID: 2851945434332185089}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6854,6 +6854,7 @@ MonoBehaviour:
   playerScoreText: {fileID: 940519081555832549}
   dealerScoreText: {fileID: 7932874293431281694}
   gameResultText: {fileID: 2339620798089262524}
+  cardFlip: {fileID: 8300000, guid: b44b63b1b0a54f749b0c9b9225603872, type: 3}
 --- !u!1 &6418253369813115949
 GameObject:
   m_ObjectHideFlags: 0
@@ -6887,7 +6888,7 @@ RectTransform:
   m_Father: {fileID: 4319085731465693467}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8712,7 +8713,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2052015102879981749
 Transform:
   m_ObjectHideFlags: 0
