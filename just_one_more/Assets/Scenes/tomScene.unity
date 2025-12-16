@@ -4062,6 +4062,16 @@ PrefabInstance:
     - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
         type: 3}
       propertyPath: wave
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: isOpen
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: mapCompleted
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,

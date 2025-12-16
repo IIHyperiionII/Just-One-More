@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 5764657212745838802}
   - component: {fileID: 1856592905169667446}
   - component: {fileID: 5521072596710698599}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BackgroundOfficeExit
   m_TagString: BoundsCheckDoors
   m_Icon: {fileID: 0}

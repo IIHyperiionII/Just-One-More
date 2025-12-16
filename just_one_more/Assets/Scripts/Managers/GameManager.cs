@@ -77,6 +77,9 @@ public class GameManager : MonoBehaviour
         if (ModeController.Instance != null){
             currentSelection = ModeController.Instance.currentSelection;
         }
+        if (currentSelection != null && currentSelection.selectedWeapon == WeaponType.Melee){
+            runtimePlayerData.isMelee = true;
+        }
     }
     void Start()
     {
@@ -112,6 +115,9 @@ public class GameManager : MonoBehaviour
         if (currentSelection == null)
         {
             currentSelection = ModeController.Instance.currentSelection;
+        }
+        if (currentSelection != null && currentSelection.selectedWeapon == WeaponType.Melee){
+            runtimePlayerData.isMelee = true;
         }
     }
     void GetCamera()
@@ -571,6 +577,10 @@ public class GameManager : MonoBehaviour
             GameObject playerBulletInstance = Instantiate(playerBullet, projectilePlayerData.position, projectilePlayerData.initialRotation);
             playerBulletInstance.GetComponent<PlayerBulletControllerTest>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation);
             playerBulletInstance.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform);
+        }
+        if (runtimePlayerData != null && currentSelection != null)
+        {
+            runtimePlayerData.isMelee = currentSelection.selectedWeapon == WeaponType.Melee;
         }
         Debug.Log("GameManager applied save data ");
     }
