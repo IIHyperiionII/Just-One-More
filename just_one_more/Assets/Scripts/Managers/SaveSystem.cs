@@ -100,9 +100,9 @@ public class SaveSystem : MonoBehaviour
             Debug.LogWarning("Save file not found!");
             currentSaveData = new SaveData();
         }
+        modeController.ApplySaveData();
         playerController.ApplySaveData();
         gameManager.ApplySaveData();
-        modeController.ApplySaveData();
         Time.timeScale = 1f;
     }
 
