@@ -11,12 +11,6 @@ public class SoundController : MonoBehaviour
     private int currentTrackIndex = 0;
     private bool wasInCasino = false;
     private bool currentlyInCasino = false;
-
-    [Header("Music clips")]
-    public AudioClip[] casinoMusicTracks;
-    private int currentTrackIndex = 0;
-    private bool wasInCasino = false;
-    private bool currentlyInCasino = false;
     
     private void Awake()
     {

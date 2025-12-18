@@ -1,9 +1,5 @@
 using UnityEngine;
 using System.Collections;
-<<<<<<< HEAD
-
-=======
->>>>>>> 7ff7112 (Fix: Altered Sound controller and redid previous commits changes)
 
 public class Ball : MonoBehaviour
 {
@@ -136,17 +132,5 @@ public class Ball : MonoBehaviour
             yield return null;
         }
         Destroy(gameObject);
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Peg"))
-        {
-            float impact = collision.relativeVelocity.magnitude;
-            float volume = Mathf.Clamp(impact * 0.1f, 0.1f, 0.4f);
-            float randPitch = Random.Range(0.75f, 1.25f);
-
-            SoundController.Instance.PlaySound(pegHitSound, volume, randPitch);
-        }
     }
 }

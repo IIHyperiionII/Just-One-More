@@ -15,9 +15,6 @@ public class Bucket : MonoBehaviour
     private int shakeCount = 3;
     public float getMultiplier() => multiplier;
     private ParticleSystem particleInstance;
-    [SerializeField] private AudioClip particleSound;
-
-
 
     public void OnBallEntered()
     {
