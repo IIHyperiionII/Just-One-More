@@ -23,10 +23,6 @@ public class GameModeManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 100;
-        if (casino == null)
-        {
-            casino = GameObject.FindGameObjectWithTag("Casino");
-        }
         ExitMiniGame();
         casinoButton.onClick.AddListener(EnterMiniGame);
         continueButton.onClick.AddListener(CloseEscMenu);
@@ -81,8 +77,10 @@ public class GameModeManager : MonoBehaviour
         cameraDisortionEffect.SetActive(false);
         casino.SetActive(true);
         timeIsPaused = true;
-
-        SoundController.Instance.PlayCasinoMusic(0.3f);
+        if (SoundController.Instance != null)
+        {
+            SoundController.Instance.PlayCasinoMusic(0.2f);
+        }
     }
 
     public void ExitMiniGame()
@@ -92,8 +90,10 @@ public class GameModeManager : MonoBehaviour
         casino.SetActive(false);
         cameraDisortionEffect.SetActive(true);
         timeIsPaused = false;
-
-        SoundController.Instance.StopCasinoMusic();
+        if (SoundController.Instance != null)
+        {
+            SoundController.Instance.StopCasinoMusic();
+        }
     }
 
     void GameWonMenu()

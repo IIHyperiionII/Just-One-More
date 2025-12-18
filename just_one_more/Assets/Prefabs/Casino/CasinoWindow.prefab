@@ -4489,7 +4489,6 @@ MonoBehaviour:
   moveSpeedButton: {fileID: 6135193441157217134}
   attackSpeedButton: {fileID: 6219795905718312412}
   attackModifierButton: {fileID: 5585729936532739406}
-  attackModifierButtonText: {fileID: 0}
   attackModifierButtonImage: {fileID: 3511101804903382211}
   bulletSpeedSprite: {fileID: -576799071, guid: e6c4abc8d555df449a3e823284e71775,
     type: 3}
