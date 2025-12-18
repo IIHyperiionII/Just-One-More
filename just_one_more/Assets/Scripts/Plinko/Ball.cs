@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 public class Ball : MonoBehaviour
 {
     private float lifetime = 30f;

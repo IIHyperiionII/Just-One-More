@@ -16,7 +16,6 @@ public class Bucket : MonoBehaviour
     public float getMultiplier() => multiplier;
     private ParticleSystem particleInstance;
 
-
     public void OnBallEntered()
     {
         StartCoroutine(ShakeBounceAnimation());

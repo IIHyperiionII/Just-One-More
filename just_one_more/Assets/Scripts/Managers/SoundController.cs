@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class SoundController : MonoBehaviour
 {
     public static SoundController Instance;
@@ -12,106 +11,151 @@ public class SoundController : MonoBehaviour
     private int currentTrackIndex = 0;
     private bool wasInCasino = false;
     private bool currentlyInCasino = false;
-
+    
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
+            // If the existing instance has no tracks but this one does, copy them over
+            if ((Instance.casinoMusicTracks == null || Instance.casinoMusicTracks.Length == 0) &&
+                casinoMusicTracks != null && casinoMusicTracks.Length > 0)
+            {
+                Instance.casinoMusicTracks = casinoMusicTracks;
+            }
+            
             Destroy(gameObject);
             return;
         }
-        else
+        
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        
+        if(sfxSource == null)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-
-            sfxSource.spatialBlend = 0.0f; // Set to 2D sound
-            sfxSource.playOnAwake = false;
-
-            musicSource.spatialBlend = 0.0f; // Set to 2D sound
-            musicSource.loop = false;
-            musicSource.playOnAwake = false;
+            sfxSource = gameObject.AddComponent<AudioSource>();
         }
+        
+        if(musicSource == null)
+        {
+            musicSource = gameObject.AddComponent<AudioSource>();
+        }
+        
+        sfxSource.spatialBlend = 0.0f;
+        sfxSource.playOnAwake = false;
+        
+        musicSource.spatialBlend = 0.0f;
+        musicSource.loop = false;
+        musicSource.playOnAwake = false;
     }
-
+    
     private void Update()
     {
-        // Pokud máme hrát casino hudbu a aktuální track dohrál, přehraj další
         if (currentlyInCasino && wasInCasino && 
-            !musicSource.isPlaying && casinoMusicTracks.Length > 0)
+            musicSource != null && !musicSource.isPlaying && casinoMusicTracks.Length > 0)
         {
             PlayNextCasinoTrack();
         }
     }
-
+    
     public void PlaySound(AudioClip clip, float volume, float pitch)
     {
-        if (clip == null) return;
+        if (clip == null || sfxSource == null) return;
+        
         sfxSource.pitch = pitch;
         sfxSource.PlayOneShot(clip, volume);
-        sfxSource.pitch = 1.0f; // Reset pitch to default
+        sfxSource.pitch = 1.0f;
     }
-
+    
     public void PlayMusic(AudioClip clip, float volume = 0.5f)
     {
-        if (clip == null) 
-        {
-            return;
-        }
+        if (clip == null || musicSource == null) return;
         
-        if (musicSource.clip == clip && musicSource.isPlaying)
-        {
-            return;
-        }
+        if (musicSource.clip == clip && musicSource.isPlaying) return;
         
         musicSource.Stop();
         musicSource.clip = clip;
         musicSource.volume = volume;
         musicSource.Play();
     }
-
+    
     public void StopMusic()
     {
+        if(musicSource == null) return;
         musicSource.Stop();
     }
-
+    
     public void PlayCasinoMusic(float volume = 0.5f)
     {
-        if (casinoMusicTracks == null || casinoMusicTracks.Length == 0
-            || (wasInCasino && musicSource.isPlaying))
+        if (musicSource == null)
         {
             return;
         }
-
+        
+        if (casinoMusicTracks == null)
+        {
+            return;
+        }
+        
+        if (casinoMusicTracks.Length == 0)
+        {
+            return;
+        }
+        
+        if (wasInCasino && musicSource.isPlaying)
+        {
+            return;
+        }
+        
         if (wasInCasino && !musicSource.isPlaying)
         {
             currentlyInCasino = true;
             musicSource.UnPause();
             return;
         }
-
+        
         currentlyInCasino = true;
         wasInCasino = true;
         currentTrackIndex = Random.Range(0, casinoMusicTracks.Length);
-
-        musicSource.clip = casinoMusicTracks[currentTrackIndex];
+        AudioClip selectedClip = casinoMusicTracks[currentTrackIndex];
+        
+        if (selectedClip == null)
+        {
+            return;
+        }
+        
+        musicSource.clip = selectedClip;
         musicSource.volume = volume;
         musicSource.loop = false;
-
         musicSource.Play();
     }
-
+    
     public void StopCasinoMusic()
     {
+        if(musicSource == null)
+        {
+            return;
+        }
+        
         currentlyInCasino = false;
         musicSource.Pause();
     }
-
+    
     public void PlayNextCasinoTrack()
     {
-        currentTrackIndex = (currentTrackIndex + 1) % casinoMusicTracks.Length;
+        if(musicSource == null || casinoMusicTracks == null || casinoMusicTracks.Length == 0)
+        {
+            return;
+        }
         
-        musicSource.clip = casinoMusicTracks[currentTrackIndex];
+        currentTrackIndex = (currentTrackIndex + 1) % casinoMusicTracks.Length;
+        AudioClip nextClip = casinoMusicTracks[currentTrackIndex];
+        
+        if (nextClip == null)
+        {
+            return;
+        }
+        
+        musicSource.clip = nextClip;
         musicSource.Play();
     }
 }

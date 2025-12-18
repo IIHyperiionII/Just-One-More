@@ -12,7 +12,7 @@ public class BlackjackManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dealerScoreText;
     [SerializeField] private TextMeshProUGUI gameResultText;
     [SerializeField] private AudioClip cardFlip;
-
+    
     private Action<float> onGameComplete;
     private bool gameActive = false;
     private bool resultSent = false;
@@ -217,10 +217,13 @@ public class BlackjackManager : MonoBehaviour
         float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
         SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
 
-        if (isPlayer)
+        if (isPlayer) {
             playerCardIndex++;
-        else
+        } else {
             dealerCardIndex++;
+        }
+
+        PlayCardSound();
     }
 
     private void ShowDealerCardBack()
@@ -243,6 +246,7 @@ public class BlackjackManager : MonoBehaviour
         float volume = UnityEngine.Random.Range(0.25f, 0.45f);
         float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
         SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
+        PlayCardSound();
     }
 
     private void RevealDealerHoleCard()
@@ -271,6 +275,8 @@ public class BlackjackManager : MonoBehaviour
                 Debug.LogError($"Could not find sprite for hole card: {spriteName}");
             }
         }
+
+        PlayCardSound();
     }
 
     private void UpdateTextField(TextMeshProUGUI textField, string label, int value)
@@ -295,6 +301,14 @@ public class BlackjackManager : MonoBehaviour
                 gameResultText.text = "IT'S A DRAW!";
             }
         }
+    }
+
+    private void PlayCardSound()
+    {
+        float volume = UnityEngine.Random.Range(0.25f, 0.45f);
+        float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
+        SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
+
     }
 
     public void ResetGame() 

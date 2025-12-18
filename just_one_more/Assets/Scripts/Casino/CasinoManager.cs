@@ -20,7 +20,6 @@ public class CasinoManager : MonoBehaviour
     [SerializeField] private Button moveSpeedButton;
     [SerializeField] private Button attackSpeedButton;
     [SerializeField] private Button attackModifierButton;
-    [SerializeField] private TextMeshProUGUI attackModifierButtonText;
     [SerializeField] private Image attackModifierButtonImage;
     [SerializeField] private Sprite bulletSpeedSprite;
     [SerializeField] private Sprite knockbackSprite;
@@ -71,7 +70,7 @@ public class CasinoManager : MonoBehaviour
             playerStatsPanel.SetPlayerData(playerData);
             attackModifierStatType = playerStatsPanel.GetAttackModifierStatType();
 
-            if (attackModifierButtonText)
+            if (attackModifierButtonImage)
             {
                 if (playerStatsPanel.GetAttackModifierName() == "Bullet Speed")
                     attackModifierButtonImage.sprite = bulletSpeedSprite;
