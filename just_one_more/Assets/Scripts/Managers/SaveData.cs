@@ -63,6 +63,7 @@ public class ProjectileSaveData
     public int speed;
     public int damage;
     public int sign; // for wave projectiles
+    public string spriteName;
 }
 
 [Serializable]
@@ -81,4 +82,5 @@ public class ProjectilePlayerSaveData
     public int damage;
     public int freezeLevel;
     public int piercingLevel;
+    public string spriteName;
 }

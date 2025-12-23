@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityRandom = UnityEngine.Random;
-using System;
 using System.Linq;
 
 public class GameManager : MonoBehaviour
@@ -45,6 +44,7 @@ public class GameManager : MonoBehaviour
     public AudioClip WaveCompleteSound;
     public GameObject coin;
     public GameObject playerBullet;
+    public Sprite[] bulletSprites;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -457,6 +457,7 @@ public class GameManager : MonoBehaviour
             projectileData.speed = bulletController.GetSpeed();
             projectileData.damage = bulletController.GetDamage();
             projectileData.sign = bulletController.GetSign();
+            projectileData.spriteName = bulletController.GetSpriteName();
             data.projectiles.Add(projectileData);
         }
         data.coins.Clear();
@@ -480,6 +481,7 @@ public class GameManager : MonoBehaviour
             projectilePlayerData.damage = bulletController.GetDamage();
             projectilePlayerData.freezeLevel = bulletController.GetFreezeLevel();
             projectilePlayerData.piercingLevel = bulletController.GetPiercingLevel();
+            projectilePlayerData.spriteName = bulletController.GetSpriteName();
             data.playerProjectiles.Add(projectilePlayerData);
         }
     }
@@ -544,22 +546,29 @@ public class GameManager : MonoBehaviour
         foreach (ProjectileSaveData projectileData in data.projectiles)
         {
             GameObject projectilePrefab;
+            Sprite bulletSprite = null;
+            for (int i = 0; i < bulletSprites.Length; i++){
+                if (bulletSprites[i].name == projectileData.spriteName){
+                    bulletSprite = bulletSprites[i];
+                    break;
+                }
+            }
             switch (projectileData.projectileType)
             {
                 case "BaseEnemyBullet":
                     projectilePrefab = bulletPrefabs[0];
                     GameObject enemyBullet = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
-                    enemyBullet.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
+                    enemyBullet.GetComponent<EnemyBulletBaseController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation, bulletSprite);
                     break;
                 case "WaveEnemyBullet":
                     projectilePrefab = bulletPrefabs[1];
                     GameObject enemyBulletWave = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
-                    enemyBulletWave.GetComponent<EnemyBulletWaveController>().Initialize(projectileData.speed, projectileData.damage, projectileData.sign, projectileData.initialRotation);
+                    enemyBulletWave.GetComponent<EnemyBulletWaveController>().Initialize(projectileData.speed, projectileData.damage, projectileData.sign, projectileData.initialRotation, bulletSprite);
                     break;
                 case "ScalingEnemyBullet":
                     projectilePrefab = bulletPrefabs[2];
                     GameObject enemyBulletScaling = Instantiate(projectilePrefab, projectileData.position, projectileData.initialRotation);
-                    enemyBulletScaling.GetComponent<EnemyBulletScalingController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation);
+                    enemyBulletScaling.GetComponent<EnemyBulletScalingController>().Initialize(projectileData.speed, projectileData.damage, projectileData.initialRotation, bulletSprite);
                     break;
                 default:
                     Debug.LogWarning("Unknown projectile type: " + projectileData.projectileType);
@@ -574,8 +583,15 @@ public class GameManager : MonoBehaviour
         }
         foreach (ProjectilePlayerSaveData projectilePlayerData in data.playerProjectiles)
         {
+            Sprite bulletSprite = null;
+            for (int i = 0; i < bulletSprites.Length; i++){
+                if (bulletSprites[i].name == projectilePlayerData.spriteName){
+                    bulletSprite = bulletSprites[i];
+                    break;
+                }
+            }
             GameObject playerBulletInstance = Instantiate(playerBullet, projectilePlayerData.position, projectilePlayerData.initialRotation);
-            playerBulletInstance.GetComponent<PlayerBulletControllerTest>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation);
+            playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite);
             playerBulletInstance.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform);
         }
         if (runtimePlayerData != null && currentSelection != null)

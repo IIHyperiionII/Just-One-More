@@ -187,6 +187,7 @@ MonoBehaviour:
     type: 3}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
+  bulletSprite: {fileID: -229946286, guid: 7108e147919fb400596e12981a4d3262, type: 3}
 --- !u!114 &4063865855136928807
 MonoBehaviour:
   m_ObjectHideFlags: 0

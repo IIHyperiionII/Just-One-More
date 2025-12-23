@@ -1,6 +1,6 @@
 using UnityEngine;
 // This script controls the behavior of the player's bullet only for testing in editor without weapons.
-public class PlayerBulletControllerTest : MonoBehaviour, IBulletPlayer
+public class PlayerBulletController : MonoBehaviour, IBulletPlayer
 {
     private Vector2 bulletPosition;
     private Vector2 direction;
@@ -11,6 +11,10 @@ public class PlayerBulletControllerTest : MonoBehaviour, IBulletPlayer
     private int freezeLevel;
     private int piercedEnemies = 0;
     private ModeAndWeaponSelection currentSelection;
+    private Sprite bulletSprite;
+    private SpriteRenderer spriteRenderer;
+    private string spriteName;
+    private BoxCollider2D boxCollider;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
@@ -19,8 +23,20 @@ public class PlayerBulletControllerTest : MonoBehaviour, IBulletPlayer
         {
             currentSelection = ModeController.Instance.currentSelection;
         }
+        boxCollider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
+        if (bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+        }
     }
-    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation)
+
+    void Start()
+    {
+        spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
+    }
+    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
@@ -28,10 +44,20 @@ public class PlayerBulletControllerTest : MonoBehaviour, IBulletPlayer
         freezeLevel = bulletFreezeLevel;
         transform.rotation = rotation;
         currentSelection = ModeController.Instance.currentSelection;
+        bulletSprite = sprite;
+        spriteName = sprite.name;
+        boxCollider.size = bulletSprite.bounds.size;
     }
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+            spriteName = bulletSprite.name;
+            spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
+            boxCollider.size = bulletSprite.bounds.size;
+        }
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
         
     }
@@ -89,5 +115,6 @@ public class PlayerBulletControllerTest : MonoBehaviour, IBulletPlayer
     public Quaternion GetInitialRotation() { return transform.rotation; }
     public int GetFreezeLevel() { return freezeLevel; }
     public int GetPiercingLevel() { return piercingLevel; }
+    public string GetSpriteName() { return spriteName; }
 
 }
