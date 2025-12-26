@@ -7,6 +7,7 @@ public class Bucket : MonoBehaviour
 {
     [SerializeField] private float multiplier = 1.0f;
     [SerializeField] private ParticleSystem particlePrefab;
+    [SerializeField] private AudioClip particleSound;
     private float dropDistance = 15f;
     private float dropDuration = 0.15f;
     private float returnDuration = 0.25f;
@@ -37,6 +38,8 @@ public class Bucket : MonoBehaviour
         var main = particleInstance.main;
         main.startColor = GetMultiplierColor();
         particleInstance.Play();
+        float randPitch = Random.Range(0.5f, 1.5f);
+        SoundController.Instance.PlaySound(particleSound, 0.5f, randPitch);
     }
 
     private Color GetMultiplierColor()

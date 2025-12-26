@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 762159802268367773}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.16859, y: -4.3651, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -136,11 +136,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b005c7bccb2d84783b97af65b5596a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedEnemyControllerTest
-  EnemiesData: {fileID: 11400000, guid: 25244fe84183c4041aa4e40b7b6c906f, type: 2}
+  EnemiesData: {fileID: 11400000, guid: 7e2eca46334724bfbba0565a79dac7a7, type: 2}
   bulletPrefab: {fileID: 1432469908638311180, guid: 2f4161520e9284bf2b7df5a177359e55,
     type: 3}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleCheckDistance: 0
+  movementCheckRadius: 0
+  timeBetweenDirectionChecks: 0
+  offsetHeight: 0
 --- !u!95 &4926208113507354612
 Animator:
   serializedVersion: 7

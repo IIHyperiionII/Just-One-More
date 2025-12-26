@@ -1,6 +1,6 @@
 using UnityEngine;
 // This script controls the behavior of the player's bullet only for testing in editor without weapons.
-public class PlayerBulletControllerTest : MonoBehaviour
+public class PlayerBulletControllerTest : MonoBehaviour, IBulletPlayer
 {
     private Vector2 bulletPosition;
     private Vector2 direction;
@@ -20,12 +20,13 @@ public class PlayerBulletControllerTest : MonoBehaviour
             currentSelection = ModeController.Instance.currentSelection;
         }
     }
-    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel)
+    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
         piercingLevel = bulletPiercingLevel;
         freezeLevel = bulletFreezeLevel;
+        transform.rotation = rotation;
         currentSelection = ModeController.Instance.currentSelection;
     }
     void FixedUpdate()
@@ -39,6 +40,7 @@ public class PlayerBulletControllerTest : MonoBehaviour
         if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("PlayerBullet")) return;
         if (other.gameObject.CompareTag("Coin")) return;
+        if (other.gameObject.CompareTag("EdgeBulletsFree")) return;
         if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("EnemyBullet"))
         {
             if (other.gameObject.CompareTag("Enemy"))
@@ -82,5 +84,10 @@ public class PlayerBulletControllerTest : MonoBehaviour
             target.GetComponent<IEnemy>().Freeze(0.5f * freezeLevel);
         }
     }
+    public int GetSpeed() { return speed; }
+    public int GetDamage() { return damage; }
+    public Quaternion GetInitialRotation() { return transform.rotation; }
+    public int GetFreezeLevel() { return freezeLevel; }
+    public int GetPiercingLevel() { return piercingLevel; }
 
 }

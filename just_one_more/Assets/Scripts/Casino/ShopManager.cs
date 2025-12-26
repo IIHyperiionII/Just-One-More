@@ -17,6 +17,9 @@ public class ShopManager : MonoBehaviour
     [Header("Data")]
     [SerializeField] private PlayerStatsPanel playerStatsPanel;
 
+    [Header("Shop sprites")]
+    [SerializeField] private Sprite[] shopSprites;
+
     private PlayerData playerData;
     private ShopItem currentItem;
     private int previousRandomChoice = -1;
@@ -249,6 +252,25 @@ public class ShopManager : MonoBehaviour
         if (itemPriceText)
         {
             itemPriceText.text = price.ToString();
+        }
+
+        switch (currentItem.statType)
+        {
+            case StatType.PiercingLevel:
+                itemIcon.sprite = shopSprites[0];
+                break;
+            case StatType.DashLevel:
+                itemIcon.sprite = shopSprites[1];
+                break;
+            case StatType.BlockLevel:
+                itemIcon.sprite = shopSprites[2];
+                break;
+            case StatType.FreezeLevel:
+                itemIcon.sprite = shopSprites[3];
+                break;
+            case StatType.SaveSlots:
+                itemIcon.sprite = shopSprites[4];
+                break;
         }
     }
     

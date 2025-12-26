@@ -28,6 +28,13 @@ public class PlayerHudController : MonoBehaviour
     private float defaultScreenWidth = 1920f;
     private float screenWidthDifference;
     private bool isFirst = true;
+    public Sprite[] needToGambleBarSprites;
+    public Sprite[] needToGambleHeadSprites;
+    public GameObject needToGambleBarImage;
+    public GameObject needToGambleHeadImage;
+    public int needToGambleLevel = 0;
+    public float multiplier = 0.75f;
+    private bool isFirstSign = true;
 
     void Start()
     {
@@ -46,9 +53,9 @@ public class PlayerHudController : MonoBehaviour
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
+        playerData = GameManager.Instance.runtimePlayerData;
         screenWidth = Screen.width;
         screenWidthDifference = screenWidth / defaultScreenWidth;
-        Debug.Log($"Screen width: {screenWidth}, Screen default width: {defaultScreenWidth}, Difference: {screenWidthDifference}");
         if (playerData != null)
         {
             if (playerData.hp > 0){
@@ -64,6 +71,22 @@ public class PlayerHudController : MonoBehaviour
             msText.text = $"MS: {playerData.moveSpeed}";
             asText.text = $"AS: {playerData.attackSpeed}";
         }
+        needToGambleLevel = playerData.needToGamble/10;
+        needToGambleBarImage.GetComponent<Image>().sprite = needToGambleBarSprites[needToGambleLevel];
+        if (needToGambleLevel < 5)
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[0];
+        } else if (needToGambleLevel < 7)
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[1];
+        } else if (needToGambleLevel < 8)
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[2];
+        } else 
+        {
+            needToGambleHeadImage.GetComponent<Image>().sprite = needToGambleHeadSprites[3];
+        }
+
     }
     void GetHp()
     {
@@ -89,7 +112,7 @@ public class PlayerHudController : MonoBehaviour
                 GameObject numberCard = new GameObject();
                 numberCard.AddComponent<Image>();
                 numberCard.GetComponent<Image>().sprite = numbersCards[digit];
-                numberCard.GetComponent<RectTransform>().sizeDelta = new Vector2(256 * screenWidthDifference, 256 * screenWidthDifference);
+                numberCard.GetComponent<RectTransform>().sizeDelta = new Vector2(256 * screenWidthDifference * multiplier, 256 * screenWidthDifference * multiplier);
                 numberCardsSprites[index] = numberCard;
                 numberCard.transform.SetParent(numbersCardsParent.transform);
             }
@@ -110,7 +133,7 @@ public class PlayerHudController : MonoBehaviour
         {
             if (numberCardsSprites.ContainsKey(i))
             {
-                numberCardsSprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + 95f * iterator * screenWidthDifference, numbersCardsParent.transform.position.y, numbersCardsParent.transform.position.z);
+                numberCardsSprites[i].transform.position = new Vector3(numbersCardsParent.transform.position.x + 95f * iterator * screenWidthDifference * multiplier, numbersCardsParent.transform.position.y, numbersCardsParent.transform.position.z);
             }
         
             iterator++;
@@ -123,30 +146,65 @@ public class PlayerHudController : MonoBehaviour
         int index = 1;
         int digit;
         bool willContinue = true;
-        while (willContinue)
+        if (playerData.money != 0)
         {
-            digit = playerMoney % 10;
-            if (playerMoney < 10)
+            while (willContinue)
             {
-                willContinue = false;
-                if (digit == 0)
+                digit = playerMoney % 10;
+                if (playerMoney < 10)
                 {
-                    break;
+                    willContinue = false;
+                    if (digit == 0)
+                    {
+                        break;
+                    }
                 }
+                if (numberMoneySprites.ContainsKey(index) )
+                {
+                    numberMoneySprites[index].GetComponent<Image>().sprite = numbersMoney[digit];
+                    numberMoneySprites[index].GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
+                    if (digit == 5)
+                    {
+                        numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                    } else {
+                        numberMoneySprites[index].transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    }
+                } else {
+                    GameObject numberMoney = new GameObject();
+                    numberMoney.AddComponent<Image>();
+                    numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
+                    numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference * multiplier;
+                    if (digit == 5)
+                    {
+                        numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0.8f);
+                    } else {
+                        numberMoney.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    }
+                    numberMoneySprites[index] = numberMoney;
+                    numberMoney.transform.SetParent(numbersMoneyParent.transform);
+                }
+                playerMoney /= 10;
+                index ++;
             }
-            if (numberMoneySprites.ContainsKey(index) )
+        } else {
+            if (numberMoneySprites.ContainsKey(1))
             {
-                numberMoneySprites[index].GetComponent<Image>().sprite = numbersMoney[digit];
-            } else {
+                numberMoneySprites[1].GetComponent<Image>().sprite = numbersMoney[0];
+                numberMoneySprites[1].GetComponent<RectTransform>().sizeDelta =
+                    numbersMoney[0].rect.size * screenWidthDifference * multiplier;
+            }
+            else
+            {
                 GameObject numberMoney = new GameObject();
                 numberMoney.AddComponent<Image>();
-                numberMoney.GetComponent<Image>().sprite = numbersMoney[digit];
-                numberMoney.GetComponent<RectTransform>().sizeDelta = numbersMoney[digit].rect.size * screenWidthDifference;
-                numberMoneySprites[index] = numberMoney;
+                numberMoney.GetComponent<Image>().sprite = numbersMoney[0];
+                numberMoney.GetComponent<RectTransform>().sizeDelta =
+                    numbersMoney[0].rect.size * screenWidthDifference * multiplier;
+                numberMoneySprites[1] = numberMoney;
                 numberMoney.transform.SetParent(numbersMoneyParent.transform);
             }
-            playerMoney /= 10;
-            index ++;
+
+            index = 2;
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
@@ -172,21 +230,25 @@ public class PlayerHudController : MonoBehaviour
                 {
                     isFirst = false;
                     numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
-                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference)/2 + 10f;
+                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference * multiplier)/2 + 7.5f;
                 } else {
-                    numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((numberMoneySprites[i].GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
-                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference) + 10f;
+                    numberMoneySprites[i].transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((numberMoneySprites[i].GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference * multiplier, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+                    position += (numberMoneySprites[i].GetComponent<Image>().sprite.rect.width * screenWidthDifference * multiplier) + 7.5f;
                 }
                 
             }
             iterator++;
 
         }
-        dollarSign.AddComponent<Image>();
-        dollarSign.GetComponent<Image>().sprite = dollarSignSprite;
-        dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference;
-        dollarSign.transform.SetParent(numbersMoneyParent.transform);
-        dollarSign.transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((dollarSign.GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
+        if (isFirstSign)
+        {
+            dollarSign.AddComponent<Image>();
+            dollarSign.GetComponent<Image>().sprite = dollarSignSprite;
+            dollarSign.GetComponent<RectTransform>().sizeDelta = dollarSignSprite.rect.size * screenWidthDifference * multiplier;
+            dollarSign.transform.SetParent(numbersMoneyParent.transform);
+            isFirstSign = false;
+        }
+        dollarSign.transform.position = new Vector3(numbersMoneyParent.transform.position.x + position + ((dollarSign.GetComponent<Image>().sprite.rect.width)/2) * screenWidthDifference * multiplier, numbersMoneyParent.transform.position.y, numbersMoneyParent.transform.position.z);
         isFirst = true;
     }
 }

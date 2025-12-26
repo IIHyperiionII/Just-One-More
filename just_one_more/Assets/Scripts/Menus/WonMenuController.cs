@@ -70,6 +70,7 @@ public class WonMenuController : MonoBehaviour
     }
     void ReturnToMainMenu()
     {
+        ModeController.Instance.ResetSettingsToDefault();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
     void GetString()

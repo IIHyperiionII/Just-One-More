@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using Unity.Mathematics;
-
 
 public class Ball : MonoBehaviour
 {
@@ -15,6 +13,7 @@ public class Ball : MonoBehaviour
     private LineRenderer previewLine;
     private Vector2 savedDirection;
     private bool isChargingPush;
+    [SerializeField] private AudioClip pegHitSound;
 
     void Start()
     {
@@ -111,6 +110,19 @@ public class Ball : MonoBehaviour
             StartCoroutine(DestroyAfterDelay(destroyDelay));
         }
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Peg"))
+        {
+            float impact = collision.relativeVelocity.magnitude;
+            float volume = Mathf.Clamp(impact * 0.1f, 0.1f, 0.4f);
+            float randPitch = Random.Range(0.75f, 1.25f);
+
+            SoundController.Instance.PlaySound(pegHitSound, volume, randPitch);
+        }
+    }
+
     IEnumerator DestroyAfterDelay(float delay)
     {
         float elapsed = 0f;

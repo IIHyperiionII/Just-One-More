@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: BasePlayerData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   hp: 100
-  moveSpeed: 10
+  moveSpeed: 5
   attackSpeed: 1
-  damage: 40
-  money: 7345
+  damage: 1
+  money: 100
   bulletSpeed: 10
   knockback: 1
   isDead: 0
   isMelee: 0
-  piercingLevel: 4
+  piercingLevel: 0
   dashLevel: 0
   blockLevel: 0
-  freezeLevel: 4
+  freezeLevel: 0
   needToGamble: 0
   numberOfSaves: 1

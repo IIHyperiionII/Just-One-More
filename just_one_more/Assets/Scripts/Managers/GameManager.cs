@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
     public float time = 0f;   
     public AudioClip  ElevatorOpenSound;
     public AudioClip WaveCompleteSound;
+    public GameObject coin;
+    public GameObject playerBullet;
     void Awake()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -74,6 +76,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager is ready to load: " + isGameReadyToLoad);
         if (ModeController.Instance != null){
             currentSelection = ModeController.Instance.currentSelection;
+        }
+        if (currentSelection != null && currentSelection.selectedWeapon == WeaponType.Melee){
+            runtimePlayerData.isMelee = true;
         }
     }
     void Start()
@@ -110,6 +115,9 @@ public class GameManager : MonoBehaviour
         if (currentSelection == null)
         {
             currentSelection = ModeController.Instance.currentSelection;
+        }
+        if (currentSelection != null && currentSelection.selectedWeapon == WeaponType.Melee){
+            runtimePlayerData.isMelee = true;
         }
     }
     void GetCamera()
@@ -413,6 +421,7 @@ public class GameManager : MonoBehaviour
 
     public void GetSaveData()
     {
+        Debug.Log("Getting GameManager Save Data...");
         SaveData data = SaveSystem.Instance.currentSaveData;
         data.map = map;
         data.isOpen = isOpen;
@@ -437,7 +446,6 @@ public class GameManager : MonoBehaviour
             data.enemies.Add(enemyData);
         }
         data.projectiles.Clear();
-        if (GameObject.FindGameObjectWithTag("BulletParent").transform.childCount == 0) return;
         foreach (Transform child in GameObject.FindGameObjectWithTag("BulletParent").transform)
         {
             GameObject bullet = child.gameObject;
@@ -450,6 +458,29 @@ public class GameManager : MonoBehaviour
             projectileData.damage = bulletController.GetDamage();
             projectileData.sign = bulletController.GetSign();
             data.projectiles.Add(projectileData);
+        }
+        data.coins.Clear();
+        foreach (Transform child in GameObject.FindGameObjectWithTag("MoneyParent").transform)
+        {
+            GameObject coin = child.gameObject;
+            CoinsSaveData coinData = new CoinsSaveData();
+            coinData.position = coin.transform.position;
+            coinData.value = coin.GetComponent<ICoin>().GetValue();
+            data.coins.Add(coinData);
+        }
+        data.playerProjectiles.Clear();
+        foreach (Transform child in GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform)
+        {
+            GameObject bullet = child.gameObject;
+            IBulletPlayer bulletController = bullet.GetComponent<IBulletPlayer>();
+            ProjectilePlayerSaveData projectilePlayerData = new ProjectilePlayerSaveData();
+            projectilePlayerData.position = bullet.transform.position;
+            projectilePlayerData.initialRotation = bulletController.GetInitialRotation();
+            projectilePlayerData.speed = bulletController.GetSpeed();
+            projectilePlayerData.damage = bulletController.GetDamage();
+            projectilePlayerData.freezeLevel = bulletController.GetFreezeLevel();
+            projectilePlayerData.piercingLevel = bulletController.GetPiercingLevel();
+            data.playerProjectiles.Add(projectilePlayerData);
         }
     }
     public void ApplySaveData()
@@ -534,6 +565,22 @@ public class GameManager : MonoBehaviour
                     Debug.LogWarning("Unknown projectile type: " + projectileData.projectileType);
                     continue;
             }
+        }
+        foreach (CoinsSaveData coinData in data.coins)
+        {
+            GameObject coinInstance = Instantiate(coin, coinData.position, Quaternion.identity);
+            coinInstance.GetComponent<ICoin>().SetValue(coinData.value);
+            coinInstance.transform.SetParent(GameObject.FindGameObjectWithTag("MoneyParent").transform);
+        }
+        foreach (ProjectilePlayerSaveData projectilePlayerData in data.playerProjectiles)
+        {
+            GameObject playerBulletInstance = Instantiate(playerBullet, projectilePlayerData.position, projectilePlayerData.initialRotation);
+            playerBulletInstance.GetComponent<PlayerBulletControllerTest>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation);
+            playerBulletInstance.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform);
+        }
+        if (runtimePlayerData != null && currentSelection != null)
+        {
+            runtimePlayerData.isMelee = currentSelection.selectedWeapon == WeaponType.Melee;
         }
         Debug.Log("GameManager applied save data ");
     }

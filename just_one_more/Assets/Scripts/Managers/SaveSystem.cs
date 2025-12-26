@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.IO;
-using UnityEngine.UI;
 using System.Collections;
 
 public class SaveSystem : MonoBehaviour
@@ -38,19 +37,26 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    string GetFilePath()
+    string GetFilePath(string fileName)
     {
-        return Path.Combine(Application.persistentDataPath, fileName);
+        string folderPath = Application.persistentDataPath;
+
+        if (!Application.isEditor)
+        {
+            folderPath = Path.Combine(folderPath, "BuildSaves");
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+        }
+
+        return Path.Combine(folderPath, fileName);
     }
     public void SaveGame()
     {
         Debug.Log("Saving Game...");
-        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        modeController = GameObject.FindGameObjectWithTag("ModeController").GetComponent<ModeController>();
         UpdateSaveData();
 
-        string savePath = GetFilePath();
+        string savePath = GetFilePath(fileName);
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
@@ -67,9 +73,9 @@ public class SaveSystem : MonoBehaviour
 
     private void UpdateSaveData()
     {
-        gameManager.GetSaveData();
+        GameManager.Instance.GetSaveData();
         playerController.GetSaveData();
-        modeController.GetSaveData();
+        ModeController.Instance.GetSaveData();
     }
 
     public void LoadGame()
@@ -80,7 +86,7 @@ public class SaveSystem : MonoBehaviour
         modeController = GameObject.FindGameObjectWithTag("ModeController").GetComponent<ModeController>();
     
         Time.timeScale = 0f;
-        string savePath = GetFilePath();
+        string savePath = GetFilePath(fileName);
         
         StartCoroutine(WaitForSync());
 
@@ -94,9 +100,9 @@ public class SaveSystem : MonoBehaviour
             Debug.LogWarning("Save file not found!");
             currentSaveData = new SaveData();
         }
+        modeController.ApplySaveData();
         playerController.ApplySaveData();
         gameManager.ApplySaveData();
-        modeController.ApplySaveData();
         Time.timeScale = 1f;
     }
 
@@ -107,7 +113,7 @@ public class SaveSystem : MonoBehaviour
 
     public void LoadBestTime()
     {
-        string savePath = Path.Combine(Application.persistentDataPath, "BestTime.json");
+        string savePath = GetFilePath("BestTime.json");
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);
@@ -122,7 +128,8 @@ public class SaveSystem : MonoBehaviour
 
     public void SaveBestTime()
     {
-        string savePath = Path.Combine(Application.persistentDataPath, "BestTime.json");
+        string savePath = GetFilePath("BestTime.json");
+
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
@@ -130,5 +137,16 @@ public class SaveSystem : MonoBehaviour
         }
         string json = JsonUtility.ToJson(currentBestTimeData, true);
         File.WriteAllText(savePath, json);
+    }
+
+    public void ResetGameData()
+    {
+        string savePath = GetFilePath(fileName);
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log("Save file deleted for reset");
+        }
+        currentSaveData = new SaveData();
     }
 }

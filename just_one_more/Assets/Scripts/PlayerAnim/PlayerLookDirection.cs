@@ -10,12 +10,8 @@ public class PlayerLookDirection : MonoBehaviour
     public HandFollowCursor handScript; 
 
     private Camera mainCam;                
-    private PlayerController playerController; 
-
-    void OnEnable()
-    {
-        handAnimator.SetInteger("Weapon", 1); // Used after leaving casino
-    }
+    private PlayerController playerController;
+    private ModeAndWeaponSelection currentSelection;
 
     void Start()
     {
@@ -28,13 +24,74 @@ public class PlayerLookDirection : MonoBehaviour
         if (handScript == null && transform.Find("HandAnchor") != null)
             handScript = transform.Find("HandAnchor").GetComponent<HandFollowCursor>();
 
-        handAnimator.SetInteger("Weapon", 1);
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
+        switch (currentSelection.selectedWeapon)
+        {
+            case WeaponType.Melee:
+                handAnimator.SetInteger("Weapon", 1);
+                break;
+            case WeaponType.Pistol:
+                handAnimator.SetInteger("Weapon", 2);
+                break;
+            case WeaponType.Shotgun:
+                handAnimator.SetInteger("Weapon", 3);
+                break;
+            default:
+                break;
+
+        }
     }
 
+    private void OnEnable() // used after returning from casino
+    {
+        if (currentSelection == null)
+        {
+            if (ModeController.Instance == null) return;
+            currentSelection = ModeController.Instance.currentSelection;
+        }
+        switch (currentSelection.selectedWeapon)
+        {
+            case WeaponType.Melee:
+                handAnimator.SetInteger("Weapon", 1);
+                break;
+            case WeaponType.Pistol:
+                handAnimator.SetInteger("Weapon", 2);
+                break;
+            case WeaponType.Shotgun:
+                handAnimator.SetInteger("Weapon", 3);
+                break;
+            default:
+                break;
+
+        }
+    }
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
         if (playerAnimator == null) return;
+        if (ModeController.Instance.wasLoadedFromSave)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+            switch (currentSelection.selectedWeapon)
+            {
+                case WeaponType.Melee:
+                    handAnimator.SetInteger("Weapon", 1);
+                    break;
+                case WeaponType.Pistol:
+                    handAnimator.SetInteger("Weapon", 2);
+                    break;
+                case WeaponType.Shotgun:
+                    handAnimator.SetInteger("Weapon", 3);
+                    break;
+                default:
+                    break;
+
+            }
+            ModeController.Instance.wasLoadedFromSave = false;
+        }
 
         // Handle attacking animation
         if (playerController != null && playerController.isAttacking)

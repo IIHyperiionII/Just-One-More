@@ -138,3 +138,4 @@ MonoBehaviour:
   multiplier: 1
   particlePrefab: {fileID: 2800241541332925983, guid: a933557e8204b2041a3cf98906a2a01c,
     type: 3}
+  particleSound: {fileID: 8300000, guid: 3fec12913637a064b8d2f1e0eaba924a, type: 3}

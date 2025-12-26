@@ -24,12 +24,21 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     private Color flashColor = new Color(1f, 0.4f, 0.4f);
     private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
     private Color originalColor = Color.white;
+    public LayerMask obstacleMask;
+    public float obstacleCheckDistance;
+    public float movementCheckRadius;
+    public float timeBetweenDirectionChecks;
+    public float offsetHeight;
+    private Vector2 newDirection;
+    private float timer = 0f;
+    private bool[] checks = new bool[3]; // 0 = front, 1 = left, 2 = right
 
     void Start()
     {
         if (runtimeEnemiesData == null){
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
         }
+        Debug.Log("Enemy AS: " + runtimeEnemiesData.attackSpeed);
         Rigidbody = GetComponent<Rigidbody2D>();
         if (currentSelection == null)
         {
@@ -37,6 +46,12 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         }
         player = GameObject.FindGameObjectWithTag("Player");
         target = player.transform.Find("WallBoundsCheck");
+        GetDirections(0.8f);
+        newDirection = direction;
+    }
+    void Update()
+    {
+        timer += Time.deltaTime;  
     }
     void FixedUpdate()
     {
@@ -44,7 +59,6 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         if (isKnockbacked) return;
         Move();
         
-        Debug.Log("Is frozen:" + isFrozen);
     }
     void Move()
     {
@@ -52,10 +66,86 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         {
             Debug.LogError("Player does not exist in the scene.");
         } else {
-            GetDirections(0.8f);
-            Vector2 movement = direction * Time.deltaTime * runtimeEnemiesData.moveSpeed;
+            if (timer >= timeBetweenDirectionChecks)
+            {
+                GetDirections(0.8f);
+                newDirection = MovementCheck(direction).normalized;
+                timer = 0f;
+            }else {
+                newDirection = MovementCheck(newDirection).normalized;
+            }
+            Vector2 movement = newDirection * Time.deltaTime * runtimeEnemiesData.moveSpeed;
             Rigidbody.MovePosition(Rigidbody.position + movement);
         }
+    }
+    Vector2 MovementCheck(Vector2 vector2)
+    {
+        Vector2 newDirection = vector2;
+        Vector2 enemyPos = transform.position;
+        enemyPos.y += offsetHeight;
+        RaycastHit2D hit = Physics2D.CircleCast(enemyPos, movementCheckRadius, newDirection, obstacleCheckDistance, obstacleMask);
+        Vector2 left75 = Rotate(newDirection, 60).normalized;
+        RaycastHit2D hitleft = Physics2D.CircleCast(enemyPos, movementCheckRadius, left75, obstacleCheckDistance, obstacleMask);
+        Vector2 right75 = Rotate(newDirection, -60).normalized;
+        RaycastHit2D hitright = Physics2D.CircleCast(enemyPos, movementCheckRadius, right75, obstacleCheckDistance, obstacleMask);
+        if(hit)
+        {
+            checks[0] = true;
+        } else {
+            checks[0] = false;
+        }
+        if (hitleft)
+        {
+            checks[1] = true;
+        } else {
+            checks[1] = false;
+        }
+        if (hitright)
+        {
+            checks[2] = true;
+        } else {
+            checks[2] = false;
+        }
+        if (hit)
+        {
+            if (!hitleft)
+            {
+                newDirection = left75;
+            } else if (!hitright)
+            {
+                newDirection = right75;
+            } else {
+                newDirection = Rotate(newDirection, -90).normalized;
+            }
+        } else if (hitleft)
+        {
+            if (!hitright)
+            {
+                newDirection = right75;
+            } else {
+                newDirection = Rotate(newDirection, -90).normalized;
+            }
+        } else if (hitright)
+        {
+            if (!hitleft)
+            {
+                newDirection = left75;
+            } else {
+                newDirection = Rotate(newDirection, 90).normalized;
+            }
+        }
+        return newDirection;
+    }
+    Vector2 Rotate(Vector2 v, float degrees)
+    {
+        float rad = degrees * Mathf.Deg2Rad;
+        float sin = Mathf.Sin(rad);
+        float cos = Mathf.Cos(rad);
+
+        return new Vector2(
+            v.x * cos - v.y * sin,
+            v.x * sin + v.y * cos
+        );
     }
 
     void GetDirections(float offset)
@@ -70,8 +160,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         // Check if the collided object has the "Player" tag
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
-        {
-            nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
+        {    
+            nextAttackTime = Time.time + 2f / runtimeEnemiesData.attackSpeed;
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
                 other.gameObject.GetComponent<PlayerController>().Die();
@@ -85,7 +175,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         // Check if the collided object that is staying in contact has the "Player" tag
         if (other.gameObject.CompareTag("Player") && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + runtimeEnemiesData.attackSpeed;
+            nextAttackTime = Time.time + 2f / runtimeEnemiesData.attackSpeed;
             if (currentSelection.selectedMode == GameMode.OneShot)
             {
                 other.gameObject.GetComponent<PlayerController>().Die();
@@ -98,7 +188,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
         if (!gameObject.scene.isLoaded) return;
-        Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        GameObject coinInstance = Instantiate(coinPrefab, transform.position, Quaternion.identity); // Spawn a coin at the enemy's position upon destruction
+        coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
 
     public EnemyData GetEnemyData()
@@ -123,6 +214,11 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
+        {
+            Destroy(gameObject);
+            return;
+        }
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
@@ -246,5 +342,38 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         return direction;
     }
 
+    void OnDrawGizmos()
+    {
+        // Visualize the CircleCast in the editor
+        Gizmos.color = Color.red;
+        Vector2 gizmoDirection = newDirection.normalized;
+        Vector2 left75 = Rotate(gizmoDirection, 60).normalized;
+        Vector2 right75 = Rotate(gizmoDirection, -60).normalized;
+        Vector3 enemyPos = transform.position;
+        enemyPos.y += offsetHeight;
+        if (checks[0])
+        {
+            Gizmos.color = Color.yellow;
+        } else {
+            Gizmos.color = Color.red;
+        }
+        Gizmos.DrawWireSphere(enemyPos + (Vector3)(gizmoDirection * obstacleCheckDistance), movementCheckRadius);
+        if (checks[1])
+        {
+            Gizmos.color = Color.yellow;
+        } else {
+            Gizmos.color = Color.red;
+        }
+        Gizmos.DrawWireSphere(enemyPos + (Vector3)(left75 * obstacleCheckDistance), movementCheckRadius);
+        if (checks[2])
+        {
+            Gizmos.color = Color.yellow;
+        } else {
+            Gizmos.color = Color.red;
+        }
+        Gizmos.DrawWireSphere(enemyPos + (Vector3)(right75 * obstacleCheckDistance), movementCheckRadius);
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(enemyPos, enemyPos + (Vector3)(gizmoDirection * obstacleCheckDistance));
+    }
 
 }

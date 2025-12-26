@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4580384294073464832}
   - component: {fileID: 1151672863617778858}
   - component: {fileID: 2600262582702692208}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: ShelfsFront
   m_TagString: Edge
   m_Icon: {fileID: 0}

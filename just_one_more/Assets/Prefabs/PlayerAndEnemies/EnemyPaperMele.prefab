@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 540468372576299302}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.805, y: -4.314, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -182,9 +182,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b2b6020d02d4acf84001b12e1758a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemiesController
-  EnemiesData: {fileID: 11400000, guid: 25244fe84183c4041aa4e40b7b6c906f, type: 2}
+  EnemiesData: {fileID: 11400000, guid: 74bfb9a2074d04690ad93e88afc31c3b, type: 2}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 8192
+  obstacleCheckDistance: 1
+  movementCheckRadius: 0.4
+  timeBetweenDirectionChecks: 0.5
+  offsetHeight: -0.6
 --- !u!95 &-2149543244922151165
 Animator:
   serializedVersion: 7

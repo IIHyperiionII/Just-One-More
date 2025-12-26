@@ -79,7 +79,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     {
         if (Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1 / runtimeEnemiesData.attackSpeed; // Set next attack time based on attack speed
+            nextAttackTime = Time.time + 2f / runtimeEnemiesData.attackSpeed; // Set next attack time based on attack speed
             shootingAngle = UpdateAngle(shootingAngle);
             shootingAngle2 = UpdateAngle(shootingAngle2);
             SpawnBullet();
@@ -107,7 +107,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     }
     float UpdateAngle(float angle)
     {
-        angle += 15f * spinDirection; // Increment angle by 15 degrees in the spin direction
+        angle += 30f * spinDirection; // Increment angle by 15 degrees in the spin direction
         if (angle >= 360f) angle = 0f; // Reset angle if it exceeds 360 degrees
         if (angle <= -360f) angle = 0f; // Reset angle if it goes below -360 degrees
         return angle;
@@ -127,7 +127,8 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return; // Ensure the game object is still part of a loaded scene (scene is not ending) before instantiating the coin
-        Instantiate(coinPrefab, transform.position, Quaternion.identity);  // Spawn a coin at the enemy's position upon destruction
+        GameObject coinInstance = Instantiate(coinPrefab, transform.position, Quaternion.identity);  // Spawn a coin at the enemy's position upon destruction
+        coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
     public EnemyData GetEnemyData()
     {
@@ -151,6 +152,11 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
+        {
+            Destroy(gameObject);
+            return;
+        }
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {

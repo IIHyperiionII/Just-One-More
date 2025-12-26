@@ -4,6 +4,7 @@ public class LightBeamController : MonoBehaviour
 {
     void Update()
     {
+        if (GameModeManager.timeIsPaused) return;
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = this.transform.position.z;
 

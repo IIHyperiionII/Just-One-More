@@ -25,6 +25,10 @@ TagManager:
   - EnemyBulletWave
   - EnemyBulletScaling
   - ModeController
+  - EdgeBulletsFree
+  - MoneyParent
+  - Flashlight
+  - BulletsPlayerParent
   layers:
   - Default
   - TransparentFX
@@ -39,7 +43,7 @@ TagManager:
   - Wall
   - PlayerCheck
   - BulletLayer
-  - 
+  - ObstacleCheck
   - 
   - 
   - 

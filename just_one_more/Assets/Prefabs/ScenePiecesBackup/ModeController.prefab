@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 8967963195584134742}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.77, y: -12.32, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -139,3 +139,4 @@ MonoBehaviour:
   currentSelection: {fileID: 11400000, guid: 3c9fc14f864cc4240beaeef36670a21f, type: 2}
   darknessOverlay: {fileID: 8967963195584134742}
   lightSource: {fileID: 0}
+  wasLoadedFromSave: 0

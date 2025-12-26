@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6820273749586761415}
   m_Layer: 0
   m_Name: WCObstaclesFull
-  m_TagString: Untagged
+  m_TagString: Edge
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2339,7 +2339,7 @@ PrefabInstance:
     - target: {fileID: 6351851035618459501, guid: 65d72b4fd774d4509abefe50c87b754f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -30.89
+      value: -29.77
       objectReference: {fileID: 0}
     - target: {fileID: 6351851035618459501, guid: 65d72b4fd774d4509abefe50c87b754f,
         type: 3}
@@ -3015,7 +3015,7 @@ PrefabInstance:
     - target: {fileID: 6351851035618459501, guid: 65d72b4fd774d4509abefe50c87b754f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -29.53998
+      value: -30.72
       objectReference: {fileID: 0}
     - target: {fileID: 6351851035618459501, guid: 65d72b4fd774d4509abefe50c87b754f,
         type: 3}

@@ -22,6 +22,7 @@ public class DeadMenuController : MonoBehaviour
     }
     void ReturnToMainMenu()
     {
+        ModeController.Instance.ResetSettingsToDefault();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 

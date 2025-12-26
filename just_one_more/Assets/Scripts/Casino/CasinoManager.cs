@@ -20,7 +20,9 @@ public class CasinoManager : MonoBehaviour
     [SerializeField] private Button moveSpeedButton;
     [SerializeField] private Button attackSpeedButton;
     [SerializeField] private Button attackModifierButton;
-    [SerializeField] private TextMeshProUGUI attackModifierButtonText;
+    [SerializeField] private Image attackModifierButtonImage;
+    [SerializeField] private Sprite bulletSpeedSprite;
+    [SerializeField] private Sprite knockbackSprite;
 
     [Header("Panels")]
     [SerializeField] private GameObject casinoPanel;
@@ -42,7 +44,7 @@ public class CasinoManager : MonoBehaviour
     private Color selectedColor = Color.green;
     private Color normalColor = new Color(0f, 0.65f, 0.7f, 1f);
     private StatType attackModifierStatType = StatType.BulletSpeed;
-    private int remainingGambles = 3;
+    private int remainingGambles = 5;
     private float minigameStartTime;
     private const float MIN_MINIGAME_DURATION = 30f;
     private int needToGambleReduction = 15;
@@ -59,21 +61,21 @@ public class CasinoManager : MonoBehaviour
         EnsureGameManagerForTesting();
 #endif
 
-        if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null)
+        if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null){
             // Get the runtime PlayerData from GameManager
             playerData = GameManager.Instance.runtimePlayerData;
-
+        }
         if (playerStatsPanel && playerData != null)
         {
             playerStatsPanel.SetPlayerData(playerData);
             attackModifierStatType = playerStatsPanel.GetAttackModifierStatType();
 
-            if (attackModifierButtonText)
+            if (attackModifierButtonImage)
             {
                 if (playerStatsPanel.GetAttackModifierName() == "Bullet Speed")
-                    attackModifierButtonText.text = "Bullet Speed";
+                    attackModifierButtonImage.sprite = bulletSpeedSprite;
                 else
-                    attackModifierButtonText.text = "Knock back";
+                    attackModifierButtonImage.sprite = knockbackSprite;
             }
         }
 
@@ -161,7 +163,16 @@ public class CasinoManager : MonoBehaviour
 
     void OnEnable()
     {
-        remainingGambles = 3;     
+        remainingGambles = 5;
+         if (playerStatsPanel != null){
+            if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null && playerData == null){
+                playerData = GameManager.Instance.runtimePlayerData;
+            }
+            playerStatsPanel.SetPlayerData(playerData);
+            playerStatsPanel.UpdateUI();
+        }
+
+        UpdateUI();
     }
 
     private void SetupSlider()

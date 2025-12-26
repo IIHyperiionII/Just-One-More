@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
     public bool MouseKeyHoldDown = false;
     private float nextAttackTime = 0f;
     public GameObject bulletPrefab;
-    public bool isAttacking = false; // for animation testing 
+    public bool isAttacking = false; // for animation
+    float attackAnimationDuration = 0.2f; // 
+    private float attackStartTime = 0f; //
     private bool isDashing = false;
     private bool dashReset = true;
     private Vector2 dashDir;
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private float stepTimer = 0f;
     public GameObject WeaponControllerObject;
     private WeaponController weaponController;
+    public int needToGamble = 0;
     
     void Start()
     {
@@ -64,7 +67,6 @@ public class PlayerController : MonoBehaviour
             postProcessVolume.profile.TryGetSettings(out vignetteEffect);
         }
         startTimer = Time.time;
-        PlayerData.damage = 1; // For testing purposes only
         numberOfSaves = PlayerData.numberOfSaves;
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife && PlayerData.money == 0)
         {
@@ -74,6 +76,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
+        PlayerData = GameManager.Instance.runtimePlayerData; // Ensure PlayerData is always up-to-date
         GetMovementInput();
         if (PlayerData.dashLevel > 0)
         {
@@ -81,14 +84,16 @@ public class PlayerController : MonoBehaviour
         }
         GetAttackInput(); // Just for testing will be removed after weapons are implemented
         Attack(); // Just for testing will be removed after weapons are implemented
-        if (Time.time - startTimer >= 1f) {
+        if (Time.time - startTimer >= 2f) {
             startTimer = Time.time;
-            PlayerData.needToGamble ++;
+            if (PlayerData.needToGamble < 100){
+                GameManager.Instance.runtimePlayerData.needToGamble ++;
+            }
             NeedToGambleEffect();
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
-            PlayerData.hp = PlayerData.money;
+            GameManager.Instance.runtimePlayerData.hp = GameManager.Instance.runtimePlayerData.money;
         }
         if (isMoving)
         
@@ -99,6 +104,7 @@ public class PlayerController : MonoBehaviour
         {
             stepTimer = 0.3f; // reset when stopping
         }
+        needToGamble = PlayerData.needToGamble;
     }
 
     void HandleFootsteps()
@@ -148,7 +154,7 @@ public class PlayerController : MonoBehaviour
 
     void NeedToGambleEffect()
     {
-        if (PlayerData.needToGamble >= 70)
+        if (PlayerData.needToGamble >= 80)
         {
             if (vignetteEffect != null)
             {
@@ -171,7 +177,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Dash(true));
                 StartCoroutine(ResetDash());
             }
-        } else if (PlayerData.needToGamble >= 60)
+        } else if (PlayerData.needToGamble >= 70)
         {
             if (vignetteEffect != null)
             {
@@ -444,7 +450,10 @@ public class PlayerController : MonoBehaviour
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
-            isAttacking = true; // for animation testing
+
+            isAttacking = true; // for animation
+            attackStartTime = Time.time; //
+
             switch (ModeController.Instance.currentSelection.selectedWeapon)
             {
                 case WeaponType.Melee:
@@ -470,8 +479,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //for animation testing
-        if (isAttacking && Time.time >= nextAttackTime - (1f / PlayerData.attackSpeed) + 0.1f)
+        //for animation
+        if (isAttacking && Time.time >= attackStartTime + attackAnimationDuration)
         {
             isAttacking = false;
         }
@@ -498,10 +507,10 @@ public class PlayerController : MonoBehaviour
         }
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
-            PlayerData.money -= damage;
+            GameManager.Instance.runtimePlayerData.money -= damage;
             if (PlayerData.money < 0) PlayerData.money = 0;
         } else {
-            PlayerData.hp -= damage;
+            GameManager.Instance.runtimePlayerData.hp -= damage;
         }
         if (PlayerData.hp <= 0)
         {
@@ -577,17 +586,18 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         SoundController.Instance.PlaySound(deathSound, 0.4f, 1.0f);
-        PlayerData.isDead = true;
+        GameManager.Instance.runtimePlayerData.isDead = true;
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
-            PlayerData.money = 0;
+            GameManager.Instance.runtimePlayerData.money = 0;
         } else {
-            PlayerData.hp = 0;
+            GameManager.Instance.runtimePlayerData.hp = 0;
         }
     }
     public void GetCoin(int amount)
     {
-        PlayerData.money += amount;
+        Debug.Log("Collected coin worth: " + amount);
+        GameManager.Instance.runtimePlayerData.money += amount;
         SoundController.Instance.PlaySound(coinSound, 0.6f, 1.0f);
     }
 
@@ -638,5 +648,6 @@ public class PlayerController : MonoBehaviour
             PlayerData.needToGamble = playerData.needToGamble;
             PlayerData.numberOfSaves = playerData.numberOfSaves;
         }
+        GameManager.Instance.runtimePlayerData = PlayerData;
     }
 }

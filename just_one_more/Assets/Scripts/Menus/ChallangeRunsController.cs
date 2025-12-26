@@ -55,7 +55,7 @@ public class ChallangeRunsController : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("tomScene");
+        FindFirstObjectByType<SceneLoader>().LoadGameplayScene();
     } 
     public void ReturnToMainMenu()
     {
@@ -99,6 +99,7 @@ public class ChallangeRunsController : MonoBehaviour
         oneShotButton.interactable = true;
         nightRideButton.interactable = false;
         moneyLifeButton.interactable = true;
+        noModeButton.interactable = true;
     }
     public void SelectMoneyLife()
     {
