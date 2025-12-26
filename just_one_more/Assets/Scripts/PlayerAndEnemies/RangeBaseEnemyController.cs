@@ -27,6 +27,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     private Color flashColor = new Color(1f, 0.4f, 0.4f);
     private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
     private Color originalColor = Color.white;
+    public Sprite bulletSprite;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -107,7 +108,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     void SpawnBullet(Quaternion rotation)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at enemy position with calculated rotation
-        bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, rotation); // Initialize bullet with speed and damage
+        bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, rotation, bulletSprite); // Initialize bullet with speed and damage
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     } 
     void OnDestroy()

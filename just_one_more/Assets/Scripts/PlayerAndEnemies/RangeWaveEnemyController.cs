@@ -28,6 +28,8 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
     private Color flashColor = new Color(1f, 0.4f, 0.4f);
     private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
     private Color originalColor = Color.white;
+    public Sprite[] bulletSprites;
+    private int bulletSpriteIndex = 0;
     void Start()
     {
         runtimeEnemiesData = Instantiate(EnemiesData); // Create an instance of the EnemyData for this enemy only
@@ -106,8 +108,9 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
     {
         sign = Random.Range(0, 2) * 2 - 1; // Randomly choose between -1 and 1 for bullet wave direction starting sign
         GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
-        bullet.GetComponent<EnemyBulletWaveController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, sign, rotation); // Initialize the wave bullet with speed, damage, wave direction sign, and rotation
+        bullet.GetComponent<EnemyBulletWaveController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, sign, rotation, bulletSprites[bulletSpriteIndex]); // Initialize the wave bullet with speed, damage, wave direction sign, and rotation
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
+        bulletSpriteIndex = (bulletSpriteIndex + 1) % bulletSprites.Length; // Cycle through bullet sprites for variety
     }
     void OnDestroy()
     {

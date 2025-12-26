@@ -7,4 +7,5 @@ public interface IBulletPlayer
     Quaternion GetInitialRotation();
     int GetFreezeLevel();
     int GetPiercingLevel();
+    string GetSpriteName();
 }

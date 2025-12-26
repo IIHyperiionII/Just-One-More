@@ -141,13 +141,7 @@ MonoBehaviour:
     type: 3}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 0
-  obstacleCheckDistance: 0
-  movementCheckRadius: 0
-  timeBetweenDirectionChecks: 0
-  offsetHeight: 0
+  bulletSprite: {fileID: 431097023, guid: 7108e147919fb400596e12981a4d3262, type: 3}
 --- !u!95 &4926208113507354612
 Animator:
   serializedVersion: 7

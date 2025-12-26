@@ -29,6 +29,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     private Color flashColor = new Color(1f, 0.4f, 0.4f);
     private Color freezeFlashColor = new Color(0.4f, 0.4f, 1f);
     private Color originalColor = Color.white;
+    public Sprite bulletSprite;
     void Awake()
     {
         spinDirection = Random.Range(0, 2) * 2 - 1; // Randomly set to -1 or 1
@@ -116,12 +117,12 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     {
         // Spawn the first bullet
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle));
-        bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, Quaternion.Euler(0f, 0f, shootingAngle));
+        bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, Quaternion.Euler(0f, 0f, shootingAngle), bulletSprite);
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
 
         // Spawn the second bullet in the opposite direction
         GameObject bullet2 = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, shootingAngle2));
-        bullet2.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, Quaternion.Euler(0f, 0f, shootingAngle2));
+        bullet2.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, Quaternion.Euler(0f, 0f, shootingAngle2), bulletSprite);
         bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     }
     void OnDestroy()
@@ -284,5 +285,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         enemyPosition = transform.position;
         direction = (playerPosition - enemyPosition).normalized; // Get the normalized (value is 1, it does not affect speed) direction vector towards the player
     }
+
+
 
 }

@@ -8,4 +8,5 @@ public interface IBullet
     int GetSpeed();
     int GetDamage();
     int GetSign();
+    string GetSpriteName();
 }

@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnemyBulletWaveController : MonoBehaviour, IBullet
 {
@@ -23,6 +24,10 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
     public int GetDamage() { return damage; }
     public int GetSign() { return sign; }
     private ModeAndWeaponSelection currentSelection;
+    private SpriteRenderer spriteRenderer;
+    private Sprite bulletSprite;
+    private string spriteName;
+    private BoxCollider2D boxCollider;
 
     void Awake()
     {
@@ -35,19 +40,41 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         {
             currentSelection = ModeController.Instance.currentSelection;
         }
+        boxCollider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        if (bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+        }
     }
 
-    public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign, Quaternion rotation)
+    void Start()
+    {
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+    }
+
+    public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign, Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
         sign = bulletSign;
         initialRotation = rotation;
         currentSelection = ModeController.Instance.currentSelection;
+        bulletSprite = sprite;
+        spriteName = sprite.name;
+        boxCollider.size = bulletSprite.bounds.size;
     }
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+            spriteName = bulletSprite.name;
+            spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+            boxCollider.size = bulletSprite.bounds.size;
+        }
         GetWaveMovement();
             Rigidbody.MovePosition(motionForward + waveMovement);
     }
@@ -81,6 +108,11 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
             Destroy(gameObject);
             return;
         }
+    }
+
+    public string GetSpriteName()
+    {
+        return spriteName;
     }
 
 }

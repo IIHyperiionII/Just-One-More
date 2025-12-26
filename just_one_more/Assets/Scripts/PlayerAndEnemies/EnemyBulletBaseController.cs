@@ -14,6 +14,9 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
     public int GetDamage() { return damage; }
     public int GetSign() { return 0; }
     private ModeAndWeaponSelection currentSelection;
+    private Sprite bulletSprite;
+    private SpriteRenderer spriteRenderer;
+    private string spriteName;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
@@ -22,19 +25,37 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
         {
             currentSelection = ModeController.Instance.currentSelection;
         }
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        if (bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+        }
     }
 
-    public void Initialize( int bulletSpeed, int bulletDamage , Quaternion rotation)
+    public void Initialize( int bulletSpeed, int bulletDamage , Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
         initialRotation = rotation;
         currentSelection = ModeController.Instance.currentSelection;
+        bulletSprite = sprite;
+        spriteName = sprite.name;
+    }
+    void Start()
+    {
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
     }
 
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+            spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+            spriteName = bulletSprite.name;
+        }
         // Move the bullet in the set direction
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
     }
@@ -61,6 +82,11 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
             Destroy(gameObject);
             return;
         }
+    }
+
+    public string GetSpriteName()
+    {
+        return spriteName;
     }
 
 }

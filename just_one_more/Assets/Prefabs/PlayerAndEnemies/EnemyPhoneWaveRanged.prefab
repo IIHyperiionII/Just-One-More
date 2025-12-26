@@ -187,6 +187,18 @@ MonoBehaviour:
     type: 3}
   coinPrefab: {fileID: 676116895670997433, guid: 331402443525f4dc280467e41a1411fa,
     type: 3}
+  bulletSprites:
+  - {fileID: -655395960, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: -1520554555, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: -162489709, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: -1136952459, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: -2124083384, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: 1165253241, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: -1078202770, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: 714935413, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: -1573110946, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: 105101712, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: 1941702245, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
 --- !u!114 &8299935992838000782
 MonoBehaviour:
   m_ObjectHideFlags: 0

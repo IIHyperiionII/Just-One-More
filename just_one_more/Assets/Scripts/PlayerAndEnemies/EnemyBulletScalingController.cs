@@ -16,6 +16,9 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
     public int GetDamage() { return damage; }
     public int GetSign() { return 0; }
     private ModeAndWeaponSelection currentSelection;
+    private Sprite bulletSprite;
+    private SpriteRenderer spriteRenderer;
+    private string spriteName;
 
     void Awake()
     {
@@ -25,14 +28,27 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
         {
             currentSelection = ModeController.Instance.currentSelection;
         }
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        if (bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+        }
     }
 
-    public void Initialize(int bulletSpeed, int bulletDamage, Quaternion rotation)
+    void Start()
+    {
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+    }
+
+    public void Initialize(int bulletSpeed, int bulletDamage, Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
         initialRotation = rotation;
         currentSelection = ModeController.Instance.currentSelection;
+        bulletSprite = sprite;
+        spriteName = sprite.name;
     }
     void Update()
     {
@@ -41,6 +57,13 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
     }
     void FixedUpdate()
     {
+        if (GameModeManager.timeIsPaused) return;
+        if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
+        {
+            spriteRenderer.sprite = bulletSprite;
+            spriteName = bulletSprite.name;
+            spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        }
         Rigidbody.MovePosition(Rigidbody.position + (Vector2)direction * speed * Time.fixedDeltaTime);
     }
 
@@ -89,4 +112,10 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
             return;
         }
     }
+
+    public string GetSpriteName()
+    {
+        return spriteName;
+    }
+
 }
