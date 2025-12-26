@@ -107,7 +107,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     }
     void SpawnBullet(Quaternion rotation)
     {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation); // Spawn bullet at enemy position with calculated rotation
+        GameObject bullet = Instantiate(bulletPrefab, transform.position + rotation * Vector3.right * 0.5f, rotation); // Spawn bullet at enemy position with calculated rotation
         bullet.GetComponent<EnemyBulletBaseController>().Initialize(runtimeEnemiesData.bulletSpeed, runtimeEnemiesData.damage, rotation, bulletSprite); // Initialize bullet with speed and damage
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletParent").transform); // Set the parent of the spawned bullet for organization
     } 

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8521911318114054210
+--- !u!1 &2367566191669291423
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,44 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9074390469605375151}
-  - component: {fileID: 2875493661123180833}
+  - component: {fileID: 3345848450905645001}
+  - component: {fileID: 2225631135007647019}
   m_Layer: 0
-  m_Name: SaveSystem
+  m_Name: MainMenuController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9074390469605375151
+--- !u!4 &3345848450905645001
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8521911318114054210}
+  m_GameObject: {fileID: 2367566191669291423}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19566, y: 4.80646, z: 0}
+  m_LocalPosition: {x: -6.99782, y: -8.05601, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2875493661123180833
+--- !u!114 &2225631135007647019
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8521911318114054210}
+  m_GameObject: {fileID: 2367566191669291423}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d1863e227d0d4e6d9c3504c3580fc5c, type: 3}
+  m_Script: {fileID: 11500000, guid: fa43985f234be4d3ebba768c2c8cc311, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SaveSystem
-  player: {fileID: 4497077220926923720, guid: 905a26feeaa2642338fab26f30b7b38d, type: 3}
-  gameController: {fileID: 6342973518231793899, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
-    type: 3}
-  currentSaveData:
-    map: 0
-    wave: 0
-    mapCompleted: 0
-    players: []
-    enemies: []
-    projectiles: []
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
+  startGameButton: {fileID: 0}
+  loadGameButton: {fileID: 0}
+  settingsButton: {fileID: 0}
+  quitGameButton: {fileID: 0}
+  settingsMenu: {fileID: 0}

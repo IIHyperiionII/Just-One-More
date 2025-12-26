@@ -224,6 +224,7 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator SpawnEnemies()
     {
+        Debug.Log("Spawning wave " + wave + " on map " + map);
         enemiesToSpawn.Clear(); // Clear the list before spawning enemies
     
         // Spawn a random number (0, 1, or 2) of each enemy type at random positions
@@ -261,6 +262,7 @@ public class GameManager : MonoBehaviour
         foreach (GameObject enemyPrefab in enemiesToSpawn)
         {
             if (enemyPrefab == null) continue;
+            Debug.Log("Spawning enemy of type: " + enemyPrefab.name);
             GetSpawnposition(enemyPrefab); // Get a valid spawn position
             string enemyType = GetEnemyType(enemyPrefab);
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity); // Spawn the enemy at the calculated position
@@ -338,7 +340,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         UpdateBounds();
-        if (spawnBounds.Any(bounds => bounds.Contains(spawnPosition)) && !cameraBounds.Contains(spawnPosition))
+        if (spawnBounds.Any(bounds => bounds.Contains(spawnPosition)) && !cameraBounds.Contains(spawnPosition) && isFreeOfObstacles(spawnPosition, enemyPrefab))
         {
             return;
         }
@@ -346,6 +348,20 @@ public class GameManager : MonoBehaviour
         {
             GetSpawnposition(enemyPrefab, recursionDepth + 1); // Recursively find a new position if out of bounds
         }
+    }
+
+    bool isFreeOfObstacles(Vector2 position, GameObject enemyPrefab)
+    {
+        SpriteRenderer enemySpriteRenderer = enemyPrefab.GetComponent<SpriteRenderer>();
+        
+        if (enemySpriteRenderer == null)
+        {
+            Debug.LogWarning("Enemy prefab does not have a SpriteRenderer component.");
+            return true; // Assume it's free of obstacles if no collider is present
+        }
+        Vector2 size = enemySpriteRenderer.bounds.size;
+        Collider2D hit = Physics2D.OverlapBox(position, size + new Vector2(0.1f, 0.1f), 0f, LayerMask.GetMask("Default"));
+        return hit == null;
     }
 
     void UpdateBounds()

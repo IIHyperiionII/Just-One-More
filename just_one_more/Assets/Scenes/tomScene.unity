@@ -1802,6 +1802,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 157298569185900344, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2052015102879981749, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1862,10 +1867,40 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1548284133}
+    - target: {fileID: 6365843112431828382, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1900
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365843112431828382, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1060
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326863893025192656, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7733288476956803336, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_Name
       value: CasinoWindow
+      objectReference: {fileID: 0}
+    - target: {fileID: 7733288476956803336, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7763640941266524079, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_ScreenMatchMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179560868838160094, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4017,7 +4052,7 @@ PrefabInstance:
     - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
         type: 3}
       propertyPath: wave
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
         type: 3}
