@@ -89,7 +89,7 @@ MonoBehaviour:
     type: 3}
   bulletSprites:
   - {fileID: -1568819433, guid: 7108e147919fb400596e12981a4d3262, type: 3}
-  - {fileID: -1953881290, guid: 7108e147919fb400596e12981a4d3262, type: 3}
+  - {fileID: 21300000, guid: 6f01efc4362c5439ea7b9dd23175de48, type: 3}
   - {fileID: 1885326649, guid: 7108e147919fb400596e12981a4d3262, type: 3}
   - {fileID: 431097023, guid: 7108e147919fb400596e12981a4d3262, type: 3}
   - {fileID: -229946286, guid: 7108e147919fb400596e12981a4d3262, type: 3}
@@ -104,3 +104,4 @@ MonoBehaviour:
   - {fileID: -1573110946, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
   - {fileID: 105101712, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
   - {fileID: 1941702245, guid: 69dca1daf21a342c58915ac4d68947f6, type: 3}
+  - {fileID: 21300000, guid: 3f090f4673fac456eada394bbcae78be, type: 3}

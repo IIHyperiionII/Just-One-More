@@ -17,5 +17,5 @@ MonoBehaviour:
   moveSpeed: 12
   damage: 15
   attackSpeed: 1
-  bulletSpeed: 10
+  bulletSpeed: 7
   value: 40

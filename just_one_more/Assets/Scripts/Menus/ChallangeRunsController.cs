@@ -14,6 +14,8 @@ public class ChallangeRunsController : MonoBehaviour
     public Button startButton;
     public Button mainMenuButton;
     public Button noModeButton;
+    public Color original = new Color(1f, 1f, 1f, 1f);
+    public Color disabled = new Color(0.5f, 0.5f, 0.5f, 1f);
 
     void Awake()
     {
@@ -39,6 +41,7 @@ public class ChallangeRunsController : MonoBehaviour
         currentSelection.selectedMode = GameMode.none;
         currentSelection.selectedWeapon = WeaponType.none;
         noModeButton.interactable = false;
+        noModeButton.GetComponent<Image>().color = disabled;
     }
     void Update()
     {
@@ -46,10 +49,12 @@ public class ChallangeRunsController : MonoBehaviour
         if (currentSelection.selectedWeapon != WeaponType.none)
         {
             startButton.interactable = true;
+            startButton.GetComponent<Image>().color = original;
         }
         else
         {
             startButton.interactable = false;
+            startButton.GetComponent<Image>().color = disabled;
         }
     }
 
@@ -65,57 +70,82 @@ public class ChallangeRunsController : MonoBehaviour
     {
         currentSelection.selectedWeapon = WeaponType.Pistol;
         pistolButton.interactable = false;
+        pistolButton.GetComponent<Image>().color = disabled;
         shotgunButton.interactable = true;
+        shotgunButton.GetComponent<Image>().color = original;
         meleeButton.interactable = true;
+        meleeButton.GetComponent<Image>().color = original;
     }
 
     public void SelectShotgun()
     {
         currentSelection.selectedWeapon = WeaponType.Shotgun;
         pistolButton.interactable = true;
+        pistolButton.GetComponent<Image>().color = original;
         shotgunButton.interactable = false;
+        shotgunButton.GetComponent<Image>().color = disabled;
         meleeButton.interactable = true;
+        meleeButton.GetComponent<Image>().color = original;
     }
 
     public void SelectMelee()
     {
         currentSelection.selectedWeapon = WeaponType.Melee;
         pistolButton.interactable = true;
+        pistolButton.GetComponent<Image>().color = original;
         shotgunButton.interactable = true;
+        shotgunButton.GetComponent<Image>().color = original;
         meleeButton.interactable = false;
+        meleeButton.GetComponent<Image>().color = disabled;
     }
 
     public void SelectOneShot()
     {
         currentSelection.selectedMode = GameMode.OneShot;
         oneShotButton.interactable = false;
+        oneShotButton.GetComponent<Image>().color = disabled;
         nightRideButton.interactable = true;
+        nightRideButton.GetComponent<Image>().color = original;
         moneyLifeButton.interactable = true;
+        moneyLifeButton.GetComponent<Image>().color = original;
         noModeButton.interactable = true;
+        noModeButton.GetComponent<Image>().color = original;
     }
     public void SelectNightRide()
     {
         currentSelection.selectedMode = GameMode.nightRide;
         oneShotButton.interactable = true;
+        oneShotButton.GetComponent<Image>().color = original;
         nightRideButton.interactable = false;
+        nightRideButton.GetComponent<Image>().color = disabled;
         moneyLifeButton.interactable = true;
+        moneyLifeButton.GetComponent<Image>().color = original;
         noModeButton.interactable = true;
+        noModeButton.GetComponent<Image>().color = original;
     }
     public void SelectMoneyLife()
     {
         currentSelection.selectedMode = GameMode.MoneyLife;
         oneShotButton.interactable = true;
+        oneShotButton.GetComponent<Image>().color = original;
         nightRideButton.interactable = true;
+        nightRideButton.GetComponent<Image>().color = original;
         moneyLifeButton.interactable = false;
-        noModeButton.interactable = true;
+        moneyLifeButton.GetComponent<Image>().color = disabled;
+        noModeButton.interactable = true;   
+        noModeButton.GetComponent<Image>().color = original;
     }
     public void NoMode()
     {
         currentSelection.selectedMode = GameMode.none;
 
         oneShotButton.interactable = true;
+        oneShotButton.GetComponent<Image>().color = original;
         nightRideButton.interactable = true;
+        nightRideButton.GetComponent<Image>().color = original;
         moneyLifeButton.interactable = true;
+        moneyLifeButton.GetComponent<Image>().color = original;
         noModeButton.interactable = false;
+        noModeButton.GetComponent<Image>().color = disabled;
     }
 }

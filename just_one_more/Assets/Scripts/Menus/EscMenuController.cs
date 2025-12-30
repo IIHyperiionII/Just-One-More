@@ -29,10 +29,12 @@ public class EscMenuController : MonoBehaviour
             if (GameManager.Instance.runtimePlayerData.numberOfSaves <= 0)
             {
                 saveGameButton.interactable = false;
+                saveGameButton.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f); // Greyed out
             }
             else
             {
                 saveGameButton.interactable = true;
+                saveGameButton.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f); // Original color
             }
             saveGameText.text = $"Save game\n<size=50%>(Saves left: {GameManager.Instance.runtimePlayerData.numberOfSaves})</size>";
         }

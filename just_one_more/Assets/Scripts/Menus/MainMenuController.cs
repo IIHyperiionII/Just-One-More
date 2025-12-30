@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
+using TMPro;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -29,6 +30,14 @@ public class MainMenuController : MonoBehaviour
     {
         string savePath = GetSavePath();
         loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath);
+        if (loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable)
+        {
+            loadGameButton.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        }
+        else
+        {
+            loadGameButton.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+        }
     }
 
     string GetSavePath()

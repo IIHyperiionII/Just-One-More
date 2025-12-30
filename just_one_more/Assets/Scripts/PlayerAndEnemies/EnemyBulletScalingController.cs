@@ -29,7 +29,7 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
             currentSelection = ModeController.Instance.currentSelection;
         }
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, -90);
         if (bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
@@ -38,7 +38,7 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
 
     void Start()
     {
-        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, -90);
     }
 
     public void Initialize(int bulletSpeed, int bulletDamage, Quaternion rotation, Sprite sprite)
@@ -62,7 +62,7 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
         {
             spriteRenderer.sprite = bulletSprite;
             spriteName = bulletSprite.name;
-            spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+            spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, -90);
         }
         Rigidbody.MovePosition(Rigidbody.position + (Vector2)direction * speed * Time.fixedDeltaTime);
     }
@@ -70,24 +70,9 @@ public class EnemyBulletScalingController : MonoBehaviour, IBullet
     void ScaleSize()
     {
         // Increase size over time
-        float growSpeed = 0.5f;
+        float growSpeed = 0.2f;
         growth = growSpeed * Time.deltaTime;
         transform.localScale += new Vector3(growth, growth, 0); // Scale the object
-        if (spriteTransform == null) // Check if object has a sprite transform assigned
-        {
-            Debug.LogWarning("Sprite Transform is not assigned in EnemyScalingBulletController.");
-        }else
-        {
-            spriteTransform.localScale += new Vector3(growth, growth, 0); // Scale the sprite
-        }
-        BoxCollider2D box = GetComponent<BoxCollider2D>();
-        if (box == null) // Check if BoxCollider2D component exists
-        {
-            Debug.LogWarning("BoxCollider2D component not found on the bullet.");
-            box.size = Vector2.one;
-        } else {
-            box.size = Vector2.one; // Keep collider size constant towards object scale
-        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
