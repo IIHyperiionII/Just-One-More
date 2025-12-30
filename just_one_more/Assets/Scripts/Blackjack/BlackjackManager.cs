@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using TMPro;
 using System.Collections;
+using UnityEngine.UI;
 
 public class BlackjackManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class BlackjackManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dealerScoreText;
     [SerializeField] private TextMeshProUGUI gameResultText;
     [SerializeField] private AudioClip cardFlip;
+    [SerializeField] private Button hitButton;
+    [SerializeField] private Button standButton;
     
     private Action<float> onGameComplete;
     private bool gameActive = false;
@@ -32,13 +35,15 @@ public class BlackjackManager : MonoBehaviour
 
     public void StartNewGame(Action<float> onComplete)
     {
+        hitButton.interactable = false;
+        standButton.interactable = false;
+        
         playerCardIndex = 0;
         dealerCardIndex = 0;
         gameActive = true;
         resultSent = false;
         onGameComplete = onComplete;
         gameResultText.enabled = false;
-        
 
         foreach (CardSlot pCardSlot in playerCardSlots) {
             pCardSlot.Initialize();
@@ -78,6 +83,9 @@ public class BlackjackManager : MonoBehaviour
 
         UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
         UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue() - dealerHand.GetCards()[1].GetValue());
+
+        hitButton.interactable = true;
+        standButton.interactable = true;
 
         if (playerHand.IsBlackjack())
         {
