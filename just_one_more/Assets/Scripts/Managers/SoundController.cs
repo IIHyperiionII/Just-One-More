@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.Audio;
+
 public class SoundController : MonoBehaviour
 {
     public static SoundController Instance;
     public AudioSource sfxSource;
     public AudioSource musicSource;
+    public AudioMixerGroup musicMixerGroup;
+    public AudioMixerGroup sfxMixerGroup;
 
     [Header("Music clips")]
     public AudioClip[] casinoMusicTracks;
@@ -21,6 +25,25 @@ public class SoundController : MonoBehaviour
                 casinoMusicTracks != null && casinoMusicTracks.Length > 0)
             {
                 Instance.casinoMusicTracks = casinoMusicTracks;
+            }
+            
+            // Copy mixer groups if the existing instance doesn't have them
+            if (Instance.musicMixerGroup == null && musicMixerGroup != null)
+            {
+                Instance.musicMixerGroup = musicMixerGroup;
+                if (Instance.musicSource != null)
+                {
+                    Instance.musicSource.outputAudioMixerGroup = musicMixerGroup;
+                }
+            }
+            
+            if (Instance.sfxMixerGroup == null && sfxMixerGroup != null)
+            {
+                Instance.sfxMixerGroup = sfxMixerGroup;
+                if (Instance.sfxSource != null)
+                {
+                    Instance.sfxSource.outputAudioMixerGroup = sfxMixerGroup;
+                }
             }
             
             Destroy(gameObject);
@@ -42,10 +65,18 @@ public class SoundController : MonoBehaviour
         
         sfxSource.spatialBlend = 0.0f;
         sfxSource.playOnAwake = false;
+        if (sfxMixerGroup != null)
+        {
+            sfxSource.outputAudioMixerGroup = sfxMixerGroup;
+        }
         
         musicSource.spatialBlend = 0.0f;
         musicSource.loop = false;
         musicSource.playOnAwake = false;
+        if (musicMixerGroup != null)
+        {
+            musicSource.outputAudioMixerGroup = musicMixerGroup;
+        }
     }
     
     private void Update()
@@ -66,7 +97,7 @@ public class SoundController : MonoBehaviour
         sfxSource.pitch = 1.0f;
     }
     
-    public void PlayMusic(AudioClip clip, float volume = 0.5f)
+    public void PlayMusic(AudioClip clip)
     {
         if (clip == null || musicSource == null) return;
         
@@ -74,7 +105,6 @@ public class SoundController : MonoBehaviour
         
         musicSource.Stop();
         musicSource.clip = clip;
-        musicSource.volume = volume;
         musicSource.Play();
     }
     
@@ -84,7 +114,7 @@ public class SoundController : MonoBehaviour
         musicSource.Stop();
     }
     
-    public void PlayCasinoMusic(float volume = 0.5f)
+    public void PlayCasinoMusic()
     {
         if (musicSource == null)
         {
@@ -124,7 +154,6 @@ public class SoundController : MonoBehaviour
         }
         
         musicSource.clip = selectedClip;
-        musicSource.volume = volume;
         musicSource.loop = false;
         musicSource.Play();
     }

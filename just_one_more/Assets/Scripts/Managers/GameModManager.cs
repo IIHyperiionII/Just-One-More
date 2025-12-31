@@ -80,7 +80,7 @@ public class GameModeManager : MonoBehaviour
         timeIsPaused = true;
         if (SoundController.Instance != null)
         {
-            SoundController.Instance.PlayCasinoMusic(0.2f);
+            SoundController.Instance.PlayCasinoMusic();
         }
     }
 
