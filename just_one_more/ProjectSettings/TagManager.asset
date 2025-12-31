@@ -29,6 +29,7 @@ TagManager:
   - MoneyParent
   - Flashlight
   - BulletsPlayerParent
+  - DoorExitCheck
   layers:
   - Default
   - TransparentFX

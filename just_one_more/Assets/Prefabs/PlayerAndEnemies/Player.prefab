@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 1313260484758439883}
   m_Layer: 0
   m_Name: WallBoundsCheck
-  m_TagString: Untagged
+  m_TagString: DoorExitCheck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

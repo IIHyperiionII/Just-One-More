@@ -71,7 +71,6 @@ public class ControlsManager : MonoBehaviour
         savedKeyBinds.moveRight = keyBindings[ActionKey.MoveRight];
         savedKeyBinds.dash = keyBindings[ActionKey.Dash];
         savedKeyBinds.attack = keyBindings[ActionKey.Attack];
-        savedKeyBinds.help = keyBindings[ActionKey.Help];
 
         string savePath = GetFilePath(fileName);
         if (File.Exists(savePath))
@@ -100,8 +99,7 @@ public class ControlsManager : MonoBehaviour
                 { ActionKey.MoveLeft, savedKeyBinds.moveLeft },
                 { ActionKey.MoveRight, savedKeyBinds.moveRight },
                 { ActionKey.Dash, savedKeyBinds.dash },
-                { ActionKey.Attack, savedKeyBinds.attack },
-                { ActionKey.Help, savedKeyBinds.help }
+                { ActionKey.Attack, savedKeyBinds.attack }
             };
         }
         else
@@ -147,10 +145,6 @@ public class ControlsManager : MonoBehaviour
     public bool GetAttackInput()
     {
         return Input.GetKey(keyBindings[ActionKey.Attack]);
-    }
-    public bool GetHelpInputDown()
-    {
-        return Input.GetKeyDown(keyBindings[ActionKey.Help]);
     }
     public string GetKeyName(ActionKey actionKey)
     {

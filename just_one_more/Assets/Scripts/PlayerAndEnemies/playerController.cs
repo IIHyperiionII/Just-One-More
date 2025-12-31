@@ -82,8 +82,8 @@ public class PlayerController : MonoBehaviour
         {
             GetDashInput();
         }
-        GetAttackInput(); // Just for testing will be removed after weapons are implemented
-        Attack(); // Just for testing will be removed after weapons are implemented
+        GetAttackInput(); 
+        Attack(); 
         if (Time.time - startTimer >= 2f) {
             startTimer = Time.time;
             if (PlayerData.needToGamble < 100){
@@ -139,7 +139,11 @@ public class PlayerController : MonoBehaviour
     {
         if (GameModeManager.timeIsPaused) return;
         if (isDashing) return; // Skip normal movement while dashing
-        Vector2 movement = input * Time.deltaTime * (PlayerData.moveSpeed * multiplier * slowMultiplier) * sign;
+        float speed = PlayerData.moveSpeed;
+        if (PlayerData.moveSpeed > 5){
+            speed = 5 + Mathf.Log(PlayerData.moveSpeed, 2);
+        }
+        Vector2 movement = input * Time.deltaTime * (speed * multiplier * slowMultiplier) * sign;
         if (movement.magnitude > 0)
         {
             isMoving = true;
@@ -449,7 +453,11 @@ public class PlayerController : MonoBehaviour
     {
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + 1f / (PlayerData.attackSpeed * multiplier);
+            float attackTime = PlayerData.attackSpeed;
+            if (PlayerData.attackSpeed > 1){
+                attackTime = Mathf.Log(PlayerData.attackSpeed, 2);
+            }
+            nextAttackTime = Time.time + 1f / (attackTime * multiplier);
 
             isAttacking = true; // for animation
             attackStartTime = Time.time; //

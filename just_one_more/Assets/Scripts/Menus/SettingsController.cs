@@ -12,7 +12,6 @@ public class SettingsController : MonoBehaviour
     public Button rightButton;
     public Button dashButton;
     public Button attackButton;
-    public Button helpButton;
     public Button saveButton;
     public Button loadDefaultsButton;
     public Button backButton;
@@ -47,8 +46,6 @@ public class SettingsController : MonoBehaviour
         UpdateText(ActionKey.Dash, "");
         attackButton.onClick.AddListener(() => StartRebinding(ActionKey.Attack));
         UpdateText(ActionKey.Attack, "");
-        helpButton.onClick.AddListener(() => StartRebinding(ActionKey.Help));
-        UpdateText(ActionKey.Help, "");
         saveButton.onClick.AddListener(() => SaveKeyBinds());
         loadDefaultsButton.onClick.AddListener(() => LoadDefaults());
         backButton.onClick.AddListener(() => BackToEscMenu());
@@ -141,7 +138,6 @@ public class SettingsController : MonoBehaviour
         UpdateText(ActionKey.MoveRight, "");
         UpdateText(ActionKey.Dash, "");
         UpdateText(ActionKey.Attack, "");
-        UpdateText(ActionKey.Help, "");
         SaveKeyBinds();
     }
     private void SaveKeyBinds()
@@ -174,9 +170,6 @@ public class SettingsController : MonoBehaviour
                 break;
             case ActionKey.Attack:
                 attackButton.GetComponentInChildren<TextMeshProUGUI>().text = keyName;
-                break;
-            case ActionKey.Help:
-                helpButton.GetComponentInChildren<TextMeshProUGUI>().text = keyName;
                 break;
         }
     }

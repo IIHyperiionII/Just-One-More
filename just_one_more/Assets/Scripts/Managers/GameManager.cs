@@ -196,6 +196,7 @@ public class GameManager : MonoBehaviour
     {
         isTeleporting = true;
         doorsEntered = false;
+        GameModeManager.timeIsPaused = true;
         // Time.timeScale = 0f; // Pause the game
         CameraController.isTeleporting = true;
         yield return StartCoroutine(CameraController.TeleportMoveUp()); // Wait a moment before teleporting for sync of coroutines
@@ -210,9 +211,8 @@ public class GameManager : MonoBehaviour
             Destroy(child.gameObject); // Clear all remaining bullets
         }
         yield return StartCoroutine(CameraController.TeleportMoveDown());
-        // Time.timeScale = 1f; // Resume the game
-        yield return new WaitForSecondsRealtime(5f); // Wait a moment after teleporting before starting the next wave
         backgroundSet = false;
+        GameModeManager.timeIsPaused = false;
     }
 
     IEnumerator SpawnWave()
@@ -607,7 +607,11 @@ public class GameManager : MonoBehaviour
                 }
             }
             GameObject playerBulletInstance = Instantiate(playerBullet, projectilePlayerData.position, projectilePlayerData.initialRotation);
-            playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite);
+            if (bulletSprite == bulletSprites[1]){
+                playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite, true);
+            } else {
+                playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite, false);
+            }
             playerBulletInstance.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform);
         }
         if (runtimePlayerData != null && currentSelection != null)

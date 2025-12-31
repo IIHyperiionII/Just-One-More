@@ -73,6 +73,7 @@ public class GameModeManager : MonoBehaviour
     public void EnterMiniGame()
     {
         inMiniGame = true;
+        GameManager.Instance.runtimePlayerData.money -= 100;
         gameLoopParent.SetActive(false);
         cameraDisortionEffect.SetActive(false);
         casino.SetActive(true);
