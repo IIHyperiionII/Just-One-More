@@ -30,7 +30,7 @@ public class GameModeManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu && !GameManager.Instance.waveIsSpawning)
         {
             OpenEscMenu();
         }
@@ -38,7 +38,7 @@ public class GameModeManager : MonoBehaviour
         {
             CloseEscMenu();
         }
-        if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive)
+        if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive || GameManager.Instance.waveIsSpawning)
         {
             casinoButton.interactable = false;
         } else

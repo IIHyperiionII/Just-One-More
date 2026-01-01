@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private int[] KindMinCount = new int[] { 1, 1, 1 };
     public static Transform enemiesParent;
     private Vector2 spawnPosition;
-    private bool waveIsSpawning = false;
+    public bool waveIsSpawning = false;
     //private bool isTeleporting = false;
     public bool doorsEntered = false;
     private SaveData saveData;
@@ -219,10 +219,10 @@ public class GameManager : MonoBehaviour
     {
         waveIsSpawning = true;
         yield return new WaitForSeconds(1f); // Wait a moment before starting the next wave for sync of coroutines
-        StartCoroutine(SpawnEnemies());
+        SpawnEnemies();
         waveIsSpawning = false;
     }
-    IEnumerator SpawnEnemies()
+    void SpawnEnemies()
     {
         Debug.Log("Spawning wave " + wave + " on map " + map);
         enemiesToSpawn.Clear(); // Clear the list before spawning enemies
@@ -269,7 +269,6 @@ public class GameManager : MonoBehaviour
             enemy.GetComponent<IEnemy>().SetEnemyType(enemyType);
             if (enemiesParent != null)
                 enemy.transform.SetParent(enemiesParent); // Set the parent of the spawned enemy for better hierarchy organization
-            yield return new WaitForSeconds(0.5f); // Wait before spawning the next enemy
         }
         if (wave == 10)
         {
