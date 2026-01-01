@@ -44,4 +44,5 @@
   <Project Path="Unity.Collections.CodeGen.csproj" />
   <Project Path="Unity.Mathematics.Editor.csproj" />
   <Project Path="Unity.Collections.Editor.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>

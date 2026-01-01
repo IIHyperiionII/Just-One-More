@@ -222,6 +222,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
+            GetComponent<EnemyDeathEvent>()?.TriggerDeathEvent();
+            
             Destroy(gameObject);
         }
         HitColorChange();

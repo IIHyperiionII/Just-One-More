@@ -18,6 +18,9 @@ public class WeaponController : MonoBehaviour
     public GameObject bulletPrefab;
     public Sprite pistolBulletSprite;
     public Sprite shotgunBulletSprite;
+    public AudioClip swordSfx;
+    public AudioClip gunSfx;
+    public AudioClip shotgunSfx;
 
     void Update()
     {
@@ -41,6 +44,8 @@ public class WeaponController : MonoBehaviour
                 enemiesToDamage[i].GetComponent<IEnemy>().Knockback(knockback);
             }
         }
+
+        SoundController.Instance.PlaySound(swordSfx, 0.15f, 1.0f);
     }
 
     public void AttackGun(int bulletSpeed, int damage, int piercingLevel, int freezeLevel)
@@ -49,6 +54,8 @@ public class WeaponController : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, transform.position + mouseDirection * Vector3.right * 0.5f, rotation); // Spawn bullet at player position with calculated rotation
         bullet.GetComponent<PlayerBulletController>().Initialize(bulletSpeed, damage, piercingLevel, freezeLevel, rotation, pistolBulletSprite); // Initialize bullet with player stats
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
+    
+        SoundController.Instance.PlaySound(gunSfx, 0.3f, 1.0f);
     }
 
     public void AttackShotgun(int bulletSpeed, int damage , int piercingLevel, int freezeLevel)
@@ -63,6 +70,8 @@ public class WeaponController : MonoBehaviour
         bullet.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
         bullet2.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
         bullet3.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform); // Set the parent of the spawned bullet for organization
+    
+        SoundController.Instance.PlaySound(shotgunSfx, 0.3f, 1.0f);
     }
 
     Quaternion UpdateAngle()

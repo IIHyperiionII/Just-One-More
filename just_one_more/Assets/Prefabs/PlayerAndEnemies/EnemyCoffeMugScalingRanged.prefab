@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7771740809936982228}
   - component: {fileID: 9032130123870031209}
   - component: {fileID: 3836410455810643911}
+  - component: {fileID: -5229942785639405426}
   m_Layer: 11
   m_Name: EnemyCoffeMugScalingRanged
   m_TagString: Enemy
@@ -241,6 +242,34 @@ MonoBehaviour:
   positionReference: {fileID: 1439060979809258739}
   circlePositionReference: {fileID: 0}
   isCircle: 0
+--- !u!114 &-5229942785639405426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3026029418750680626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 228baae151bdec446b450cb489e6c4f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathEvent
+  onDeath:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3165728561002198203, guid: f099fe7660cac46428c83be730c980ef,
+          type: 3}
+        m_TargetAssemblyTypeName: SoundController, Assembly-CSharp
+        m_MethodName: PlayBossOffice2Death
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &9174308002573688874
 GameObject:
   m_ObjectHideFlags: 0

@@ -595,6 +595,26 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1929464716}
+    - target: {fileID: 3258488546732561176, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3258488546732561176, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3258488546732561176, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3258488546732561176, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: CasinoManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3642638878582617338, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -803,6 +823,11 @@ PrefabInstance:
     - target: {fileID: 6168305397919484162, guid: f494c2b3225244b6783fd1d9dd8cb200,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6346856873149522213, guid: f494c2b3225244b6783fd1d9dd8cb200,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6417566580327587602, guid: f494c2b3225244b6783fd1d9dd8cb200,

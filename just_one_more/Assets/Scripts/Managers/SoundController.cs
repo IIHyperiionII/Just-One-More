@@ -12,6 +12,20 @@ public class SoundController : MonoBehaviour
     [Header("Music clips")]
     public AudioClip[] casinoMusicTracks;
 
+    [Header("UI Sound Clips")]
+    public AudioClip buttonClickSound;
+    
+    [Header("Enemy Death Sounds")]
+    public AudioClip office1DeathSound;
+    public AudioClip office2DeathSound;
+    public AudioClip office3DeathSound;
+    public AudioClip toilet1DeathSound;
+    public AudioClip toilet2DeathSound;
+    public AudioClip toilet3DeathSound;
+    public AudioClip bossOffice1DeathSound;
+    public AudioClip bossOffice2DeathSound;
+    public AudioClip bossOffice3DeathSound;
+
     private int currentTrackIndex = 0;
     private bool wasInCasino = false;
     private bool currentlyInCasino = false;
@@ -88,6 +102,7 @@ public class SoundController : MonoBehaviour
         }
     }
     
+    // Override for code calls
     public void PlaySound(AudioClip clip, float volume, float pitch)
     {
         if (clip == null || sfxSource == null) return;
@@ -95,6 +110,74 @@ public class SoundController : MonoBehaviour
         sfxSource.pitch = pitch;
         sfxSource.PlayOneShot(clip, volume);
         sfxSource.pitch = 1.0f;
+    }
+
+    // Override for unity OnClick() calls
+    // public void PlaySound(AudioClip clip)
+    // {
+    //     PlaySound(clip, 0.3f, 1.0f);
+    // }
+
+    // === UI SOUNDS (bez parametrů pro UnityEvents) ===
+    public void PlayButtonClick()
+    {
+        if (buttonClickSound != null)
+            PlaySound(buttonClickSound, 0.3f, 1.0f);
+    }
+    
+    // === ENEMY DEATH SOUNDS (bez parametrů pro UnityEvents) ===
+    public void PlayOffice1Death()
+    {
+        if (office1DeathSound != null)
+            PlaySound(office1DeathSound, 0.3f, Random.Range(0.9f, 1.1f));
+    }
+    
+    public void PlayOffice2Death()
+    {
+        if (office2DeathSound != null)
+            PlaySound(office2DeathSound, 0.3f, Random.Range(0.9f, 1.1f));
+    }
+    
+    public void PlayOffice3Death()
+    {
+        if (office3DeathSound != null)
+            PlaySound(office3DeathSound, 0.3f, Random.Range(0.9f, 1.1f));
+    }
+    
+    public void PlayToilet1Death()
+    {
+        if (toilet1DeathSound != null)
+            PlaySound(toilet1DeathSound, 0.3f, Random.Range(0.9f, 1.1f));
+    }
+    
+    public void PlayToilet2Death()
+    {
+        if (toilet2DeathSound != null)
+            PlaySound(toilet2DeathSound, 0.3f, Random.Range(0.9f, 1.1f));
+    }
+    
+    public void PlayToilet3Death()
+    {
+        if (toilet3DeathSound != null)
+            PlaySound(toilet3DeathSound, 0.3f, Random.Range(0.9f, 1.1f));
+    }
+    
+    public void PlayBossOffice1Death()
+    {
+        if (bossOffice1DeathSound != null)
+            PlaySound(bossOffice1DeathSound, 0.3f, Random.Range(0.85f, 1.0f));
+    }
+    
+    public void PlayBossOffice2Death()
+    {
+        if (bossOffice2DeathSound != null)
+            PlaySound(bossOffice2DeathSound, 0.3f, Random.Range(0.85f, 1.0f));
+    }
+    
+    public void PlayBossOffice3Death()
+    {
+        if (bossOffice3DeathSound != null)
+            PlaySound(bossOffice3DeathSound, 0.3f, Random.Range(0.85f, 1.0f));
     }
     
     public void PlayMusic(AudioClip clip)

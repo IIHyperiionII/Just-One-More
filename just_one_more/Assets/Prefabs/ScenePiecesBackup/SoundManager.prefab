@@ -47,11 +47,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundController
   sfxSource: {fileID: 2883023571071319570}
-  musicSource: {fileID: 3372667637688584568}
+  musicSource: {fileID: 1024347413931394517}
+  musicMixerGroup: {fileID: -1000584833534782716, guid: 0e18a14362b074f0dac253d17d936523,
+    type: 2}
+  sfxMixerGroup: {fileID: -264529141663735953, guid: 0e18a14362b074f0dac253d17d936523,
+    type: 2}
   casinoMusicTracks:
   - {fileID: 8300000, guid: 4d8e959c6a3c1e5478edef3bbccf3c6e, type: 3}
   - {fileID: 8300000, guid: f05f1b9ad185b1047becb3e75ffc4f54, type: 3}
   - {fileID: 8300000, guid: 633a4ee4cc9b2e544ad125dc1058d3d1, type: 3}
+  buttonClickSound: {fileID: 8300000, guid: 20828c8c375f6084f80f9bb663924a0a, type: 3}
+  office1DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49, type: 3}
+  office2DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49, type: 3}
+  office3DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49, type: 3}
+  toilet1DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49, type: 3}
+  toilet2DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49, type: 3}
+  toilet3DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49, type: 3}
+  bossOffice1DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49,
+    type: 3}
+  bossOffice2DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49,
+    type: 3}
+  bossOffice3DeathSound: {fileID: 8300000, guid: 8402b1b9a4e8fa34283cc48f08195a49,
+    type: 3}
 --- !u!82 &2883023571071319570
 AudioSource:
   m_ObjectHideFlags: 0

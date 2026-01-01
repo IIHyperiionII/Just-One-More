@@ -27,3 +27,4 @@ MonoBehaviour:
   freezeLevel: 0
   needToGamble: 0
   numberOfSaves: 1
+  projectileCount: 3
