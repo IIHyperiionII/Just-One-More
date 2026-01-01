@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviour
             wave++;
             StartCoroutine(SpawnWave()); // Wait for sync
             if (wave > 1){
-                SoundController.Instance.PlaySound(WaveCompleteSound, 0.3f, 1.0f);
+                SoundController.Instance.PlaySound(WaveCompleteSound, 0.1f, 1.0f);
             }
         } else if ( wave > 10 && !mapCompleted ) {
             mapCompleted = true;
@@ -411,19 +411,29 @@ public class GameManager : MonoBehaviour
             mapType = "bossOffice";
         }
         string enemyPrefix = "";
-        if (enemyPrefab == officePrefabs[0] || enemyPrefab == toiletPrefabs[0] || enemyPrefab == bossOfficePrefabs[0])
+        string prefabName = enemyPrefab.name;
+        
+        // Compare by name instead of reference (more reliable in builds)
+        if ((officePrefabs[0] != null && prefabName == officePrefabs[0].name) || 
+            (toiletPrefabs[0] != null && prefabName == toiletPrefabs[0].name) || 
+            (bossOfficePrefabs[0] != null && prefabName == bossOfficePrefabs[0].name))
         {
             enemyPrefix = "1";
         }
-        else if (enemyPrefab == officePrefabs[1] || enemyPrefab == toiletPrefabs[1] || enemyPrefab == bossOfficePrefabs[1])
+        else if ((officePrefabs[1] != null && prefabName == officePrefabs[1].name) || 
+                 (toiletPrefabs[1] != null && prefabName == toiletPrefabs[1].name) || 
+                 (bossOfficePrefabs[1] != null && prefabName == bossOfficePrefabs[1].name))
         {
             enemyPrefix = "2";
         }
-        else if (enemyPrefab == officePrefabs[2] || enemyPrefab == toiletPrefabs[2] || enemyPrefab == bossOfficePrefabs[2])
+        else if ((officePrefabs[2] != null && prefabName == officePrefabs[2].name) || 
+                 (toiletPrefabs[2] != null && prefabName == toiletPrefabs[2].name) || 
+                 (bossOfficePrefabs[2] != null && prefabName == bossOfficePrefabs[2].name))
         {
             enemyPrefix = "3";
         }
-        return mapType + enemyPrefix;
+        string result = mapType + enemyPrefix;
+        return result;
     }
     void GetCameraBounds()
     {

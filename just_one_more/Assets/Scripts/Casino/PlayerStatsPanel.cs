@@ -198,7 +198,10 @@ public class PlayerStatsPanel : MonoBehaviour
             Debug.LogError("PlayerData not assigned to PlayerStatsPanel!");
             return;
         }
-        UpdateTextField(moneyText, "Money", playerData.money);
+        if (moneyText)
+        {
+            moneyText.text = $"Money: {playerData.money} $";
+        }
         UpdateTextField(hpText, "HP", playerData.hp);
         UpdateTextField(dmgText, "Damage", playerData.damage);
         UpdateTextField(speedText, "Move Speed", playerData.moveSpeed);

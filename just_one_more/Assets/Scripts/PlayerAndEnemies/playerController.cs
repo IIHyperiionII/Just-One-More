@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
         if (stepTimer >= 0.4f && slowMultiplier == 1f)
         {
             float pitch = Random.Range(0.95f, 1.1f);
-            SoundController.Instance.PlaySound(footstepClip, 0.85f, pitch);
+            SoundController.Instance.PlaySound(footstepClip, 0.6f, pitch);
 
             stepTimer = 0f;
         }

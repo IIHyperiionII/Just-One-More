@@ -35,6 +35,7 @@ public class CasinoManager : MonoBehaviour
     [Header("Game References")]
     [SerializeField] private PlinkoManager plinkoManager;
     [SerializeField] private BlackjackManager blackjackManager;
+    [SerializeField] private ShopManager shopManager;
 
     private int minBet = 1;
     private PlayerData playerData;
@@ -164,14 +165,21 @@ public class CasinoManager : MonoBehaviour
     void OnEnable()
     {
         remainingGambles = 5;
+        
+        if (shopManager != null)
+        {
+            shopManager.rerollCount = 0;
+        }
+        
          if (playerStatsPanel != null){
-            if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null && playerData == null){
+            if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null) {
                 playerData = GameManager.Instance.runtimePlayerData;
             }
             playerStatsPanel.SetPlayerData(playerData);
             playerStatsPanel.UpdateUI();
         }
 
+        
         UpdateUI();
     }
 
@@ -518,6 +526,7 @@ public class CasinoManager : MonoBehaviour
         if (gambleGameInProgress && playerData != null)
         {
             AddWinToStat(currentBet);
+            remainingGambles++;
             Debug.LogWarning("Game force closed - bet returned to player");
         }
 
