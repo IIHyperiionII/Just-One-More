@@ -65,7 +65,10 @@ public class PlayerHudController : MonoBehaviour
                 }
                 GetHp();
             }
-            GetMoney();
+            if (!(ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife))
+            {
+                GetMoney();
+            }
             healthText.text = $"Health: {playerData.hp}";
             coinsText.text = $"{playerData.money}";
             msText.text = $"MS: {playerData.moveSpeed}";

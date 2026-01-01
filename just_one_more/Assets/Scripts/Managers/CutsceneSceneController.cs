@@ -54,7 +54,7 @@ public class CutsceneSceneController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            EndCutscene();
+            SkipCutscene();
         }
     }
 
@@ -74,6 +74,11 @@ public class CutsceneSceneController : MonoBehaviour
     {
         FadeOut(secondCutsceneImage);
         StartCoroutine(LoadMainMenuAfterFadeOut());
+    }
+
+    public void SkipCutscene()
+    {
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     IEnumerator LoadMainMenuAfterFadeOut()

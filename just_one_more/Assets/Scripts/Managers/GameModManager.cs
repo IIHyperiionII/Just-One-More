@@ -32,7 +32,7 @@ public class GameModeManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu)
+        if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu && !GameManager.Instance.waveIsSpawning)
         {
             OpenEscMenu();
         }
@@ -40,7 +40,7 @@ public class GameModeManager : MonoBehaviour
         {
             CloseEscMenu();
         }
-        if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive)
+        if (escMenuActive || inMiniGame || gameWonMenuActive || deadMenuActive || GameManager.Instance.waveIsSpawning)
         {
             casinoButton.interactable = false;
         } else
@@ -75,7 +75,11 @@ public class GameModeManager : MonoBehaviour
     public void EnterMiniGame()
     {
         inMiniGame = true;
-        // GameManager.Instance.runtimePlayerData.money -= 100;
+        GameManager.Instance.runtimePlayerData.money -= 100;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            GameManager.Instance.runtimePlayerData.hp = GameManager.Instance.runtimePlayerData.money;
+        }
         gameLoopParent.SetActive(false);
         cameraDisortionEffect.SetActive(false);
         casino.SetActive(true);

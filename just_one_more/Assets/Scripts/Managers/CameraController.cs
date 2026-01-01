@@ -11,6 +11,12 @@ public class CameraController : MonoBehaviour
     public static bool isTeleporting = false;
     private static Vector3 newPosition;
     private static bool isShaking = false;
+    private Camera cam;
+
+    void Start()
+    {
+        cam = GetComponent<Camera>();
+    }
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
@@ -22,10 +28,20 @@ public class CameraController : MonoBehaviour
         {
             if (isTeleporting) return;
             // Follow the player while maintaining the camera's z position
-            newPosition = player.position;
-            newPosition.z = transform.position.z;
-            transform.position = newPosition;
+            Move();
         }
+    }
+
+    void Move()
+    {
+        newPosition = player.position;
+        newPosition.z = transform.position.z;
+        float camHalfHeight = cam.orthographicSize;
+        float camHalfWidth  = camHalfHeight * cam.aspect;
+        newPosition.x = Mathf.Clamp(newPosition.x, -40f + camHalfWidth, 40f - camHalfWidth);
+
+        newPosition.y = Mathf.Max( newPosition.y, -22f + camHalfHeight );
+        transform.position = newPosition;
     }
 
     public static void ShakeCamera(float duration = 0.2f, float magnitude = 0.2f)
