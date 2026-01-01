@@ -148,6 +148,8 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
+            EnemySoundHelper.PlayDeathSound(enemyType);
+            
             Destroy(gameObject);
         }
         HitColorChange();

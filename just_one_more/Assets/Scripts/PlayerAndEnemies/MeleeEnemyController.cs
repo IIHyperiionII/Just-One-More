@@ -222,7 +222,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         runtimeEnemiesData.hp -= damage;
         if (runtimeEnemiesData.hp <= 0)
         {
-            GetComponent<EnemyDeathEvent>()?.TriggerDeathEvent();
+            EnemySoundHelper.PlayDeathSound(enemyType);
             
             Destroy(gameObject);
         }

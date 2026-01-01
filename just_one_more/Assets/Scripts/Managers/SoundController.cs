@@ -112,12 +112,6 @@ public class SoundController : MonoBehaviour
         sfxSource.pitch = 1.0f;
     }
 
-    // Override for unity OnClick() calls
-    // public void PlaySound(AudioClip clip)
-    // {
-    //     PlaySound(clip, 0.3f, 1.0f);
-    // }
-
     // === UI SOUNDS (bez parametrů pro UnityEvents) ===
     public void PlayButtonClick()
     {
