@@ -10,5 +10,4 @@ public class SaveDataKeyBinds
     public KeyCode moveRight;
     public KeyCode dash;
     public KeyCode attack;
-    public KeyCode help;
 }

@@ -91,6 +91,8 @@ public class BlackjackManager : MonoBehaviour
         {
             RevealDealerHoleCard();
 
+            UpdateTextField(dealerScoreText, "Score: ", dealerHand.GetValue());
+            
             if (dealerHand.IsBlackjack())
             {
                 // Draw

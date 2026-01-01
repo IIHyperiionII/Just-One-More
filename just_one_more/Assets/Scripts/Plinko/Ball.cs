@@ -18,6 +18,9 @@ public class Ball : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
         currentPushes = 0;
 
         previewLine = new GameObject("Push Preview").AddComponent<LineRenderer>();

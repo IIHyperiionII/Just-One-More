@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemiesData
   type: 
   hp: 40
-  moveSpeed: 15
+  moveSpeed: 11
   damage: 20
   attackSpeed: 1
   bulletSpeed: 20

@@ -23,7 +23,7 @@ public class ShopManager : MonoBehaviour
     private PlayerData playerData;
     private ShopItem currentItem;
     private int previousRandomChoice = -1;
-    private int rerollCount = 0;
+    public int rerollCount = 0;
     private int baseRerollPrice = 100;
     private int baseItemPrice = 100;
     private int itemLevelPriceIncrement = 150;
@@ -251,7 +251,7 @@ public class ShopManager : MonoBehaviour
 
         if (itemPriceText)
         {
-            itemPriceText.text = price.ToString();
+            itemPriceText.text = $"{price} $";
         }
 
         switch (currentItem.statType)
@@ -279,7 +279,7 @@ public class ShopManager : MonoBehaviour
         if (rerollPriceText)
         {
             int nextRerollPrice = baseRerollPrice * rerollCount;
-            rerollPriceText.text = nextRerollPrice.ToString();
+            rerollPriceText.text = $"{nextRerollPrice} $";
         }
     }
 

@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: -2149543244922151165}
   - component: {fileID: 7681321861560697937}
   - component: {fileID: 8045807154699433998}
-  - component: {fileID: -445790658029328487}
   m_Layer: 11
   m_Name: EnemyPaperMele
   m_TagString: Enemy
@@ -246,34 +245,6 @@ MonoBehaviour:
   playerTag: Player
   leftRightValue: 0
   moveTowardsValue: 0
---- !u!114 &-445790658029328487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540468372576299302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 228baae151bdec446b450cb489e6c4f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathEvent
-  onDeath:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3165728561002198203, guid: f099fe7660cac46428c83be730c980ef,
-          type: 3}
-        m_TargetAssemblyTypeName: SoundController, Assembly-CSharp
-        m_MethodName: PlayOffice1Death
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &5301312200687785638
 GameObject:
   m_ObjectHideFlags: 0

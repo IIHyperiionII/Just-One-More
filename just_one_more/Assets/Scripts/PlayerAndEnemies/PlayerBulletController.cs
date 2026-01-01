@@ -15,6 +15,7 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
     private SpriteRenderer spriteRenderer;
     private string spriteName;
     private BoxCollider2D boxCollider;
+    private bool isPistol;
     void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
@@ -32,11 +33,7 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
         }
     }
 
-    void Start()
-    {
-        spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
-    }
-    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation, Sprite sprite)
+    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation, Sprite sprite, bool isPistol)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
@@ -47,6 +44,10 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
         bulletSprite = sprite;
         spriteName = sprite.name;
         boxCollider.size = bulletSprite.bounds.size;
+        if (isPistol)
+        {
+            spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
+        } 
     }
     void FixedUpdate()
     {
@@ -58,7 +59,12 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
             spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
             boxCollider.size = bulletSprite.bounds.size;
         }
-        Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
+        float moveSpeed = speed;
+        if (speed > 10)
+        {
+            moveSpeed = 10 + 2 * Mathf.Log(speed - 10, 2);
+        }
+        Rigidbody.MovePosition(Rigidbody.position + direction * moveSpeed * Time.fixedDeltaTime);
         
     }
     void OnTriggerEnter2D(Collider2D other)

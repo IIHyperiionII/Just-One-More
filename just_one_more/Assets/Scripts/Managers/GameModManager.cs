@@ -26,6 +26,8 @@ public class GameModeManager : MonoBehaviour
         ExitMiniGame();
         casinoButton.onClick.AddListener(EnterMiniGame);
         continueButton.onClick.AddListener(CloseEscMenu);
+        SoundController.Instance.StopMainMenuMusic();
+        SoundController.Instance.PlayGameMusic();
     }
     
     void Update()
@@ -73,12 +75,14 @@ public class GameModeManager : MonoBehaviour
     public void EnterMiniGame()
     {
         inMiniGame = true;
+        // GameManager.Instance.runtimePlayerData.money -= 100;
         gameLoopParent.SetActive(false);
         cameraDisortionEffect.SetActive(false);
         casino.SetActive(true);
         timeIsPaused = true;
         if (SoundController.Instance != null)
         {
+            SoundController.Instance.StopGameMusic();
             SoundController.Instance.PlayCasinoMusic();
         }
     }
@@ -93,6 +97,7 @@ public class GameModeManager : MonoBehaviour
         if (SoundController.Instance != null)
         {
             SoundController.Instance.StopCasinoMusic();
+            SoundController.Instance.PlayGameMusic();
         }
     }
 
