@@ -312,11 +312,19 @@ public class CasinoManager : MonoBehaviour
         {
             case StatType.Money:
                 playerData.money = Mathf.Max(0, playerData.money + amount);
+                if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+                {
+                    playerData.hp = playerData.money;
+                }
                 break;
             case StatType.HP:
                 // HP == 0 means player's death (TODO: achievement)
                 playerData.hp = Mathf.Max(0, playerData.hp + amount);
                 if (playerData.hp <= 0) playerData.isDead = true;
+                if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+                {
+                    playerData.money = playerData.hp;
+                }
                 break;
             case StatType.Dmg:
                 playerData.damage = Mathf.Max(1, playerData.damage + amount);

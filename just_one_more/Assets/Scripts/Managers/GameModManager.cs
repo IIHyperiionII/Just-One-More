@@ -74,6 +74,10 @@ public class GameModeManager : MonoBehaviour
     {
         inMiniGame = true;
         GameManager.Instance.runtimePlayerData.money -= 100;
+        if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
+        {
+            GameManager.Instance.runtimePlayerData.hp = GameManager.Instance.runtimePlayerData.money;
+        }
         gameLoopParent.SetActive(false);
         cameraDisortionEffect.SetActive(false);
         casino.SetActive(true);

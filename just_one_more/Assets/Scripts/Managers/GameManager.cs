@@ -607,11 +607,9 @@ public class GameManager : MonoBehaviour
                 }
             }
             GameObject playerBulletInstance = Instantiate(playerBullet, projectilePlayerData.position, projectilePlayerData.initialRotation);
-            if (bulletSprite == bulletSprites[1]){
-                playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite, true);
-            } else {
-                playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite, false);
-            }
+            
+            playerBulletInstance.GetComponent<PlayerBulletController>().Initialize(projectilePlayerData.speed, projectilePlayerData.damage, projectilePlayerData.piercingLevel, projectilePlayerData.freezeLevel, projectilePlayerData.initialRotation, bulletSprite);
+            
             playerBulletInstance.transform.SetParent(GameObject.FindGameObjectWithTag("BulletsPlayerParent").transform);
         }
         if (runtimePlayerData != null && currentSelection != null)

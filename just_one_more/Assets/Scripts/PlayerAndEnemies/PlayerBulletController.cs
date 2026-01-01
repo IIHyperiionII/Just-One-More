@@ -33,25 +33,24 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
         }
     }
 
-    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation, Sprite sprite, bool isPistol)
+    public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
         damage = bulletDamage;
         piercingLevel = bulletPiercingLevel;
         freezeLevel = bulletFreezeLevel;
         transform.rotation = rotation;
-        currentSelection = ModeController.Instance.currentSelection;
         bulletSprite = sprite;
         spriteName = sprite.name;
         boxCollider.size = bulletSprite.bounds.size;
-        if (isPistol)
-        {
-            spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
-        } 
     }
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        if (currentSelection == null)
+        {
+            currentSelection = ModeController.Instance.currentSelection;
+        }
         if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
