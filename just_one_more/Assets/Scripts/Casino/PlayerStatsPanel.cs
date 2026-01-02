@@ -110,7 +110,7 @@ public class PlayerStatsPanel : MonoBehaviour
     public int GetAttackModifier()
     {
         if (playerData != null)
-            return playerData.isMelee ? playerData.knockback : playerData.bulletSpeed;
+            return ModeController.Instance.currentSelection.selectedWeapon == WeaponType.Melee ? playerData.knockback : playerData.bulletSpeed;
         return 0;
     }
 
@@ -118,7 +118,7 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         if (playerData != null)
         {
-            return playerData.isMelee ? "Knockback" : "Bullet Speed";
+            return ModeController.Instance.currentSelection.selectedWeapon == WeaponType.Melee ? "Knockback" : "Bullet Speed";
         }
         return "Attack Modifier";
     }
@@ -127,7 +127,7 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         if (playerData != null)
         {
-            return playerData.isMelee ? StatType.Knockback : StatType.BulletSpeed;
+            return ModeController.Instance.currentSelection.selectedWeapon == WeaponType.Melee ? StatType.Knockback : StatType.BulletSpeed;
         }
         return StatType.BulletSpeed; // Default
     }
@@ -173,7 +173,7 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         if (playerData != null)
         {
-            if (playerData.isMelee)
+            if (ModeController.Instance.currentSelection.selectedWeapon == WeaponType.Melee)
                 playerData.knockback = value;
             else
                 playerData.bulletSpeed = value;
@@ -206,7 +206,7 @@ public class PlayerStatsPanel : MonoBehaviour
         UpdateTextField(dmgText, "Damage", playerData.damage);
         UpdateTextField(speedText, "Move Speed", playerData.moveSpeed);
         UpdateTextField(attackSpeedText, "Attack Speed", playerData.attackSpeed);
-        int attackModifierValue = playerData.isMelee ? playerData.knockback : playerData.bulletSpeed;
+        int attackModifierValue = ModeController.Instance.currentSelection.selectedWeapon == WeaponType.Melee ? playerData.knockback : playerData.bulletSpeed;
         UpdateTextField(attackModifierText, attackModifierName, attackModifierValue);
         UpdateTextField(piercingText, "Piercing Level", playerData.piercingLevel);
         UpdateTextField(dashText, "Dash Level", playerData.dashLevel);
