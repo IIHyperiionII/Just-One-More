@@ -10382,6 +10382,10 @@ MonoBehaviour:
   blockText: {fileID: 7341920598709435666}
   freezeText: {fileID: 6597965072663888655}
   saveSlotText: {fileID: 223263106973344461}
+  attackModifierImage: {fileID: 749827596997227673}
+  bulletSpeedSprite: {fileID: -576799071, guid: e6c4abc8d555df449a3e823284e71775,
+    type: 3}
+  knockbackSprite: {fileID: 30367153, guid: e6c4abc8d555df449a3e823284e71775, type: 3}
 --- !u!114 &3583171274556207676
 MonoBehaviour:
   m_ObjectHideFlags: 0
