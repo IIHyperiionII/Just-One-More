@@ -11,7 +11,7 @@ public class PlayerData : ScriptableObject
     public int bulletSpeed = 10;
     public int knockback = 5;
     public bool isDead = false;
-    public bool isMelee = false;
+    public bool isMelee;
     public int piercingLevel = 0;
     public int dashLevel = 0;
     public int blockLevel = 0;

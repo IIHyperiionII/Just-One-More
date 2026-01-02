@@ -76,8 +76,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager is ready to load: " + isGameReadyToLoad);
         if (ModeController.Instance != null){
             currentSelection = ModeController.Instance.currentSelection;
+            Debug.Log("Current weapon selection: " + currentSelection.selectedWeapon);
         }
         if (currentSelection != null && currentSelection.selectedWeapon == WeaponType.Melee){
+            Debug.Log("Setting runtime player data to melee based on current selection");
             runtimePlayerData.isMelee = true;
         }
     }
@@ -115,6 +117,9 @@ public class GameManager : MonoBehaviour
         if (currentSelection == null)
         {
             currentSelection = ModeController.Instance.currentSelection;
+            if (currentSelection.selectedWeapon == WeaponType.Melee){
+                runtimePlayerData.isMelee = true;
+            }
         }
         if (currentSelection != null && currentSelection.selectedWeapon == WeaponType.Melee){
             runtimePlayerData.isMelee = true;
@@ -134,6 +139,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (GameModeManager.timeIsPaused) return;
+        Debug.Log("Player is melee: " + runtimePlayerData.isMelee);
         if (mapCompleted && !backgroundSet && enemiesParent.childCount == 0)
         {
             Debug.Log("Switching background from map " + map + " to map " + (map + 1));

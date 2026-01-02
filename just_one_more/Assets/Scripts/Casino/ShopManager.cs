@@ -143,8 +143,9 @@ public class ShopManager : MonoBehaviour
 
         do
         {
-            randomChoice = Random.Range(0, 6);
-        } while (randomChoice == previousRandomChoice);
+            randomChoice = Random.Range(0, 5);
+        
+        } while ((randomChoice == previousRandomChoice && previousRandomChoice != 4) || LvlCheck(randomChoice));
         
         previousRandomChoice = randomChoice;
 
@@ -158,10 +159,29 @@ public class ShopManager : MonoBehaviour
                 return new ShopItem("Block", StatType.BlockLevel);
             case 3:
                 return new ShopItem("Freeze", StatType.FreezeLevel);
-            case 5:
+            case 4:
                 return new ShopItem("Save Slot", StatType.SaveSlots);
             default:
-                return new ShopItem("Piercing", StatType.PiercingLevel);
+                return new ShopItem("Save Slot", StatType.SaveSlots);
+        }
+    }
+
+    private bool LvlCheck( int randomChoice)
+    {
+        switch (randomChoice)
+        {
+            case 0:
+                return playerData.piercingLevel >= 4;
+            case 1:
+                return playerData.dashLevel >= 4;
+            case 2:
+                return playerData.blockLevel >= 4;
+            case 3:
+                return playerData.freezeLevel >= 4;
+            case 4:
+                return false;
+            default:
+                return false;
         }
     }
 

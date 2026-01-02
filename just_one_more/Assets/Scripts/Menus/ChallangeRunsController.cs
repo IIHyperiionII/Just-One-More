@@ -60,6 +60,9 @@ public class ChallangeRunsController : MonoBehaviour
 
     public void StartGame()
     {
+        ModeController.Instance.currentSelection = currentSelection;
+        Debug.Log("Selected Mode: " + currentSelection.selectedMode);
+        Debug.Log("Selected Weapon: " + currentSelection.selectedWeapon);
         FindFirstObjectByType<SceneLoader>().LoadGameplayScene();
     } 
     public void ReturnToMainMenu()
