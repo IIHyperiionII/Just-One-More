@@ -41,6 +41,12 @@ public class EscMenuController : MonoBehaviour
     void BackToMainMenu()
     {
         ModeController.Instance.ResetSettingsToDefault();
+        // Stop game music and play main menu music
+        if (SoundController.Instance != null)
+        {
+            SoundController.Instance.StopGameMusic();
+            SoundController.Instance.PlayMainMenuMusic();
+        }
         SceneManager.LoadScene("MainMenuScene");
     }
 
