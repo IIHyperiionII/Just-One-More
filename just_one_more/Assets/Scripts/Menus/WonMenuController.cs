@@ -71,6 +71,12 @@ public class WonMenuController : MonoBehaviour
     void ReturnToMainMenu()
     {
         ModeController.Instance.ResetSettingsToDefault();
+        // Stop game music and play main menu music
+        if (SoundController.Instance != null)
+        {
+            SoundController.Instance.StopGameMusic();
+            SoundController.Instance.PlayMainMenuMusic();
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
     void GetString()

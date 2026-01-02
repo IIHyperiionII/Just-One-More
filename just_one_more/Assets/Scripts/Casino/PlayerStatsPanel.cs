@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerStatsPanel : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class PlayerStatsPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI blockText;
     [SerializeField] private TextMeshProUGUI freezeText;
     [SerializeField] private TextMeshProUGUI saveSlotText;
+    [SerializeField] private Image attackModifierImage;
+    [SerializeField] private Sprite bulletSpeedSprite;
+    [SerializeField] private Sprite knockbackSprite;
 
     private PlayerData playerData;
     // Changes based on whether the player is melee or ranged
@@ -213,5 +217,13 @@ public class PlayerStatsPanel : MonoBehaviour
         UpdateTextField(blockText, "Block Level", playerData.blockLevel);
         UpdateTextField(freezeText, "Freeze Level", playerData.freezeLevel);
         UpdateTextField(saveSlotText, "Save slots", playerData.numberOfSaves);
+    
+        if (attackModifierImage)
+            {
+            if (GetAttackModifierName() == "Bullet Speed")
+                attackModifierImage.sprite = bulletSpeedSprite;
+            else
+                attackModifierImage.sprite = knockbackSprite;
+        }
     }
 }
