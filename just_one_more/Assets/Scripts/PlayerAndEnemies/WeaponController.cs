@@ -45,7 +45,7 @@ public class WeaponController : MonoBehaviour
             }
         }
 
-        SoundController.Instance.PlaySound(swordSfx, 0.15f, 1.0f);
+        SoundController.Instance.PlaySound(swordSfx, 0.45f, 1.0f);
     }
 
     public void AttackGun(int bulletSpeed, int damage, int piercingLevel, int freezeLevel)
