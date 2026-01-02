@@ -55,7 +55,7 @@ MonoBehaviour:
   sfxMixerGroup: {fileID: -264529141663735953, guid: 0e18a14362b074f0dac253d17d936523,
     type: 2}
   casinoMusicTracks:
-  - {fileID: 8300000, guid: 4d8e959c6a3c1e5478edef3bbccf3c6e, type: 3}
+  - {fileID: 8300000, guid: 9d02bffc52ae59844b2935a32ce72fd4, type: 3}
   - {fileID: 8300000, guid: f05f1b9ad185b1047becb3e75ffc4f54, type: 3}
   - {fileID: 8300000, guid: 633a4ee4cc9b2e544ad125dc1058d3d1, type: 3}
   gameMusicTracks:
