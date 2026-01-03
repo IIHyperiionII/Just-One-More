@@ -2,6 +2,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+// Panel in casino showing all players stats
+
 public class PlayerStatsPanel : MonoBehaviour
 {
     [Header("UI References")]
@@ -21,11 +23,12 @@ public class PlayerStatsPanel : MonoBehaviour
     [SerializeField] private Sprite knockbackSprite;
 
     private PlayerData playerData;
-    // Changes based on whether the player is melee or ranged
+    // Cached name: "Knockback" for melee, "Bullet Speed" for ranged
     private string attackModifierName;
 
     void Start()
     {
+        // PlayerData is typically set via SetPlayerData() from parent (CasinoManager)
         if (playerData != null) 
         {
             attackModifierName = GetAttackModifierName();
@@ -37,6 +40,7 @@ public class PlayerStatsPanel : MonoBehaviour
     {
         playerData = pd;
         if (playerData != null) {
+            // Cache modifier name based on weapon type (melee vs ranged)
             attackModifierName = GetAttackModifierName();
         }
         UpdateUI();
@@ -111,6 +115,7 @@ public class PlayerStatsPanel : MonoBehaviour
         return 0;
     }
 
+    // Returns current attack modifier value (Knockback for melee, Bullet Speed for ranged)
     public int GetAttackModifier()
     {
         if (playerData != null)
@@ -118,6 +123,7 @@ public class PlayerStatsPanel : MonoBehaviour
         return 0;
     }
 
+    // Returns display name of attack modifier based on weapon type
     public string GetAttackModifierName()
     {
         if (playerData != null)
@@ -127,6 +133,7 @@ public class PlayerStatsPanel : MonoBehaviour
         return "Attack Modifier";
     }
 
+    // Returns StatType enum for attack modifier (used for betting in casino)
     public StatType GetAttackModifierStatType()
     {
         if (playerData != null)
@@ -173,6 +180,7 @@ public class PlayerStatsPanel : MonoBehaviour
         }
     }
 
+    // Sets attack modifier based on weapon type (knockback for melee, bulletSpeed for ranged)
     public void SetAttackModifier(int value)
     {
         if (playerData != null)
@@ -210,14 +218,18 @@ public class PlayerStatsPanel : MonoBehaviour
         UpdateTextField(dmgText, "Damage", playerData.damage);
         UpdateTextField(speedText, "Move Speed", playerData.moveSpeed);
         UpdateTextField(attackSpeedText, "Attack Speed", playerData.attackSpeed);
+        
+        // Display correct modifier based on weapon type (cached name, current value)
         int attackModifierValue = ModeController.Instance.currentSelection.selectedWeapon == WeaponType.Melee ? playerData.knockback : playerData.bulletSpeed;
         UpdateTextField(attackModifierText, attackModifierName, attackModifierValue);
+        
         UpdateTextField(piercingText, "Piercing Level", playerData.piercingLevel);
         UpdateTextField(dashText, "Dash Level", playerData.dashLevel);
         UpdateTextField(blockText, "Block Level", playerData.blockLevel);
         UpdateTextField(freezeText, "Freeze Level", playerData.freezeLevel);
         UpdateTextField(saveSlotText, "Save slots", playerData.numberOfSaves);
     
+        // Update icon to match current weapon type
         if (attackModifierImage)
             {
             if (GetAttackModifierName() == "Bullet Speed")

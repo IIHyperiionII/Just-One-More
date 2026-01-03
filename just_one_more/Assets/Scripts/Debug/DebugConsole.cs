@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 
+// In-game debug console with state inspection tools
+// F1: Toggle console | F2-F5: Various state checks
 public class DebugConsole : MonoBehaviour
 {
     private List<string> logs = new List<string>();
@@ -11,16 +13,19 @@ public class DebugConsole : MonoBehaviour
     
     void OnEnable()
     {
+        // Subscribe to Unity's logging system
         Application.logMessageReceived += HandleLog;
     }
     
     void OnDisable()
     {
+        // Cleanup: unsubscribe to prevent memory leaks
         Application.logMessageReceived -= HandleLog;
     }
     
     void HandleLog(string logString, string stackTrace, LogType type)
     {
+        // Add prefix based on log severity
         string prefix = "";
         switch(type)
         {
@@ -34,35 +39,36 @@ public class DebugConsole : MonoBehaviour
         }
         
         logs.Add(prefix + logString);
-        if(logs.Count > 500) logs.RemoveAt(0); // Keep last 500
+        if(logs.Count > 500) logs.RemoveAt(0); // Keep last 500 logs to prevent memory issues
     }
     
     void Update()
     {
+        // F1 - Toggle console visibility
         if(Input.GetKeyDown(KeyCode.F1))
         {
             showConsole = !showConsole;
         }
         
-        // ✅ F2 - Dump aktuálního stavu
+        // F2 - Dump complete state of all systems
         if(Input.GetKeyDown(KeyCode.F2))
         {
             DumpCurrentState();
         }
         
-        // ✅ F3 - Kontrola ModeController
+        // F3 - Check ModeController state
         if(Input.GetKeyDown(KeyCode.F3))
         {
             CheckModeController();
         }
         
-        // ✅ F4 - Kontrola GameManager
+        // F4 - Check GameManager state
         if(Input.GetKeyDown(KeyCode.F4))
         {
             CheckGameManager();
         }
         
-        // ✅ F5 - Kontrola PlayerStatsPanel
+        // F5 - Check PlayerStatsPanel state
         if(Input.GetKeyDown(KeyCode.F5))
         {
             CheckPlayerStatsPanel();
@@ -164,7 +170,7 @@ public class DebugConsole : MonoBehaviour
     {
         if(!showConsole) return;
         
-        // Černé poloprůhledné pozadí
+        // Black semi-transparent background
         GUI.color = new Color(0, 0, 0, 0.9f);
         GUI.Box(new Rect(10, 10, Screen.width - 20, Screen.height - 20), "");
         GUI.color = Color.white;
@@ -188,7 +194,7 @@ public class DebugConsole : MonoBehaviour
         }
         GUILayout.EndHorizontal();
         
-        // ✅ Quick info panel
+        // Quick info panel showing key runtime values
         GUILayout.BeginVertical("box");
         GUILayout.Label("=== QUICK INFO ===");
         
@@ -223,7 +229,7 @@ public class DebugConsole : MonoBehaviour
         {
             if(string.IsNullOrEmpty(filterText) || log.ToLower().Contains(filterText.ToLower()))
             {
-                // ✅ Barevné zvýraznění důležitých logů
+                // Color-code logs based on content for easier scanning
                 if(log.Contains("[ERROR]"))
                 {
                     GUI.color = Color.red;

@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
+// Card deck with shuffle functionality
+
 public class Deck
 {
     private List<Card> cards = new List<Card>();
@@ -39,6 +41,7 @@ public class Deck
         }
     }
 
+    // Returns card and resets deck if all cards were taken
     public Card DrawCard()
     {
         if (cards.Count == 0)

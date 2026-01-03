@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
+// Global audio manager handling music tracks and sound effects
+// Singleton pattern with DontDestroyOnLoad - persists across scenes
+// Manages separate audio sources for casino music, game music, and SFX
 public class SoundController : MonoBehaviour
 {
     public static SoundController Instance;
@@ -34,9 +37,10 @@ public class SoundController : MonoBehaviour
     
     private void Awake()
     {
+        // Singleton pattern: if instance exists, copy missing assets then destroy duplicate
         if (Instance != null && Instance != this)
         {
-            // Copy tracks if the existing instance doesn't have them
+            // Copy tracks if the existing instance doesn't have them (scene reload scenario)
             if ((Instance.casinoMusicTracks == null || Instance.casinoMusicTracks.Length == 0) &&
                 casinoMusicTracks != null && casinoMusicTracks.Length > 0)
             {
@@ -150,7 +154,8 @@ public class SoundController : MonoBehaviour
     
     private void Update()
     {
-        // Auto-play next casino track when current one finishes
+        // Auto-playlist: automatically advance to next track when current one finishes
+        // Checks if track ended naturally (not paused)
         if (casinoMusicSource != null && !casinoMusicSource.isPlaying && 
             casinoMusicTracks != null && casinoMusicTracks.Length > 0)
         {
@@ -175,13 +180,15 @@ public class SoundController : MonoBehaviour
         }
     }
     
+    // Play one-shot sound effect with custom volume and pitch
+    // PlayOneShot allows multiple sounds to overlap
     public void PlaySound(AudioClip clip, float volume, float pitch)
     {
         if (clip == null || sfxSource == null) return;
         
         sfxSource.pitch = pitch;
         sfxSource.PlayOneShot(clip, volume);
-        sfxSource.pitch = 1.0f;
+        sfxSource.pitch = 1.0f; // Reset pitch to default after playing
     }
 
     // === UI SOUNDS ===
@@ -247,6 +254,8 @@ public class SoundController : MonoBehaviour
     }
     
     // === CASINO MUSIC ===
+    // Start or resume casino music playlist
+    // Intelligent handling: unpause if paused, ignore if already playing, start new track if stopped
     public void PlayCasinoMusic()
     {
         if (casinoMusicSource == null || casinoMusicTracks == null || casinoMusicTracks.Length == 0)
@@ -254,7 +263,7 @@ public class SoundController : MonoBehaviour
             return;
         }
         
-        // If already playing, just unpause
+        // If paused, resume instead of restarting
         if (casinoMusicSource.clip != null && !casinoMusicSource.isPlaying)
         {
             casinoMusicSource.UnPause();
@@ -280,6 +289,7 @@ public class SoundController : MonoBehaviour
         casinoMusicSource.Play();
     }
     
+    // Pause casino music (can be resumed later - preserves playback position)
     public void StopCasinoMusic()
     {
         if(casinoMusicSource == null)
@@ -290,6 +300,7 @@ public class SoundController : MonoBehaviour
         casinoMusicSource.Pause();
     }
     
+    // Advance to next track in casino playlist (circular - loops back to start)
     private void PlayNextCasinoTrack()
     {
         if(casinoMusicSource == null || casinoMusicTracks == null || casinoMusicTracks.Length == 0)
@@ -297,7 +308,7 @@ public class SoundController : MonoBehaviour
             return;
         }
         
-        currentCasinoTrackIndex = (currentCasinoTrackIndex + 1) % casinoMusicTracks.Length;
+        currentCasinoTrackIndex = (currentCasinoTrackIndex + 1) % casinoMusicTracks.Length; // Modulo for circular playlist
         AudioClip nextClip = casinoMusicTracks[currentCasinoTrackIndex];
         
         if (nextClip == null)
@@ -373,6 +384,8 @@ public class SoundController : MonoBehaviour
     }
     
     // === MAIN MENU MUSIC ===
+    // Play main menu music in looped mode (different from game music playlist)
+    // Uses gameMusicSource but sets loop=true for continuous playback
     public void PlayMainMenuMusic()
     {
         if (gameMusicSource == null || mainMenuMusic == null)
@@ -387,7 +400,7 @@ public class SoundController : MonoBehaviour
         
         gameMusicSource.Stop();
         gameMusicSource.clip = mainMenuMusic;
-        gameMusicSource.loop = true;
+        gameMusicSource.loop = true; // Loop main menu music continuously
         gameMusicSource.Play();
     }
     
@@ -402,7 +415,8 @@ public class SoundController : MonoBehaviour
         gameMusicSource.loop = false;
     }
     
-    // === LEGACY METHODS (pro kompatibilitu) ===
+    // === LEGACY METHODS ===
+    // Kept for backwards compatibility - use specific methods (PlayGameMusic, etc.) instead
     public void PlayMusic(AudioClip clip)
     {
         if (clip == null || gameMusicSource == null) return;

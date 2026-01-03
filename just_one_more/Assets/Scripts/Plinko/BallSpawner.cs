@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Spawns Plinko balls with random initial sideways force for variety
 public class BallSpawner : MonoBehaviour 
 {
     [Header("Ball Setup")]
@@ -12,18 +13,16 @@ public class BallSpawner : MonoBehaviour
 
     private GameObject currentBall;
 
+    // Spawn new ball at spawn point with random sideways push
     public void DropBall()
     {
         if (currentBall != null)
             DestroyCurrentBall();
 
-        // Spawn new ball in ball spawn point or at position 
-        // of the GO the BallSpawner is attached to
         Vector3 spawnPos = ballSpawnPoint != null
             ? ballSpawnPoint.position
             : transform.position;
 
-        // Instantiate ball, no rotation, parented to spawner
         currentBall = Instantiate(ballPrefab, spawnPos, Quaternion.identity);
 
         currentBall.transform.SetParent(transform);
@@ -33,7 +32,6 @@ public class BallSpawner : MonoBehaviour
         Rigidbody2D rb = currentBall.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            // Reset velocity
             rb.linearVelocity = Vector2.zero;
 
             // Random sideways force (variety)
@@ -42,6 +40,7 @@ public class BallSpawner : MonoBehaviour
         }
     }
 
+    // Remove current ball from game
     public void DestroyCurrentBall()
     {
         if (currentBall != null)
@@ -51,6 +50,7 @@ public class BallSpawner : MonoBehaviour
         }
     }
 
+    // Get reference to the currently active ball
     public GameObject GetCurrentBall()
     {
         return currentBall;

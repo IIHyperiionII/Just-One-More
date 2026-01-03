@@ -1,3 +1,5 @@
+// Struct for card object
+
 public struct Card
 {
     public Suit suit;

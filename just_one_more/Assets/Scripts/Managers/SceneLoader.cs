@@ -2,50 +2,53 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+// Handles async scene loading with memory cleanup to prevent crashes
+// Persists across scenes via DontDestroyOnLoad
 public class SceneLoader : MonoBehaviour
 {
 
     void Awake()
     {
+        // Persist this manager across all scene loads
         DontDestroyOnLoad(gameObject);
     }
 
-    // Zavolej tuhle funkci místo přímého SceneManager.LoadScene()
+    // Call this instead of direct SceneManager.LoadScene() to prevent memory issues
     public void LoadGameplayScene()
     {
-        StartCoroutine(LoadSceneAsync("tomScene")); // Změň "Gameplay" na jméno tvé scény
+        StartCoroutine(LoadSceneAsync("tomScene"));
     }
     
     IEnumerator LoadSceneAsync(string sceneName)
     {
         Debug.Log($"Starting async load of scene: {sceneName}");
         
-        // Vyčisti memory před načtením
+        // Clean up memory before loading new scene
         yield return Resources.UnloadUnusedAssets();
         System.GC.Collect();
         
         Debug.Log("Unused assets unloaded, starting scene load...");
         
-        // Načti scénu asynchronně (postupně, ne najednou)
+        // Load scene asynchronously (gradual, not all at once)
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false; // Nechceme aktivovat hned
+        asyncLoad.allowSceneActivation = false; // Don't activate immediately
         
-        // Počkej než se načte většina (90%)
+        // Wait until most of scene is loaded (90%)
         while (asyncLoad.progress < 0.9f)
         {
             Debug.Log($"Loading progress: {asyncLoad.progress * 100}%");
-            yield return null; // Počkej jeden frame
+            yield return null; // Wait one frame
         }
         
         Debug.Log("Scene loaded 90%, waiting before activation...");
         
-        // Extra pauza pro GPU breathing room
+        // Extra pause to give GPU breathing room
         yield return new WaitForSeconds(0.5f);
         
-        // Teď aktivuj scénu
+        // Now activate the scene
         asyncLoad.allowSceneActivation = true;
         
-        // Počkej až se scéna skutečně aktivuje
+        // Wait until scene is actually activated
         while (!asyncLoad.isDone)
         {
             yield return null;
@@ -53,7 +56,7 @@ public class SceneLoader : MonoBehaviour
         
         Debug.Log("Scene fully loaded and activated!");
         
-        // Ještě jednou vyčisti po načtení
+        // Clean up again after loading
         yield return Resources.UnloadUnusedAssets();
         
         Debug.Log("Post-load cleanup done!");

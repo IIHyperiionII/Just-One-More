@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-
+// Plinko bucket that registers ball scores with multiplier value and plays animation
 public class Bucket : MonoBehaviour
 {
     [SerializeField] private float multiplier = 1.0f;
@@ -16,11 +16,11 @@ public class Bucket : MonoBehaviour
     public float getMultiplier() => multiplier;
     private ParticleSystem particleInstance;
 
+    // Called when ball enters this bucket - triggers animation, particles, and score registration
     public void OnBallEntered()
     {
         StartCoroutine(ShakeBounceAnimation());
         SpawnParticles();
-        // Send the bucket's multiplier to the plinkoManager when a ball enters
         PlinkoManager plinkoManager = FindAnyObjectByType<PlinkoManager>();
         if (plinkoManager != null)
         {
@@ -32,6 +32,7 @@ public class Bucket : MonoBehaviour
         }
     }
 
+    // Spawn colored particle effect at bucket position with sound
     private void SpawnParticles()
     {
         particleInstance = Instantiate(particlePrefab, transform.position, Quaternion.identity);
@@ -53,11 +54,13 @@ public class Bucket : MonoBehaviour
         return Color.white;
     }
 
+    // Drop bucket down with shake, then bounce back up - two-phase animation
     private IEnumerator ShakeBounceAnimation()
     {
         Vector3 originalPos = transform.localPosition;
         Quaternion originalRot = transform.localRotation;
         
+        // Phase 1: Drop down with shake
         float elapsed = 0f;
         while (elapsed < dropDuration)
         {
@@ -77,6 +80,7 @@ public class Bucket : MonoBehaviour
             yield return null;
         }
         
+        // Phase 2: Return to original position
         elapsed = 0f;
         while (elapsed < returnDuration)
         {

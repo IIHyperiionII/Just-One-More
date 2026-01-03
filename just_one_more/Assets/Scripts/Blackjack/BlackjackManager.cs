@@ -4,6 +4,8 @@ using TMPro;
 using System.Collections;
 using UnityEngine.UI;
 
+// Manages blackjack logic - hit, stand, card giving, results...
+
 public class BlackjackManager : MonoBehaviour
 {
     [SerializeField] private CardSlot[] playerCardSlots;
@@ -45,6 +47,7 @@ public class BlackjackManager : MonoBehaviour
         onGameComplete = onComplete;
         gameResultText.enabled = false;
 
+        // Randomize all cards position and rotation
         foreach (CardSlot pCardSlot in playerCardSlots) {
             pCardSlot.Initialize();
         }
@@ -77,6 +80,7 @@ public class BlackjackManager : MonoBehaviour
         UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
         yield return new WaitForSeconds(0.6f);
         
+        // Don't show dealers 2nd card yet 
         dealerHoleCard = deck.DrawCard();
         dealerHand.AddCard(dealerHoleCard);
         ShowDealerCardBack();
@@ -87,6 +91,7 @@ public class BlackjackManager : MonoBehaviour
         hitButton.interactable = true;
         standButton.interactable = true;
 
+        // Check for all game ending results at the start of the game
         if (playerHand.IsBlackjack())
         {
             RevealDealerHoleCard();
@@ -111,6 +116,7 @@ public class BlackjackManager : MonoBehaviour
         }
     }
 
+    // Player gets another card
     public void Hit()
     {
         if (!gameActive) return;
@@ -119,6 +125,7 @@ public class BlackjackManager : MonoBehaviour
 
         UpdateTextField(playerScoreText, "Score: ", playerHand.GetValue());
 
+        // Player has more than 21 value in his hand
         if (playerHand.IsBust())
         {
             RevealDealerHoleCard();
@@ -128,6 +135,7 @@ public class BlackjackManager : MonoBehaviour
         }
     }
 
+    // Player stops getting cards
     public void Stand()
     {
         if (!gameActive) return;
@@ -141,6 +149,7 @@ public class BlackjackManager : MonoBehaviour
         RevealDealerHoleCard();
         yield return new WaitForSeconds(1.0f);
 
+        // Dealer takes card until he has >= 17 value in his hand
         while (dealerHand.GetValue() < 17)
         {
             yield return new WaitForSeconds(1.0f);
@@ -157,6 +166,7 @@ public class BlackjackManager : MonoBehaviour
         int playerValue = playerHand.GetValue();
         int dealerValue = dealerHand.GetValue();
 
+        // Check for all possible endings
         if (dealerHand.IsBust() || playerValue > dealerValue)
         {
             EndGame(2f);
@@ -191,11 +201,12 @@ public class BlackjackManager : MonoBehaviour
             resultSent = true;
             gameActive = false;
 
-            //onGameComplete != null => Invoke (call) onGameComplete with multiplier
+            //onGameComplete != null => Invoke (call) onGameComplete (CasinoManager) with multiplier
             onGameComplete?.Invoke(multiplier);
         }
     }
 
+    // Show card sprite from sprite sheet
     private void RevealCard(Card card, bool isPlayer)
     {
         string spriteName = card.GetSpriteName();
@@ -236,6 +247,7 @@ public class BlackjackManager : MonoBehaviour
         PlayCardSound();
     }
 
+    // Show the back sprite for dealers 2nd card
     private void ShowDealerCardBack()
     {
         if (dealerCardIndex >= dealerCardSlots.Length)
@@ -259,6 +271,7 @@ public class BlackjackManager : MonoBehaviour
         PlayCardSound();
     }
 
+    // Show the front of dealers 2nd card
     private void RevealDealerHoleCard()
     {
         int holeCardSlotIndex = 1;
@@ -318,7 +331,6 @@ public class BlackjackManager : MonoBehaviour
         float volume = UnityEngine.Random.Range(0.25f, 0.45f);
         float randPitch = UnityEngine.Random.Range(0.75f, 1.25f);
         SoundController.Instance.PlaySound(cardFlip, volume, randPitch);
-
     }
 
     public void ResetGame() 

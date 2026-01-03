@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// Card slot for sprites on the table
+
 public class CardSlot : MonoBehaviour
 {
     private Image image;
