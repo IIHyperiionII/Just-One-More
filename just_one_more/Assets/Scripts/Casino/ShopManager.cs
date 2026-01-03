@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+// Maanages shop logic - buying, rerolling, pricing...
 
 public class ShopManager : MonoBehaviour
 {
@@ -31,9 +32,11 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
     #if UNITY_EDITOR
+        // Testing helper - creates GameManager if missing when running Shop scene directly
         EnsureGameManagerForTesting();
     #endif
 
+        // Load player data from persistent GameManager
         if (GameManager.Instance != null)
         {
             playerData = GameManager.Instance.runtimePlayerData;
@@ -51,10 +54,13 @@ public class ShopManager : MonoBehaviour
             rerollButton.onClick.AddListener(RerollShop);
         }
 
+        // Generate first shop item on start
         RerollShop();
     }
 
     #if UNITY_EDITOR
+    // Testing helper: Sets up minimal scene requirements for Shop testing
+    // Safe to keep - only compiles in Editor, not in builds
     private void EnsureGameManagerForTesting()
     {
         if (GameManager.Instance != null) return;
@@ -68,7 +74,7 @@ public class ShopManager : MonoBehaviour
         {
             GameObject gmObject = Instantiate(prefab);
         
-            // Explicitně vypnout GameManager komponentu
+            // Disable GameManager to prevent it from running game loop
             GameManager gm = gmObject.GetComponent<GameManager>();
             if (gm != null)
             {
@@ -81,7 +87,7 @@ public class ShopManager : MonoBehaviour
             Debug.LogWarning("GameManager prefab not found in Resources folder!");
         }
 
-        // Create dummy objects
+        // Create dummy scene objects that GameManager expects to exist
         CreateDummyIfMissing("Player", "DummyPlayer");
         CreateDummyIfMissing("Background", "DummyBackground", addSprite: true);
         CreateDummyIfMissing("Background2", "DummyBackground2", addSprite: true, setInactive: true);
@@ -90,7 +96,7 @@ public class ShopManager : MonoBehaviour
         CreateDummyIfMissing("BoundsCheckDoors", "DummyBoundsCheckDoors", addCollider: true);
         CreateDummyIfMissing("BoundsCheckPlayer", "DummyBoundsCheckPlayer", addCollider: true);
 
-        // Set main camera tag
+        // Ensure main camera has correct tag
         if (Camera.main != null && Camera.main.tag != "MainCamera")
             Camera.main.tag = "MainCamera";
 
@@ -117,12 +123,14 @@ public class ShopManager : MonoBehaviour
 
     public void RerollShop()
     {
+        // First reroll is free (rerollCount starts at 0)
         if (rerollCount == 0)
         {
             rerollCount++;
         } 
         else
         {
+            // Subsequent rerolls cost money (price increases with each reroll)
             if (!playerStatsPanel.SpendMoney(baseRerollPrice * rerollCount))
             {
                 Debug.Log("Not enough money for reroll.");
@@ -141,6 +149,9 @@ public class ShopManager : MonoBehaviour
     {
         int randomChoice;
 
+        // Keep rerolling until we get a valid item:
+        // - Different from previous (except Save Slot can repeat)
+        // - Not already at max level
         do
         {
             randomChoice = Random.Range(0, 5);
@@ -166,6 +177,7 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    // Returns true if item is at max level (can't be purchased anymore)
     private bool LvlCheck( int randomChoice)
     {
         switch (randomChoice)
@@ -179,7 +191,7 @@ public class ShopManager : MonoBehaviour
             case 3:
                 return playerData.freezeLevel >= 4;
             case 4:
-                return false;
+                return false; // Save Slot has no max level
             default:
                 return false;
         }
@@ -194,6 +206,7 @@ public class ShopManager : MonoBehaviour
         {
             ApplyUpgrade(currentItem);
 
+            // Reset reroll counter after purchase (next reroll is free again)
             rerollCount = 0;
             RerollShop();
         }
@@ -203,6 +216,7 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    // Item price increases with each level purchased (higher level = more expensive)
     private int CalculatePrice(int currentLevel)
     {
         return baseItemPrice + (currentLevel * itemLevelPriceIncrement);
@@ -264,6 +278,7 @@ public class ShopManager : MonoBehaviour
         int currentLevel = GetCurrentValue(currentItem.statType);
         int price = CalculatePrice(currentLevel);
 
+        // Show item name with level upgrade preview (e.g., "Piercing 2 → 3")
         if (itemNameText)
         {
             itemNameText.text = currentItem.name +  $" {currentLevel} → {currentLevel + 1}";
@@ -274,6 +289,7 @@ public class ShopManager : MonoBehaviour
             itemPriceText.text = $"{price} $";
         }
 
+        // Set appropriate icon for the item type
         switch (currentItem.statType)
         {
             case StatType.PiercingLevel:
@@ -298,6 +314,7 @@ public class ShopManager : MonoBehaviour
     {
         if (rerollPriceText)
         {
+            // Display next reroll cost (increases with each reroll)
             int nextRerollPrice = baseRerollPrice * rerollCount;
             rerollPriceText.text = $"{nextRerollPrice} $";
         }

@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+
+// Players/Dealers hand
+
 public class Hand
 {
     List<Card> hand = new List<Card>();
@@ -33,6 +36,7 @@ public class Hand
             handValue += card.GetValue();
         }
 
+        // Ace can be 11 or 1 depending on other cards
         while (handValue > 21 && aceCount > 0)
         {
             handValue -= 10;
@@ -49,9 +53,9 @@ public class Hand
 
     public bool IsBlackjack()
     {
-        // 2-card 21?
         return GetValue() == 21 && hand.Count == 2;
     }
+    
     public int CardCount()
     {
         return hand.Count;

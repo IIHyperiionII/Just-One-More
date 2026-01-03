@@ -1,14 +1,13 @@
 using UnityEngine;
 using System;
 
+// Manages Plinko game flow - spawning balls, detecting scores, and handling stuck balls
 public class PlinkoManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private BallSpawner ballSpawner;
 
     private Action<float> onGameComplete;
-
-    // gameActive prepared for future use (e.g. multiple balls)
     private bool gameActive = false;
     private bool resultSent = false;
     private const float STUCK_Y_THRESHOLD = -12f;
@@ -29,6 +28,7 @@ public class PlinkoManager : MonoBehaviour
         }
     }
 
+    // Callback stores multiplier result when ball lands
     public void OnBallLanded(float multiplier)
     {
         if (gameActive && !resultSent)
@@ -41,6 +41,7 @@ public class PlinkoManager : MonoBehaviour
         }
     }
 
+    // Check if ball fell below threshold (likely stuck or out of bounds)
     public bool IsBallStuck()
     {
         if (ballSpawner != null)

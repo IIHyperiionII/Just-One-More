@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections;
 
+// Manages casino logic - betting, buttons for opening shop/minigames...
+
 public class CasinoManager : MonoBehaviour
 {
     // ========== FIELDS ==========
@@ -52,23 +54,20 @@ public class CasinoManager : MonoBehaviour
     void Start()
     {
 #if UNITY_EDITOR
-        /*
-            EnsureGameManagerForTesting:
-            ONLY FOR TESTING
-            REMOVE BEFORE MERGE
-            +
-            REMOVE RESOURCES FROM UNITY ASSETS IN PROJECT
-        */
+        // Testing helper - creates GameManager if missing when running Casino scene directly
         EnsureGameManagerForTesting();
 #endif
 
+        // Load player data from persistent GameManager
         if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null){
-            // Get the runtime PlayerData from GameManager
             playerData = GameManager.Instance.runtimePlayerData;
         }
+        
         if (playerStatsPanel && playerData != null)
         {
             playerStatsPanel.SetPlayerData(playerData);
+            
+            // Determine which attack modifier is active (Bullet Speed or Knockback)
             attackModifierStatType = playerStatsPanel.GetAttackModifierStatType();
 
             if (attackModifierButtonImage)
@@ -100,8 +99,8 @@ public class CasinoManager : MonoBehaviour
     // ========== INITIALIZATION ==========
 
 #if UNITY_EDITOR
-    // Create a minimal GameManager and runtime PlayerData when none exists (testing only).
-    // Remove this helper for production builds.
+    // Testing helper: Sets up minimal scene requirements for Casino testing
+    // Safe to keep - only compiles in Editor, not in builds
     private void EnsureGameManagerForTesting()
     {
         if (GameManager.Instance != null) return;
@@ -115,7 +114,8 @@ public class CasinoManager : MonoBehaviour
         {
             GameObject gmObject = Instantiate(prefab);
         
-            // Explicitně vypnout GameManager komponentu
+            // Disable GameManager to prevent it from running game loop
+            // We only need its data container (PlayerData), not game logic
             GameManager gm = gmObject.GetComponent<GameManager>();
             if (gm != null)
             {
@@ -128,7 +128,7 @@ public class CasinoManager : MonoBehaviour
             Debug.LogWarning("GameManager prefab not found in Resources folder!");
         }
 
-        // Create dummy objects
+        // Create dummy scene objects that GameManager expects to exist
         CreateDummyIfMissing("Player", "DummyPlayer");
         CreateDummyIfMissing("Background", "DummyBackground", addSprite: true);
         CreateDummyIfMissing("Background2", "DummyBackground2", addSprite: true, setInactive: true);
@@ -137,7 +137,7 @@ public class CasinoManager : MonoBehaviour
         CreateDummyIfMissing("BoundsCheckDoors", "DummyBoundsCheckDoors", addCollider: true);
         CreateDummyIfMissing("BoundsCheckPlayer", "DummyBoundsCheckPlayer", addCollider: true);
 
-        // Set main camera tag
+        // Ensure main camera has correct tag
         if (Camera.main != null && Camera.main.tag != "MainCamera")
             Camera.main.tag = "MainCamera";
 
@@ -164,6 +164,7 @@ public class CasinoManager : MonoBehaviour
 
     void OnEnable()
     {
+        // Reset state each time casino panel is opened
         remainingGambles = 5;
         
         if (shopManager != null)
@@ -172,6 +173,7 @@ public class CasinoManager : MonoBehaviour
         }
         
          if (playerStatsPanel != null){
+            // Refresh player data in case it changed
             if (GameManager.Instance != null && GameManager.Instance.runtimePlayerData != null) {
                 playerData = GameManager.Instance.runtimePlayerData;
             }
@@ -320,15 +322,17 @@ public class CasinoManager : MonoBehaviour
         {
             case StatType.Money:
                 playerData.money = Mathf.Max(0, playerData.money + amount);
+                // In MoneyLife mode, HP mirrors Money value
                 if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
                 {
                     playerData.hp = playerData.money;
                 }
                 break;
             case StatType.HP:
-                // HP == 0 means player's death (TODO: achievement)
                 playerData.hp = Mathf.Max(0, playerData.hp + amount);
+                // Mark player as dead if HP drops to 0
                 if (playerData.hp <= 0) playerData.isDead = true;
+                // In MoneyLife mode, Money mirrors HP value
                 if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
                 {
                     playerData.money = playerData.hp;
@@ -365,7 +369,6 @@ public class CasinoManager : MonoBehaviour
 
     public void StartPlinko()
     {
-        // UI ?
         if (remainingGambles == 0)
             return;
 
@@ -409,7 +412,6 @@ public class CasinoManager : MonoBehaviour
 
     public void StartBlackjack()
     {
-        // UI ?
         if (remainingGambles == 0)
             return;
 
@@ -446,7 +448,7 @@ public class CasinoManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("plinkoManager not assigned!");
+                Debug.LogWarning("blackjackManager not assigned!");
             }
         }
     }
@@ -468,6 +470,7 @@ public class CasinoManager : MonoBehaviour
 
         gambleGameInProgress = false;
         remainingGambles--;
+        // Reduce gambling addiction counter (forces player to gamble less)
         playerData.needToGamble = Mathf.Max(0, playerData.needToGamble -= needToGambleReduction);
 
         UpdateUI();
@@ -495,7 +498,7 @@ public class CasinoManager : MonoBehaviour
         }
     }
 
-    // Close for EXIT button in gambling panel
+    // Called by EXIT button - allows closing game early with bet refund under specific conditions
     public void ForceCloseGamblePanel()
     {
         bool canForceClose;
@@ -504,12 +507,12 @@ public class CasinoManager : MonoBehaviour
         {
             float timeSinceStart = Time.time - minigameStartTime;
 
-            // Allow force close only if:
+            // Prevent abuse: only allow force close if conditions met
 
-            // 1. Enough time has passed
+            // 1. Minimum time elapsed (prevents instant quit)
             bool timeCondition = timeSinceStart >= MIN_MINIGAME_DURATION;
 
-            // 2. Plinko ball is under Y threshold under buckets
+            // 2. Ball is stuck (Plinko-specific failsafe)
             bool ballCondition = false;
             if (plinkoPanel != null && plinkoPanel.activeSelf && plinkoManager != null)
                 ballCondition = plinkoManager.IsBallStuck();
@@ -522,7 +525,7 @@ public class CasinoManager : MonoBehaviour
             }
         }
 
-        // Return bet to player
+        // Refund bet to player if game was in progress
         if (gambleGameInProgress && playerData != null)
         {
             AddWinToStat(currentBet);
@@ -590,7 +593,7 @@ public class CasinoManager : MonoBehaviour
 
         if (betSlider)
         {
-            // If current value of statType is less than minBet (Only for money for now), disable the slider
+            // Disable slider if player doesn't have enough of current stat
             if (maxBet < minBet)
             {
                 betSlider.minValue = 0;
@@ -606,9 +609,9 @@ public class CasinoManager : MonoBehaviour
 
                 if (!gambleGameInProgress)
                 {
-                    // Returns currentBet if its between min and max, else returns min or max
+                    // Clamp bet to valid range
                     currentBet = Mathf.Clamp(currentBet, minBet, maxBet);
-                    // Update slider without invoking OnValueChanged event if slider value != current bet
+                    // Sync slider without triggering OnValueChanged listener
                     if (!Mathf.Approximately(betSlider.value, currentBet))
                         betSlider.SetValueWithoutNotify(currentBet);
                 }
@@ -630,7 +633,7 @@ public class CasinoManager : MonoBehaviour
     {
         if (button)
         {
-            // Selected button is green, others are white
+            // Highlight selected button (green vs cyan)
             ColorBlock colors = button.colors;
             colors.normalColor = isSelected ? selectedColor : normalColor;
             colors.selectedColor = isSelected ? selectedColor : normalColor;

@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+// Plinko ball with player-controlled push mechanic (up to 3 pushes)
+// Shows direction preview line and handles collision with pegs and buckets
 public class Ball : MonoBehaviour
 {
     private float lifetime = 30f;
@@ -19,10 +21,12 @@ public class Ball : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
+        // Continuous collision detection prevents ball from falling through buckets at high speeds
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
         currentPushes = 0;
 
+        // Create dynamic preview line to show push direction
         previewLine = new GameObject("Push Preview").AddComponent<LineRenderer>();
         previewLine.transform.SetParent(transform);
 
@@ -42,10 +46,12 @@ public class Ball : MonoBehaviour
 
     void Update()
     {
+        // Allow pushes only if player has pushes remaining and hasn't scored yet
         if (currentPushes < maxPushes && !scoreRegistered)
         {   
             UpdatePushPreview();
 
+            // Charge on mouse click, shoots after some time
             if (Input.GetMouseButtonDown(0) && !isChargingPush)
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -55,19 +61,23 @@ public class Ball : MonoBehaviour
         } 
         else 
         {
+            // Hide preview when out of pushes or scored
             previewLine.enabled = false;
         }
     }
 
+    // Charge push for 0.5 seconds (white preview) then apply force
     IEnumerator PushTowardsMouse()
     {
         isChargingPush = true;
 
+        // Turn preview white during charge
         if (previewLine != null)
             previewLine.material.color = Color.white;
 
         yield return new WaitForSeconds(0.5f);
 
+        // Apply force and increment push counter
         rb.AddForce(savedDirection * pushForce, ForceMode2D.Impulse);
 
         currentPushes++;
@@ -75,6 +85,7 @@ public class Ball : MonoBehaviour
         isChargingPush = false;
     }
 
+    // Update preview line color and position based on remaining pushes
     void UpdatePushPreview() 
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -83,6 +94,7 @@ public class Ball : MonoBehaviour
         Vector3 direction = mousePos - transform.position;
         direction.z = 0;
         
+        // Color indicates remaining pushes: green (0 used), orange (1 used), red (2 used)
         if (!isChargingPush) {
             if (currentPushes == 0)
                 previewLine.material.color = Color.green;
@@ -92,32 +104,34 @@ public class Ball : MonoBehaviour
                 previewLine.material.color = Color.red;
         }
 
+        // Draw line from ball towards mouse
         previewLine.SetPosition(0, transform.position + direction.normalized * 0.3f);
         previewLine.SetPosition(1, transform.position + direction.normalized * 1.2f);
     }
 
+    // Detect when ball enters a bucket and register the score
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bucket") && !scoreRegistered)
         {
             scoreRegistered = true;
 
-            // Get the bucket it collided with and register the score
             Bucket bucket = collision.GetComponent<Bucket>();
             if (bucket != null)
             {
                 bucket.OnBallEntered();
             }
 
-            // Destroy the ball shortly right after scoring
             StartCoroutine(DestroyAfterDelay(destroyDelay));
         }
     }
 
+    // Play sound when ball hits a peg, with volume based on impact force
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Peg"))
         {
+            // Calculate volume from impact force (0.1 to 0.4 range)
             float impact = collision.relativeVelocity.magnitude;
             float volume = Mathf.Clamp(impact * 0.1f, 0.1f, 0.4f);
             float randPitch = Random.Range(0.75f, 1.25f);
@@ -126,6 +140,7 @@ public class Ball : MonoBehaviour
         }
     }
 
+    // Destroy ball after delay using unscaled time (ignores time pause/slowdown)
     IEnumerator DestroyAfterDelay(float delay)
     {
         float elapsed = 0f;

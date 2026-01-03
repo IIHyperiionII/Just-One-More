@@ -1,17 +1,19 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Legacy debugging tool - logs system info and catches errors
+// Kept for potential future debugging needs
 public class CrashLogger : MonoBehaviour
 {
     void Awake()
     {
-        // Tohle zajistí že CrashLogger přežije všechny scene loadingy
+        // Ensures CrashLogger survives all scene loads
         DontDestroyOnLoad(gameObject);
         
-        // Zachytávej všechny error messages
+        // Capture all error messages (including exceptions and asserts)
         Application.logMessageReceived += HandleLog;
         
-        // Zaloguj systémové info při startu
+        // Log system info at startup
         Debug.Log("========================================");
         Debug.Log("=== GAME STARTED ===");
         Debug.Log($"Time: {System.DateTime.Now}");
@@ -36,9 +38,10 @@ public class CrashLogger : MonoBehaviour
         Debug.Log("========================================");
     }
 
+    // Callback invoked whenever Unity logs a message
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        // Zaloguj všechny errory a exceptions extra viditelně
+        // Log all errors and exceptions with extra visibility (easier to spot in console)
         if (type == LogType.Error || type == LogType.Exception)
         {
             Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -54,7 +57,7 @@ public class CrashLogger : MonoBehaviour
     
     void Update()
     {
-        // Každých 5 sekund zaloguj memory usage
+        // Periodic memory usage logging (every 5 seconds at 60 FPS)
         if (Time.frameCount % 300 == 0) // 60 FPS * 5 sec = 300 frames
         {
             long memoryUsed = System.GC.GetTotalMemory(false);
@@ -64,6 +67,7 @@ public class CrashLogger : MonoBehaviour
 
     void OnApplicationQuit()
     {
+        // Log shutdown information for debugging session duration
         Debug.Log("========================================");
         Debug.Log("=== GAME CLOSING ===");
         Debug.Log($"Time: {System.DateTime.Now}");
@@ -73,6 +77,7 @@ public class CrashLogger : MonoBehaviour
 
     void OnDestroy()
     {
+        // Cleanup: unsubscribe from log callback to prevent memory leaks
         Application.logMessageReceived -= HandleLog;
     }
 }
