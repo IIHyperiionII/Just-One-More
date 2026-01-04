@@ -155,6 +155,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
     }
    public void TakeDamage(int damage)
     {
+        // In OneShot mode, enemies are destroyed instantly upon taking damage
         if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
         {
             Destroy(gameObject);
@@ -168,6 +169,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
             Destroy(gameObject);
         }
         HitColorChange();
+        // Chance to change sprite or become invisible based on player's needToGamble stat
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -178,6 +180,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
             StartCoroutine(BecomeInvisible());
         }
     }
+    // Handle color change on hit
     void HitColorChange()
     {
         if (hitColorActive) return;
@@ -198,6 +201,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         }
         hitColorActive = false;
     }
+    // Handle color change on freeze
     void FreezeColorChange(float duration)
     {
         if (freezeColorActive) return;
@@ -212,6 +216,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         freezeColorActive = false;
     }
+    // Freeze the enemy for a specified duration
     public void Freeze(float duration)
     {
         if (isFrozen) return;
@@ -222,6 +227,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         isFrozen = true;
         FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
+        // If duration is 2 seconds, set speed to 0, else halve the speed
         if (duration == 2)
         {
             runtimeEnemiesData.moveSpeed = 0;
@@ -241,6 +247,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         }
         isFrozen = false;
     }
+    // Apply knockback effect to the enemy
     public void Knockback(float time)
     {
         if (isKnockbacked) return;
@@ -257,6 +264,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         isKnockbacked = false;
     }
     
+    // Change the enemy's sprite temporarily
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);
@@ -268,6 +276,7 @@ public class SpawningEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    // Make the enemy invisible temporarily
     IEnumerator BecomeInvisible()
     {
         Debug.Log("Becoming invisible");

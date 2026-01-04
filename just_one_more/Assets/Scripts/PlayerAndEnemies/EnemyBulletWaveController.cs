@@ -42,7 +42,7 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         }
         boxCollider = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90); // Adjust sprite orientation
         if (bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
@@ -51,9 +51,10 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
 
     void Start()
     {
-        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90); // Adjust sprite orientation
     }
 
+    // Initialize bullet with speed, damage, sign, rotation, and sprite
     public void Initialize(int bulletSpeed, int bulletDamage, int bulletSign, Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
@@ -68,6 +69,7 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        // Update sprite if it has changed
         if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
@@ -87,6 +89,8 @@ public class EnemyBulletWaveController : MonoBehaviour, IBullet
         Vector2 sideAxis = new Vector2(-direction.y, direction.x); // perpendicular (90˚) axis to direction of travel, for wave motion
         waveMovement = sideAxis * offset * sign; // apply offset to side axis, multiplied by sign to determine left/right wave motion
     }
+
+    // Handle collisions
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Enemy")) return;

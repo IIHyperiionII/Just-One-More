@@ -83,6 +83,7 @@ public class GameManager : MonoBehaviour
             runtimePlayerData.isMelee = true;
         }
     }
+
     void Start()
     {
         if (!Application.isPlaying) return; // Skip initialization in edit mode
@@ -93,6 +94,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("GameManager loaded save data");
             SaveSystem.Instance.toLoad = false;
         } 
+        // Set the correct background based on the current map and whether it's open or closed
         if (backgroundOpen[map] != null || background[map] != null)
         {
             for (int i = 0; i < background.Length; i++)
@@ -138,8 +140,9 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+        // Pause the update if the game is paused
         if (GameModeManager.timeIsPaused) return;
-        Debug.Log("Player is melee: " + runtimePlayerData.isMelee);
+        // Check if the elevator should open
         if (mapCompleted && !backgroundSet && enemiesParent.childCount == 0)
         {
             Debug.Log("Switching background from map " + map + " to map " + (map + 1));
@@ -159,10 +162,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("Teleporting...");
             StartCoroutine(Teleport());
         }
-        else
-        {
-            //isTeleporting = false;
-        }
         // Check if there are no enemies left
         if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && !waveIsSpawning && wave < 10 && !isTeleporting)
         {
@@ -174,6 +173,7 @@ public class GameManager : MonoBehaviour
         } else if ( wave > 10 && !mapCompleted ) {
             mapCompleted = true;
         }
+        // Update the door and casino button states based on player's money
         if (runtimePlayerData.money >= 100)
         {
             doorClosed.SetActive(false);
@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour
             doorClosedLight.SetActive(false);
             casinoButton.SetActive(false);
         }
+        // Check for game win condition
         if ((wave == 10 && mapCompleted && map == 2) || runtimePlayerData.isDead == true)
         {
             if (wave == 10 && mapCompleted && map == 2){
@@ -198,12 +199,13 @@ public class GameManager : MonoBehaviour
             time += Time.deltaTime;
         }
     }
+
+    // Teleport the player to the next map
     IEnumerator Teleport()
     {
         isTeleporting = true;
         doorsEntered = false;
         GameModeManager.timeIsPaused = true;
-        // Time.timeScale = 0f; // Pause the game
         CameraController.isTeleporting = true;
         yield return StartCoroutine(CameraController.TeleportMoveUp()); // Wait a moment before teleporting for sync of coroutines
         CameraController.isTeleporting = false;
@@ -344,6 +346,7 @@ public class GameManager : MonoBehaviour
                 spawnPosition = new Vector2(x, y);
                 break;
         }
+        // Validate the spawn position
         UpdateBounds();
         if (spawnBounds.Any(bounds => bounds.Contains(spawnPosition)) && !cameraBounds.Contains(spawnPosition) && isFreeOfObstacles(spawnPosition, enemyPrefab))
         {
@@ -355,6 +358,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Check if the spawn position is free of obstacles
     bool isFreeOfObstacles(Vector2 position, GameObject enemyPrefab)
     {
         SpriteRenderer enemySpriteRenderer = enemyPrefab.GetComponent<SpriteRenderer>();
@@ -365,7 +369,7 @@ public class GameManager : MonoBehaviour
             return true; // Assume it's free of obstacles if no collider is present
         }
         Vector2 size = enemySpriteRenderer.bounds.size;
-        Collider2D hit = Physics2D.OverlapBox(position, size + new Vector2(0.1f, 0.1f), 0f, LayerMask.GetMask("Default"));
+        Collider2D hit = Physics2D.OverlapBox(position, size + new Vector2(0.1f, 0.1f), 0f, LayerMask.GetMask("Default")); // Slightly increase size to avoid edge collisions
         return hit == null;
     }
 
@@ -450,6 +454,7 @@ public class GameManager : MonoBehaviour
         cameraBounds = new Bounds(cameraObject.transform.position, new Vector3(cameraWidth, cameraHeight, 0)); // Set the camera bounds
     }
 
+    // Save and Load functionality
     public void GetSaveData()
     {
         Debug.Log("Getting GameManager Save Data...");
@@ -528,6 +533,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Restoring enemy of type: " + enemyData.enemyType);
             GameObject enemyPrefab;
+            // Determine the correct prefab based on enemy type
             switch (enemyData.enemyType)
             {
                 case "office1":
@@ -584,6 +590,7 @@ public class GameManager : MonoBehaviour
                     break;
                 }
             }
+            // Determine the correct prefab based on projectile type
             switch (projectileData.projectileType)
             {
                 case "BaseEnemyBullet":
@@ -634,6 +641,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager applied save data ");
     }
 
+    // Get a random sprite that is different from the initial sprite
     public Sprite GetRandomSprite(Sprite initSprite)
     {
         int tmpMap = UnityEngine.Random.Range(0, 3);  
@@ -647,6 +655,7 @@ public class GameManager : MonoBehaviour
         return newSprite;
     }
 
+    // Reset the GameManager to its initial state
     public void ResetGameManager()
     {
         wave = 0;

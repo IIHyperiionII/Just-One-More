@@ -44,9 +44,9 @@ public class ModeController : MonoBehaviour
         }
     } 
 
+    // Save and Load Methods
     public void GetSaveData()
     {
-        Debug.Log("Getting Mode and Weapon Selection Save Data...");
         SaveData data = SaveSystem.Instance.currentSaveData;
         data.selectedMode = currentSelection.selectedMode;
         data.selectedWeapon = currentSelection.selectedWeapon;

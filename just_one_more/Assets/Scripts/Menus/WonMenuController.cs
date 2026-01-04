@@ -33,6 +33,7 @@ public class WonMenuController : MonoBehaviour
         }
         if (bestTimeData != null)
         {
+            // Check if current time is a new best time
             if (GameManager.Instance != null && GameManager.Instance.time < bestTimeData.bestTime || bestTimeData.bestTime == 0f)
             {
                 isBestTime = true;
@@ -51,8 +52,10 @@ public class WonMenuController : MonoBehaviour
 
     void Update()
     {
+        // Update UI only when ready
         if (GameManager.Instance != null && isReady)
         {
+            // Display final time
             float timeTaken = GameManager.Instance.time;
             timeText.text = $"Final time: {timeTaken:F2} seconds.";
             GetString();

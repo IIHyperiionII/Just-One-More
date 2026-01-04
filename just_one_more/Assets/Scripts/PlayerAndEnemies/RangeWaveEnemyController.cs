@@ -140,6 +140,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        // Handle OneShot mode: destroy enemy immediately
         if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
         {
             Destroy(gameObject);
@@ -153,6 +154,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
             Destroy(gameObject);
         }
         HitColorChange();
+        // Chance to change sprite or become invisible based on player's needToGamble stat
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -163,6 +165,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
             StartCoroutine(BecomeInvisible());
         }
     }
+    // Handle color change on hit
     void HitColorChange()
     {
         if (hitColorActive) return;
@@ -182,6 +185,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         }
         hitColorActive = false;
     }
+    // Handle color change on freeze
     void FreezeColorChange(float duration)
     {
         if (freezeColorActive) return;
@@ -196,6 +200,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         freezeColorActive = false;
     }
+    // Freeze the enemy for a duration
     public void Freeze(float duration)
     {
         if (isFrozen) return;
@@ -206,6 +211,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         isFrozen = true;
         FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
+        // If duration is 2 seconds, completely freeze the enemy, else slow down by half
         if (duration == 2)
         {
             runtimeEnemiesData.moveSpeed = 0;
@@ -225,6 +231,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         }
         isFrozen = false;
     }
+    // Apply knockback effect to the enemy
     public void Knockback(float time)
     {
         if (isKnockbacked) return;
@@ -240,7 +247,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         Rigidbody.linearVelocity = Vector2.zero;
         isKnockbacked = false;
     }
-    
+    // Change sprite temporarily
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);
@@ -252,6 +259,7 @@ public class RangeWaveEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    // Become invisible temporarily
     IEnumerator BecomeInvisible()
     {
         Debug.Log("Becoming invisible");

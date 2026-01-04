@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Interface for player bullet properties and behaviors
 public interface IBulletPlayer
 {
     int GetSpeed();

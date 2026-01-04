@@ -46,6 +46,7 @@ public class ChallangeRunsController : MonoBehaviour
     void Update()
     {
         if (currentSelection == null) return;
+        // Enable start button only if a weapon is selected
         if (currentSelection.selectedWeapon != WeaponType.none)
         {
             startButton.interactable = true;
@@ -61,14 +62,14 @@ public class ChallangeRunsController : MonoBehaviour
     public void StartGame()
     {
         ModeController.Instance.currentSelection = currentSelection;
-        Debug.Log("Selected Mode: " + currentSelection.selectedMode);
-        Debug.Log("Selected Weapon: " + currentSelection.selectedWeapon);
         FindFirstObjectByType<SceneLoader>().LoadGameplayScene();
     } 
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("MainMenuScene");
     }
+
+    // Weapon Selection Methods
     public void SelectPistol()
     {
         currentSelection.selectedWeapon = WeaponType.Pistol;
@@ -102,6 +103,7 @@ public class ChallangeRunsController : MonoBehaviour
         meleeButton.GetComponent<Image>().color = disabled;
     }
 
+    // Mode Selection Methods
     public void SelectOneShot()
     {
         currentSelection.selectedMode = GameMode.OneShot;

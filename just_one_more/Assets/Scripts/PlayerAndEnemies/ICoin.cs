@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Interface for coin properties and behaviors
 public interface ICoin
 {
     int GetValue();

@@ -3,12 +3,8 @@ using UnityEngine;
 public class SlowPaperObstacleController : MonoBehaviour
 {
     public CapsuleCollider2D slowPaperCollider;
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
+    // Script to slow down the player when they enter the collider
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.transform.parent == null) return;

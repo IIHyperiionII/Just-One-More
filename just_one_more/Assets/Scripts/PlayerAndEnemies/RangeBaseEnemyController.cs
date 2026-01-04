@@ -139,6 +139,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        // Handle OneShot mode where enemies die instantly
         if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
         {
             Destroy(gameObject);
@@ -152,6 +153,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
             Destroy(gameObject);
         }
         HitColorChange();
+        // Randomly change sprite or become invisible based on player's needToGamble stat
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -162,6 +164,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
             StartCoroutine(BecomeInvisible());
         }
     }
+    // Change color to indicate hit
     void HitColorChange()
     {
         if (hitColorActive) return;
@@ -181,6 +184,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         }
         hitColorActive = false;
     }
+    // Change color to indicate freeze
     void FreezeColorChange(float duration)
     {
         if (freezeColorActive) return;
@@ -195,6 +199,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         freezeColorActive = false;
     }
+    // Freeze enemy movement
     public void Freeze(float duration)
     {
         if (isFrozen) return;
@@ -205,6 +210,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         isFrozen = true;
         FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
+        // If duration is 2 seconds, completely freeze the enemy
         if (duration == 2)
         {
             runtimeEnemiesData.moveSpeed = 0;
@@ -240,6 +246,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         isKnockbacked = false;
     }
     
+    // Change sprite temporarily
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);
@@ -251,6 +258,7 @@ public class RangeBaseEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    // Become invisible temporarily
     IEnumerator BecomeInvisible()
     {
         Debug.Log("Becoming invisible");

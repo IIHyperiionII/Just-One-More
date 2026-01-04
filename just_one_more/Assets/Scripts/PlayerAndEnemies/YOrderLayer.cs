@@ -18,8 +18,8 @@ public class YOrderLayer : MonoBehaviour
             circlePositionReference = this.gameObject.GetComponent<CircleCollider2D>();
             }
         }
-
-        if (isCircle)
+        // Update the sorting order based on the Y position
+        if (isCircle)   
         {
             spriteRenderer.sortingOrder = Mathf.RoundToInt(-circlePositionReference.bounds.min.y * 100f);
         }

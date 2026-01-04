@@ -93,6 +93,7 @@ public class CutsceneSceneController : MonoBehaviour
         StartCoroutine(FadeInText(text));
     }
 
+    // Fade in coroutine for text
     IEnumerator FadeInText(TextMeshProUGUI text)
     {
         float duration = 3.0f;
@@ -107,13 +108,15 @@ public class CutsceneSceneController : MonoBehaviour
             color.a = Mathf.Clamp01(elapsed / duration);
             text.color = color;
             yield return null;
-        }
+        }   
+
         text.color = new Color(color.r, color.g, color.b, 1.0f);
         isChanging = false;
         skipRequested = false;
         instructionText.gameObject.SetActive(true);
     }
 
+    // Fade out coroutine
     void FadeOut(Image image)
     {
         isChanging = true;
@@ -121,6 +124,7 @@ public class CutsceneSceneController : MonoBehaviour
         StartCoroutine(FadeOutImg(image));
     }
 
+    // Fade out coroutine for image
     IEnumerator FadeOutImg(Image image)
     {
         float duration = 3.0f;
@@ -140,6 +144,8 @@ public class CutsceneSceneController : MonoBehaviour
         isChanging = false;
         skipRequested = false;
     }
+
+    // General Fade method to handle transitions
     void Fade()
     {
         isChanging = true;
@@ -172,7 +178,7 @@ public class CutsceneSceneController : MonoBehaviour
         while (elapsed < duration && !skipRequested)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            float t = Mathf.Clamp01(elapsed / duration); // Normalized time
             textColor.a = 1 - t;
             imageColor.a = t;
             text.color = textColor;

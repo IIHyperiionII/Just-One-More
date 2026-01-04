@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        // Skip update if the game is paused
         if (GameModeManager.timeIsPaused) return;
         PlayerData = GameManager.Instance.runtimePlayerData; // Ensure PlayerData is always up-to-date
         GetMovementInput();
@@ -84,6 +85,7 @@ public class PlayerController : MonoBehaviour
         }
         GetAttackInput(); 
         Attack(); 
+        // Handle NeedToGamble effects
         if (Time.time - startTimer >= 2f) {
             startTimer = Time.time;
             if (PlayerData.needToGamble < 100){
@@ -95,8 +97,8 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.runtimePlayerData.hp = GameManager.Instance.runtimePlayerData.money;
         }
+        // Handle footsteps sound
         if (isMoving)
-        
         {
             HandleFootsteps();
         }
@@ -109,9 +111,10 @@ public class PlayerController : MonoBehaviour
 
     void HandleFootsteps()
     {
-
+        // Increment step timer based on movement speed
         stepTimer += Time.deltaTime * multiplier * slowMultiplier;
 
+        // Play footstep sound at intervals
         if (stepTimer >= 0.4f && slowMultiplier == 1f)
         {
             float pitch = Random.Range(0.95f, 1.1f);
@@ -119,16 +122,17 @@ public class PlayerController : MonoBehaviour
 
             stepTimer = 0f;
         }
+        // Slower footsteps when slowed
         else if (stepTimer >= 0.4f && slowMultiplier < 1f)
         {
             float pitch = Random.Range(0.95f, 1.1f);
             if (GameManager.Instance.map == 0) // paper
             {
-                SoundController.Instance.PlaySound(paperFootstepClip, 0.35f, pitch);
+                SoundController.Instance.PlaySound(paperFootstepClip, 0.35f, pitch); // sound on paper
             }
             else
             {
-                SoundController.Instance.PlaySound(waterFootstepClip, 0.35f, pitch);
+                SoundController.Instance.PlaySound(waterFootstepClip, 0.35f, pitch); // sound on water
             }
 
             stepTimer = 0f;
@@ -141,9 +145,10 @@ public class PlayerController : MonoBehaviour
         if (isDashing) return; // Skip normal movement while dashing
         float speed = PlayerData.moveSpeed;
         if (PlayerData.moveSpeed > 5){
-            speed = 5 + Mathf.Log(PlayerData.moveSpeed, 2);
+            speed = 5 + Mathf.Log(PlayerData.moveSpeed, 2); // logarithmic scaling for high speeds
         }
         Vector2 movement = input * Time.deltaTime * (speed * multiplier * slowMultiplier) * sign;
+        // Determine if the player is moving for animation
         if (movement.magnitude > 0)
         {
             isMoving = true;
@@ -158,6 +163,7 @@ public class PlayerController : MonoBehaviour
 
     void NeedToGambleEffect()
     {
+        // Apply effects based on NeedToGamble level
         if (PlayerData.needToGamble >= 80)
         {
             if (vignetteEffect != null)
@@ -165,17 +171,20 @@ public class PlayerController : MonoBehaviour
                 multiplier = 0.3f;
                 pulseCount++;
                 vignetteEffect.intensity.value = 0.60f;
+                // intensify vignette effect
                 if (pulseCount % 3 == 0){
-                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f)); // pulse camera
                     StartCoroutine(VignettePulse());
-                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f); // play heartbeat sound
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
             }
+            // 30% chance to reverse inputs
             if (!isReversed && Random.Range(0, 100) < 30){
                     StartCoroutine(ReverseInputs());
                 }
+            // 20% chance to dash randomly
             if (!isDashing && numberOfDashes > 0 && dashReset && Random.Range(0, 100) < 20)
             {
                 StartCoroutine(Dash(true));
@@ -187,15 +196,17 @@ public class PlayerController : MonoBehaviour
             {
                 multiplier = 0.5f;
                 pulseCount++;
-                vignetteEffect.intensity.value = 0.55f + 0.005f*(PlayerData.needToGamble - 60);
+                vignetteEffect.intensity.value = 0.55f + 0.005f*(PlayerData.needToGamble - 60); // intensify vignette effect
+                // pulse camera and play heartbeat sound every 4 pulses
                 if (pulseCount % 4 == 0){
-                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f)); // pulse camera
                     StartCoroutine(VignettePulse());
-                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f); // play heartbeat sound
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
             }
+            // 20% chance to reverse inputs
             if (!isReversed && Random.Range(0, 100) < 15){
                     StartCoroutine(ReverseInputs());
                 }
@@ -204,17 +215,19 @@ public class PlayerController : MonoBehaviour
             if (vignetteEffect != null)
             {
                 pulseCount++;
-                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 50);
+                vignetteEffect.intensity.value = 0.45f + 0.005f*(PlayerData.needToGamble - 50); // intensify vignette effect
+                // pulse camera and play heartbeat sound every 5 pulses
                 if (pulseCount % 5 == 0){
-                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f));
+                    StartCoroutine(CameraController.PulseCamera(0.3f, 0.1f)); // pulse camera
                     StartCoroutine(VignettePulse());
-                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f);
+                    SoundController.Instance.PlaySound(hearthBeatSound, 4f, 1.0f); // play heartbeat sound
                     pulseCount = 0;
                 }
                 postProcessVolume.enabled = true;
             }
         } else
         {
+            // Reset effects
             if (vignetteEffect != null)
             {
                 vignetteEffect.intensity.value = 0f;
@@ -223,7 +236,7 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-
+    //  Reverse player inputs for a short duration
     IEnumerator ReverseInputs()
     {
         isReversed = true;
@@ -233,13 +246,14 @@ public class PlayerController : MonoBehaviour
         isReversed = false;
     }
 
+    // Vignette pulse effect coroutine
     public IEnumerator VignettePulse()
     {
         float init = vignetteEffect.intensity.value;
-        float target = Mathf.Lerp(init, init + 0.2f, 1f);
+        float target = Mathf.Lerp(init, init + 0.2f, 1f); // target intensity
 
         yield return new WaitForSeconds(0.1f);
-        vignetteEffect.intensity.value = target;
+        vignetteEffect.intensity.value = target; // set to target
         yield return new WaitForSeconds(0.05f);
 
         // fade back down
@@ -248,11 +262,11 @@ public class PlayerController : MonoBehaviour
         while (t < 0.35f)
         {
             t += Time.deltaTime;
-            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f);
+            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f); // fade down
             yield return null;
         }
         yield return new WaitForSeconds(0.1f);
-        vignetteEffect.intensity.value = target;
+        vignetteEffect.intensity.value = target; // set to target
         yield return new WaitForSeconds(0.05f);
 
         // fade back down
@@ -261,7 +275,7 @@ public class PlayerController : MonoBehaviour
         while (t < 0.35f)
         {
             t += Time.deltaTime;
-            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f);
+            vignetteEffect.intensity.value = Mathf.Lerp(start, init, t / 0.35f); // fade down
             yield return null;
         }
     }
@@ -283,8 +297,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Dash coroutine
     IEnumerator Dash(bool isRandom)
-    {
+    { 
+        // Initiate dash in the direction of input or random
         isDashing = true;
         lastPosition = Rigidbody.position;
         Transform handAnchor = transform.Find("HandAnchor");
@@ -302,6 +318,7 @@ public class PlayerController : MonoBehaviour
         }
         lastHandPosition = hand.position;
 
+        // Decrease number of dashes if at max level
         if (PlayerData.dashLevel == 4) numberOfDashes--;
         if (numberOfDashes > 0 && PlayerData.dashLevel == 4)
         {
@@ -314,7 +331,7 @@ public class PlayerController : MonoBehaviour
         Vector2 start = Rigidbody.position;
         if (isRandom)
         {
-            dashDir = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            dashDir = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)); // Random direction
         }
         else
         {
@@ -328,29 +345,31 @@ public class PlayerController : MonoBehaviour
         Vector2 target = start + dashDir * 6f; // Dash distance of 20 units
         float elapsed = 0f;
 
+        // Check for collisions along the dash path
         Vector2 safePosition = target;
         Vector2 safePositionHand = lastHandPosition + dashDir * 6f;
         Vector2 finalLength = target - start;
-        Vector2 finalLengthHand = lastHandPosition + dashDir * 6f - lastHandPosition;
+        Vector2 finalLengthHand = lastHandPosition + dashDir * 6f - lastHandPosition; // default length
         float distance = Vector2.Distance(Rigidbody.position, target);
 
-        RaycastHit2D[] hits = new RaycastHit2D[1];
-        int count = Rigidbody.Cast(dashDir, hits, distance);
+        RaycastHit2D[] hits = new RaycastHit2D[1]; // Array to store raycast hits
+        int count = Rigidbody.Cast(dashDir, hits, distance); // Check for collisions
 
-
+        // Adjust target position if a collision is detected
         if (count > 0)
         {
-            safePosition = Rigidbody.position + dashDir * (hits[0].distance - 0.01f);
-            safePositionHand = lastHandPosition + dashDir * (hits[0].distance - 0.01f);
+            safePosition = Rigidbody.position + dashDir * (hits[0].distance - 0.01f); // Stop just before the collision point
+            safePositionHand = lastHandPosition + dashDir * (hits[0].distance - 0.01f); // for hand
             finalLength = safePosition - start;
             finalLengthHand = safePositionHand - lastHandPosition;
-            Debug.Log("Dash collision detected, adjusting target position. Length: " + finalLength.magnitude);
+            Debug.Log("Dash collision detected, adjusting target position. Length: " + finalLength.magnitude); 
 
         } else {
             safePosition = target;
             safePositionHand = lastHandPosition + dashDir * 6f;
         }
 
+        // Create dash clones at intervals
         GameObject dashClone1 = CreateDashClone(1f, lastPosition, lastHandPosition);
         dashClone1.SetActive(false);
         GameObject dashClone2 = CreateDashClone(2f, lastPosition + dashDir * finalLength.magnitude/3, lastHandPosition + dashDir * finalLengthHand.magnitude/3);
@@ -371,8 +390,10 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
     }
 
+    // Create a dash clone at a given position
     GameObject CreateDashClone(float index, Vector2 position, Vector2 handPosition)
-    {
+    {   
+        // Create a new GameObject for the dash clone
         GameObject dashClone = new GameObject("DashClone" + index);
         dashClone.transform.position = position;
         dashClone.transform.rotation = transform.rotation;
@@ -389,6 +410,7 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("Hand not found under HandAnchor!");
             return null;
         }
+        // Clone the player's sprite and hand sprite
         GameObject cloneHand = new GameObject("Hand" + index);
         cloneHand.transform.position = handPosition;
         cloneHand.transform.rotation = hand.rotation;
@@ -403,11 +425,12 @@ public class PlayerController : MonoBehaviour
         cloneHandSprite.sortingOrder = 1;
         cloneHand.transform.parent = dashClone.transform;
 
-        cloneSprite.color = new Color(((index - 1f)/3f), ((index - 1f)/3f), ((index - 1f)/3f), 0.5f);
-        cloneHandSprite.color = new Color(((index - 1f)/3f), ((index - 1f)/3f), ((index - 1f)/3f), 0.5f);
+        cloneSprite.color = new Color(((index - 1f)/3f), ((index - 1f)/3f), ((index - 1f)/3f), 0.5f); // Set transparency based on index
+        cloneHandSprite.color = new Color(((index - 1f)/3f), ((index - 1f)/3f), ((index - 1f)/3f), 0.5f); // Set transparency based on index
 
         return dashClone;
     }
+    // Reset dash availability after cooldown
     IEnumerator ResetDash()
     {
         if (PlayerData.dashLevel < 4)
@@ -422,6 +445,7 @@ public class PlayerController : MonoBehaviour
             dashReset = true;
         }
     }
+    // Manage the activation and destruction of dash clones
     IEnumerator CloneGeneration(GameObject dashClone1, GameObject dashClone2, GameObject dashClone3)
     {
         dashClone1.SetActive(true);
@@ -451,36 +475,39 @@ public class PlayerController : MonoBehaviour
     }
     void Attack()
     {
+        // Handle attack timing based on attack speed
         if (MouseKeyHoldDown && Time.time >= nextAttackTime)
         {
-            float attackTime = PlayerData.attackSpeed;
+            float attackTime = PlayerData.attackSpeed; // Base attack time
             if (PlayerData.attackSpeed > 1){
-                attackTime = Mathf.Log(PlayerData.attackSpeed, 2);
+                attackTime = Mathf.Log(PlayerData.attackSpeed, 2); // logarithmic scaling for high attack speeds
             }
-            nextAttackTime = Time.time + 1f / (attackTime * multiplier);
+            nextAttackTime = Time.time + 1f / (attackTime * multiplier); // Adjusted attack interval
 
             isAttacking = true; // for animation
             attackStartTime = Time.time; //
 
+            // Execute attack based on selected weapon
             switch (ModeController.Instance.currentSelection.selectedWeapon)
             {
                 case WeaponType.Melee:
+                    // Calculate knockback based on PlayerData.knockback
                     float rawKnockback = PlayerData.knockback;
                     if (PlayerData.knockback > 1000)
                     {
                         rawKnockback = 1000;
                     }
-                    float knockback =Mathf.Lerp(0.1f, 1f,Mathf.Sqrt(Mathf.InverseLerp(1f, 1000f, rawKnockback)));
+                    float knockback =Mathf.Lerp(0.1f, 1f,Mathf.Sqrt(Mathf.InverseLerp(1f, 1000f, rawKnockback))); // Normalize knockback between 0.1 and 1
                     Debug.Log("Calculated knockback: " + knockback);
                     if (knockback < 0.1f) knockback = 0.1f;
                     if (knockback > 1f) knockback = 1f;
-                    weaponController.AttackSword((int)(PlayerData.damage * multiplier), knockback);
+                    weaponController.AttackSword((int)(PlayerData.damage * multiplier), knockback); // Melee attack
                     break;
                 case WeaponType.Pistol:
-                    weaponController.AttackGun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                    weaponController.AttackGun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel); // Pistol attack
                     break;
                 case WeaponType.Shotgun:
-                    weaponController.AttackShotgun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel);
+                    weaponController.AttackShotgun(PlayerData.bulletSpeed, (int)(PlayerData.damage * multiplier), PlayerData.piercingLevel, PlayerData.freezeLevel); // Shotgun attack
                 break;
                 default:
                     break;
@@ -494,10 +521,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Method to handle taking damage
     public void takeDamage(int damage)
     {
         if (PlayerData.isDead) return;
         int blockChance = 0;
+        // Calculate block chance based on block level
         if (PlayerData.blockLevel > 0 && PlayerData.blockLevel < 4)
         {
             blockChance = 2 + 3 * PlayerData.blockLevel;
@@ -513,6 +542,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(ShieldUp());
             return;
         }
+        // Apply damage to player health or money based on game mode
         if (ModeController.Instance.currentSelection.selectedMode == GameMode.MoneyLife)
         {
             GameManager.Instance.runtimePlayerData.money -= damage;
@@ -534,12 +564,13 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(HitColor());
         }
     }
+    // Shield activation coroutine
     IEnumerator ShieldUp()
     {
         GameObject shield = transform.Find("Shield").gameObject;
         shield.SetActive(true);
         shieldRequests++;
-        SoundController.Instance.PlaySound(shieldSound, 0.3f, 1.0f);
+        SoundController.Instance.PlaySound(shieldSound, 0.3f, 1.0f); 
         yield return new WaitForSeconds(0.2f);
         if (shieldRequests > 1)
         {
@@ -552,6 +583,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Coroutine to handle hit color flash effect
     IEnumerator HitColor()
     {
         isRed = true;
@@ -604,11 +636,11 @@ public class PlayerController : MonoBehaviour
     }
     public void GetCoin(int amount)
     {
-        Debug.Log("Collected coin worth: " + amount);
         GameManager.Instance.runtimePlayerData.money += amount;
         SoundController.Instance.PlaySound(coinSound, 0.6f, 1.0f);
     }
 
+    // Save and Load Methods
     public void GetSaveData()
     {
         SaveData data = SaveSystem.Instance.currentSaveData;

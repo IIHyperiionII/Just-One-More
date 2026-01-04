@@ -32,6 +32,7 @@ public class GameModeManager : MonoBehaviour
     
     void Update()
     {
+        // Escape Menu Toggle
         if (Input.GetKeyDown(KeyCode.Escape) && !inMiniGame && !escMenuActive && !gameWonMenuActive && !deadMenuActive && !isInSettingsMenu && !GameManager.Instance.waveIsSpawning)
         {
             OpenEscMenu();
@@ -72,6 +73,7 @@ public class GameModeManager : MonoBehaviour
         timeIsPaused = false;
     }
 
+    // Mini Game Methods to enter and exit casino
     public void EnterMiniGame()
     {
         inMiniGame = true;
