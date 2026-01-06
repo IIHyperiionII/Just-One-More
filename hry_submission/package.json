@@ -1,32 +1,33 @@
 {
-    "title": "Packman",
-    "team": 33,
-    "source": "hry_project",
+    "title": "JustOneMore",
+    "team": 1,
+    "source": "just_one_more",
     "has_web_build": true,
     "authors": [
         {
-            "fullname": "Jan Example",
-            "email": "exampjan@fel.cvut.cz"
+            "fullname": "Tomáš Adamec",
+            "email": "adamet12@student.cvut.cz"
         },
         {
-            "fullname": "Aleš Vopršálek",
-            "email": "voprsale@fit.cvut.cz"
+            "fullname": "Jan Brabec",
+            "email": "brabej16@student.cvut.cz"
+        },
+        {
+            "fullname": "Julie Dvořáková",
+            "email": "dvoraju1@student.cvut.cz"
+        },
+        {
+            "fullname": "Jan Červenka",
+            "email": " "
         }
     ],
-    "term": 241,
-    "summary": "A game focused on village protection with basic exploration of surroundings",
+    "term": 251,
+    "summary": "A game focused on combat and gambling.",
     "opensource": true,
     "genres": [
         "Action",
-        "Survival",
-        "Third-person"
+        "Top-down"
     ],
     "links": {
-        "facebook": "https://www.facebook.com/...",
-        "instagram": "https://www.instagram.com/...",
-        "x": "https://www.x(twitter).com/...",
-        "itchio": "https://www.itch.io/...",
-        "discord": "https://www.discord.com/...",
-        "other": "https://www.other.com/..."
     }
 }
