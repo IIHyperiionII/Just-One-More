@@ -6,19 +6,19 @@
     "authors": [
         {
             "fullname": "Tomáš Adamec",
-            "email": "adamet12@student.cvut.cz"
+            "email": "adamet12@cvut.cz"
         },
         {
             "fullname": "Jan Brabec",
-            "email": "brabej16@student.cvut.cz"
+            "email": "brabej16@cvut.cz"
         },
         {
             "fullname": "Julie Dvořáková",
-            "email": "dvoraju1@student.cvut.cz"
+            "email": "dvoraju1@cvut.cz"
         },
         {
             "fullname": "Jan Červenka",
-            "email": " "
+            "email": "cervej44@cvut.cz"
         }
     ],
     "term": 251,
@@ -26,7 +26,9 @@
     "opensource": true,
     "genres": [
         "Action",
-        "Top-down"
+        "Top-down",
+        "Rogue-lite",
+        "Risk/reward gameplay"
     ],
     "links": {
     }
