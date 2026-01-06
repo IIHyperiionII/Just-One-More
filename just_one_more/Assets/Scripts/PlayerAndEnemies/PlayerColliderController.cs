@@ -1,5 +1,5 @@
 using UnityEngine;
-
+// UNUSED SCRIPT
 public class PlayerColliderController : MonoBehaviour
 {
     

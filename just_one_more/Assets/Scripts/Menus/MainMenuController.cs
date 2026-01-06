@@ -21,15 +21,16 @@ public class MainMenuController : MonoBehaviour
     }
     void Start()
     {
-        string savePath = GetSavePath();
-        loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath);
+        string savePath = GetSavePath(); 
+        loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath); // Disable load button if no save file exists
         SaveSystem.Instance.LoadBestTime();
     }
 
     void Update()
     {
         string savePath = GetSavePath();
-        loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath);
+        loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable = File.Exists(savePath); // Update interactability in case save file status changes
+        // Visual feedback for load game button
         if (loadGameButton.GetComponent<UnityEngine.UI.Button>().interactable)
         {
             loadGameButton.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
@@ -40,6 +41,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    // Helper method to get the save file path
     string GetSavePath()
     {
         string fileName = "saveData.json";

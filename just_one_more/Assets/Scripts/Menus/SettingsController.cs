@@ -33,6 +33,7 @@ public class SettingsController : MonoBehaviour
     private bool isLoading = false;
     public void Start()
     {
+        // Initialize key bindings
         isLoading = true;
         upButton.onClick.AddListener(() => StartRebinding(ActionKey.MoveUp));
         UpdateText(ActionKey.MoveUp, "");
@@ -74,6 +75,7 @@ public class SettingsController : MonoBehaviour
 
     void Update()
     {
+        // Check for duplicate key bindings
         if (ControlsManager.Instance.DupicateInDictionary())
         {
             canSave = false;
@@ -83,14 +85,16 @@ public class SettingsController : MonoBehaviour
             canSave = true;
         }
         saveButton.interactable = canSave;
+        // Return to previous menu on Escape key
         if (keyAssigned && Input.GetKeyDown(KeyCode.Escape))
         {
             BackToEscMenu();
         }
-        musicValueText.text = $"Music: {(musicSlider.value * 100).ToString("0")}%";
-        sfxValueText.text = $"SFX: {(sfxSlider.value * 100).ToString("0")}%";
+        musicValueText.text = $"Music: {(musicSlider.value * 100).ToString("0")}%"; // Update music volume text
+        sfxValueText.text = $"SFX: {(sfxSlider.value * 100).ToString("0")}%"; // Update SFX volume text
     }
 
+    // When the settings menu is enabled, show controls panel
     private void OnEnable()
     {
         ShowControlls();
@@ -107,9 +111,11 @@ public class SettingsController : MonoBehaviour
         waitingImage.gameObject.SetActive(true);
         UpdateText(actionKey, "Waiting...");
         while (!keyAssigned)
-        {
+        {   
+            // Check for any key press
             foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
             {
+                // Ignore Escape key for rebinding
                 if (Input.GetKeyDown(keyCode) && keyCode != KeyCode.Escape)
                 {
                     ControlsManager.Instance.RebindKey(actionKey, keyCode);
@@ -117,6 +123,7 @@ public class SettingsController : MonoBehaviour
                     keyAssigned = true;
                     break;
                 }
+                // If Escape key is pressed, unbind the key
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     UpdateText(actionKey, "");

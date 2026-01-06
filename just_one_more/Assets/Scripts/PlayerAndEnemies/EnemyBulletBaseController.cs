@@ -26,13 +26,14 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
             currentSelection = ModeController.Instance.currentSelection;
         }
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90); // Adjust sprite orientation
         if (bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
         }
     }
 
+    // Initialize bullet with speed, damage, rotation, and sprite
     public void Initialize( int bulletSpeed, int bulletDamage , Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
@@ -44,12 +45,13 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
     }
     void Start()
     {
-        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = initialRotation * Quaternion.Euler(0, 0, 90); // Adjust sprite orientation
     }
 
     void FixedUpdate()
     {
         if (GameModeManager.timeIsPaused) return;
+        // Update sprite if it has changed
         if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
@@ -60,6 +62,7 @@ public class EnemyBulletBaseController : MonoBehaviour, IBullet
         Rigidbody.MovePosition(Rigidbody.position + direction * speed * Time.fixedDeltaTime);
     }
 
+    // Handle collisions
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Enemy")) return;

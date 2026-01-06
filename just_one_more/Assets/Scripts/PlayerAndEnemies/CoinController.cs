@@ -10,11 +10,11 @@ public class CoinController : MonoBehaviour, ICoin
     }
     public void SetValue(int val)
     {
-        Debug.Log("Setting coin value to: " + val);
         value = val;
     }
     void OnTriggerEnter2D(Collider2D other)
     {
+        // Check if the collider belongs to the player
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player collected coin worth: " + value);

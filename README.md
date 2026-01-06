@@ -20,3 +20,4 @@ Watch him struggle, fail, and desperately chase the jackpot he believes will red
 
 ## [Report 1](../hry_reports/report_1.pdf "report_1.pdf")
 ## [Report 2](../hry_reports/report_2.pdf "report_2.pdf")
+## [Licences](https://gitlab.fel.cvut.cz/B251_B4B39HRY/team01/-/wikis/Licence "Licences")

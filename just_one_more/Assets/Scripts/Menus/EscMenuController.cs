@@ -24,6 +24,7 @@ public class EscMenuController : MonoBehaviour
     {
         if (saveGameText != null)
         {
+            // Update save game button state based on number of saves left
             if (GameManager.Instance.runtimePlayerData.numberOfSaves <= 0)
             {
                 saveGameButton.interactable = false;

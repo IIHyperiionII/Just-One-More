@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// IEnemy.cs
+// Interface for bullet properties and behaviors
 public interface IBullet
 {
     string GetBulletType();

@@ -1,8 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.IO;
-using NUnit.Framework;
-using System.Runtime.Serialization.Formatters;
 
 public class CameraController : MonoBehaviour
 {
@@ -36,14 +33,16 @@ public class CameraController : MonoBehaviour
     {
         newPosition = player.position;
         newPosition.z = transform.position.z;
+        // Clamp camera position within boundaries
         float camHalfHeight = cam.orthographicSize;
         float camHalfWidth  = camHalfHeight * cam.aspect;
-        newPosition.x = Mathf.Clamp(newPosition.x, -40f + camHalfWidth, 40f - camHalfWidth);
+        newPosition.x = Mathf.Clamp(newPosition.x, -40f + camHalfWidth, 40f - camHalfWidth); // Level width is 80 units
 
-        newPosition.y = Mathf.Max( newPosition.y, -22f + camHalfHeight );
+        newPosition.y = Mathf.Max( newPosition.y, -22f + camHalfHeight ); // Level bottom is at -22 units
         transform.position = newPosition;
     }
 
+    // Static method to initiate camera shake
     public static void ShakeCamera(float duration = 0.2f, float magnitude = 0.2f)
     {
         if (isShaking) return;
@@ -61,7 +60,7 @@ public class CameraController : MonoBehaviour
             float x = Random.Range(-0.5f, 0.5f) * magnitude;
             float y = Random.Range(-0.5f, 0.5f) * magnitude;
 
-            cameraTransform.position = new Vector3(newPosition.x + x, newPosition.y + y, newPosition.z);
+            cameraTransform.position = new Vector3(newPosition.x + x, newPosition.y + y, newPosition.z); // Maintain original z position
 
             elapsed += Time.deltaTime;
 
@@ -70,6 +69,8 @@ public class CameraController : MonoBehaviour
         isShaking = false;
         cameraTransform.position = newPosition;
     }
+
+    // Static method to initiate camera pulse effect
     public static IEnumerator PulseCamera(float intensity, float duration)
     {
         GameObject cameraObject = Camera.main.gameObject;
@@ -81,6 +82,8 @@ public class CameraController : MonoBehaviour
         yield return new WaitForSeconds(duration);
         cameraObject.GetComponent<CameraController>().StartCoroutine(Shake(duration * 0.5f, intensity * 1f, cameraObject.transform));
     }
+
+    // Coroutine for heartbeat pulse effect
     public static IEnumerator HeartbeatPulse(float intensity, float duration, Transform cameraTransform)
     {
         float t = 0f;
@@ -93,7 +96,7 @@ public class CameraController : MonoBehaviour
         {
             t += Time.deltaTime;
             float normalized = t / pulseDuration;
-            cameraTransform.GetComponent<Camera>().orthographicSize = Mathf.Lerp(originalSize, targetSize, normalized);
+            cameraTransform.GetComponent<Camera>().orthographicSize = Mathf.Lerp(originalSize, targetSize, normalized); // Scale up
             yield return null;
         }
 
@@ -104,6 +107,7 @@ public class CameraController : MonoBehaviour
         cameraTransform.GetComponent<Camera>().orthographicSize = originalSize;
     }
 
+    // Static method to initiate teleport move up and down
     public static IEnumerator TeleportMoveUp()
     {
         float time = 0f;

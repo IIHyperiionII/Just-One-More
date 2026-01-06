@@ -45,7 +45,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             currentSelection = ModeController.Instance.currentSelection;
         }
         player = GameObject.FindGameObjectWithTag("Player");
-        target = player.transform.Find("WallBoundsCheck");
+        target = player.transform.Find("WallBoundsCheck"); // Target a specific child object of the player for more accurate tracking
         GetDirections(0.8f);
         newDirection = direction;
     }
@@ -62,32 +62,36 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     }
     void Move()
     {
+        // Check if the player exists in the scene
         if (GameObject.FindGameObjectWithTag("Player") == null)
         {
             Debug.LogError("Player does not exist in the scene.");
         } else {
+            // Move towards the player
             if (timer >= timeBetweenDirectionChecks)
             {
                 GetDirections(0.8f);
-                newDirection = MovementCheck(direction).normalized;
+                newDirection = MovementCheck(direction).normalized; // Update direction with obstacle avoidance
                 timer = 0f;
             }else {
-                newDirection = MovementCheck(newDirection).normalized;
-            }
+                newDirection = MovementCheck(newDirection).normalized; // Continue with previous direction and check for obstacles
+            } 
             Vector2 movement = newDirection * Time.deltaTime * runtimeEnemiesData.moveSpeed;
             Rigidbody.MovePosition(Rigidbody.position + movement);
         }
     }
     Vector2 MovementCheck(Vector2 vector2)
     {
+        // Perform CircleCasts to check for obstacles in the intended movement direction and adjust if necessary
         Vector2 newDirection = vector2;
         Vector2 enemyPos = transform.position;
         enemyPos.y += offsetHeight;
-        RaycastHit2D hit = Physics2D.CircleCast(enemyPos, movementCheckRadius, newDirection, obstacleCheckDistance, obstacleMask);
+        RaycastHit2D hit = Physics2D.CircleCast(enemyPos, movementCheckRadius, newDirection, obstacleCheckDistance, obstacleMask); // Forward check
         Vector2 left75 = Rotate(newDirection, 60).normalized;
-        RaycastHit2D hitleft = Physics2D.CircleCast(enemyPos, movementCheckRadius, left75, obstacleCheckDistance, obstacleMask);
+        RaycastHit2D hitleft = Physics2D.CircleCast(enemyPos, movementCheckRadius, left75, obstacleCheckDistance, obstacleMask); // Left 60 degrees check
         Vector2 right75 = Rotate(newDirection, -60).normalized;
-        RaycastHit2D hitright = Physics2D.CircleCast(enemyPos, movementCheckRadius, right75, obstacleCheckDistance, obstacleMask);
+        RaycastHit2D hitright = Physics2D.CircleCast(enemyPos, movementCheckRadius, right75, obstacleCheckDistance, obstacleMask); // Right 60 degrees check
+        // Update checks array for Gizmos visualization
         if(hit)
         {
             checks[0] = true;
@@ -106,6 +110,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         } else {
             checks[2] = false;
         }
+        // Adjust direction based on obstacle detection
         if (hit)
         {
             if (!hitleft)
@@ -136,6 +141,8 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         }
         return newDirection;
     }
+
+    // Function to rotate a vector by a given angle in degrees
     Vector2 Rotate(Vector2 v, float degrees)
     {
         float rad = degrees * Mathf.Deg2Rad;
@@ -192,6 +199,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         coinInstance.GetComponent<CoinController>().SetValue(runtimeEnemiesData.value);
     }
 
+    // IEnemy interface methods
     public EnemyData GetEnemyData()
     {
         if (runtimeEnemiesData == null)
@@ -212,8 +220,11 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
     {
         return enemyType;
     }
+
+    // Method to apply damage to the enemy
     public void TakeDamage(int damage)
     {
+        // In OneShot mode, enemies die instantly
         if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
         {
             Destroy(gameObject);
@@ -227,6 +238,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
             Destroy(gameObject);
         }
         HitColorChange();
+        // Chance to change sprite or become invisible based on player's needToGamble stat
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -281,6 +293,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         isFrozen = true;
         FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
+        // If duration is 2 seconds, completely stop movement, else halve the speed
         if (duration == 2)
         {
             runtimeEnemiesData.moveSpeed = 0;
@@ -310,12 +323,13 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         isKnockbacked = true;
         GetDirections(0f);
         Vector2 knockbackDirection = GetDirectionToPlayer(); // Get direction away from player
-        Rigidbody.AddForce(knockbackDirection * 100 * -1, ForceMode2D.Impulse);
+        Rigidbody.AddForce(knockbackDirection * 100 * -1, ForceMode2D.Impulse); // Apply knockback force away from player
         yield return new WaitForSeconds(time); // Duration of knockback effect
         Rigidbody.linearVelocity = Vector2.zero;
         isKnockbacked = false;
     }
     
+    // Coroutine to change sprite temporarily
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);
@@ -327,6 +341,7 @@ public class MeleeEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    // Coroutine to become invisible temporarily
     IEnumerator BecomeInvisible()
     {
         Debug.Log("Becoming invisible");

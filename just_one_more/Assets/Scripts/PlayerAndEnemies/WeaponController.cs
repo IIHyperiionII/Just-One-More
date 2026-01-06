@@ -29,15 +29,17 @@ public class WeaponController : MonoBehaviour
     public void AttackSword(int damage, float knockback)
     {
 
-        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRange, IsEnemy);
+        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRange, IsEnemy); // Get all enemies within attack range
         
+        // Check each enemy to see if they are within the attack angle
         for (int i = 0; i < enemiesToDamage.Length; i++)
         {
             if (enemiesToDamage[i].tag != "Enemy") continue;
-            Vector2 directionToEnemy = (enemiesToDamage[i].transform.position - transform.position).normalized;
+            Vector2 directionToEnemy = (enemiesToDamage[i].transform.position - transform.position).normalized; // Direction vector from player to enemy
             
-            float angleToEnemy = Vector2.Angle(mouseDirection * Vector3.right, directionToEnemy);
+            float angleToEnemy = Vector2.Angle(mouseDirection * Vector3.right, directionToEnemy); // Calculate angle between mouse direction and direction to enemy
 
+            // If the enemy is within the attack angle, apply damage and knockback
             if (angleToEnemy < attackAngle / 2f)
             {
                 enemiesToDamage[i].GetComponent<IEnemy>().TakeDamage(damage);
@@ -48,6 +50,7 @@ public class WeaponController : MonoBehaviour
         SoundController.Instance.PlaySound(swordSfx, 0.45f, 1.0f);
     }
 
+    // Shoot a bullet towards the mouse position
     public void AttackGun(int bulletSpeed, int damage, int piercingLevel, int freezeLevel)
     {
         Quaternion rotation = UpdateAngle();

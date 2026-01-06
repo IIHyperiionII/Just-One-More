@@ -153,6 +153,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        // If in OneShot mode, destroy the enemy immediately
         if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
         {
             Destroy(gameObject);
@@ -166,6 +167,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
             Destroy(gameObject);
         }
         HitColorChange();
+        // Chance to change sprite or become invisible based on player's needToGamble stat
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -176,6 +178,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
             StartCoroutine(BecomeInvisible());
         }
     }
+    // Handle color change on hit
     void HitColorChange()
     {
         if (hitColorActive) return;
@@ -195,6 +198,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         }
         hitColorActive = false;
     }
+    // Handle color change on freeze
     void FreezeColorChange(float duration)
     {
         if (freezeColorActive) return;
@@ -209,6 +213,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         freezeColorActive = false;
     }
+    // Freeze the enemy for a duration
     public void Freeze(float duration)
     {
         if (isFrozen) return;
@@ -219,6 +224,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         isFrozen = true;
         FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
+        // If duration is 2 seconds, completely stop movement, else halve the speed
         if (duration == 2)
         {
             runtimeEnemiesData.moveSpeed = 0;
@@ -238,6 +244,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         }
         isFrozen = false;
     }
+    // Apply knockback effect for a duration
     public void Knockback(float time)
     {
         StartCoroutine(KnockbackCoroutine(time));
@@ -252,7 +259,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         Rigidbody.linearVelocity = Vector2.zero;
         isKnockbacked = false;
     }
-    
+    // Method to change sprite temporarily
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);
@@ -264,6 +271,7 @@ public class RangeSpiningEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    // Method to become invisible temporarily
     IEnumerator BecomeInvisible()
     {
         Debug.Log("Becoming invisible");

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+// UNUSED SCRIPT
 public class MouseCursorController : MonoBehaviour
 {
     Vector3 mousePosition;

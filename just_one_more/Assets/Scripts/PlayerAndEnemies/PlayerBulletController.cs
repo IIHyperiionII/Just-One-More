@@ -26,13 +26,14 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
         }
         boxCollider = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
+        spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90); // Rotate the sprite to match the bullet direction
         if (bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
         }
     }
 
+    // Initialize the bullet with given parameters
     public void Initialize( int bulletSpeed, int bulletDamage, int bulletPiercingLevel, int bulletFreezeLevel, Quaternion rotation, Sprite sprite)
     {
         speed = bulletSpeed;
@@ -51,6 +52,7 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
         {
             currentSelection = ModeController.Instance.currentSelection;
         }
+        // Update sprite if needed
         if (spriteRenderer.sprite != bulletSprite && bulletSprite != null)
         {
             spriteRenderer.sprite = bulletSprite;
@@ -58,14 +60,16 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
             spriteRenderer.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, 90);
             boxCollider.size = bulletSprite.bounds.size;
         }
+        // Move the bullet
         float moveSpeed = speed;
         if (speed > 10)
         {
-            moveSpeed = 10 + 2 * Mathf.Log(speed - 10, 2);
-        }
+            moveSpeed = 10 + 2 * Mathf.Log(speed - 10, 2); // Use logarithmic scaling for speed above 10
+        } 
         Rigidbody.MovePosition(Rigidbody.position + direction * moveSpeed * Time.fixedDeltaTime);
         
     }
+    // Handle collision with other objects
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player")) return;
@@ -76,6 +80,7 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
         {
             if (other.gameObject.CompareTag("Enemy"))
             {
+                // Apply damage and effects to the enemy
                 if (currentSelection.selectedMode == GameMode.OneShot)
                 {
                     Destroy(other.gameObject);
@@ -108,6 +113,7 @@ public class PlayerBulletController : MonoBehaviour, IBulletPlayer
     {
         target.GetComponent<IEnemy>().TakeDamage(damage);
     }
+    // 50% chance to freeze the enemy on hit
     void Freeze(GameObject target)
     {
         if (Random.Range(0,2) == 0)

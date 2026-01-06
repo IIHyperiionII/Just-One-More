@@ -1,5 +1,5 @@
 using UnityEngine;
-// IEnemy.cs
+// Interface for enemy properties and behaviors
 public interface IEnemy
 {
     EnemyData GetEnemyData(); // Must return the enemy's runtime data

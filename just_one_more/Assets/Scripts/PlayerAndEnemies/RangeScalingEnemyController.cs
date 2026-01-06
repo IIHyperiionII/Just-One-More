@@ -135,6 +135,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
     }
     public void TakeDamage(int damage)
     {
+        // OneShot mode instantly destroys the enemy
         if (ModeController.Instance != null && ModeController.Instance.currentSelection.selectedMode == GameMode.OneShot)
         {
             Destroy(gameObject);
@@ -148,6 +149,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
             Destroy(gameObject);
         }
         HitColorChange();
+        // Chance to change sprite or become invisible based on player's needToGamble stat
         if (GameManager.Instance.runtimePlayerData.needToGamble > 70 && Random.Range(0, 100) < 20 && !isChangingSprite)
         {
             Sprite newSprite = GameManager.Instance.GetRandomSprite(GetComponent<SpriteRenderer>().sprite);
@@ -157,7 +159,8 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
         {
             StartCoroutine(BecomeInvisible());
         }
-    }
+    }   
+    // Handle color change on hit
     void HitColorChange()
     {
         if (hitColorActive) return;
@@ -177,6 +180,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
         }
         hitColorActive = false;
     }
+    // Handle color change on freeze
     void FreezeColorChange(float duration)
     {
         if (freezeColorActive) return;
@@ -191,6 +195,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.color = originalColor; // Restore original color
         freezeColorActive = false;
     }
+    // Freeze the enemy for a duration
     public void Freeze(float duration)
     {
         if (isFrozen) return;
@@ -201,6 +206,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
         isFrozen = true;
         FreezeColorChange(duration);
         int original = runtimeEnemiesData.moveSpeed;
+        // If duration is 2 seconds, completely stop movement, else halve the speed
         if (duration == 2)
         {
             runtimeEnemiesData.moveSpeed = 0;
@@ -236,6 +242,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
         isKnockbacked = false;
     }
     
+    // Manage sprite change
     IEnumerator SpriteChange(Sprite newSprite)
     {
         Debug.Log("Changing sprite to " + newSprite.name);
@@ -247,6 +254,7 @@ public class RangedScalingEnemyController : MonoBehaviour, IEnemy
         spriteRenderer.sprite = originalSprite;
         isChangingSprite = false;
     }
+    // Manage invisibility
     IEnumerator BecomeInvisible()
     {
         Debug.Log("Becoming invisible");

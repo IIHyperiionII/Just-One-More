@@ -49,10 +49,12 @@ public class ControlsManager : MonoBehaviour
         keyBindings[ActionKey.Help] = KeyCode.H;
     }
 
+    // Get the file path for saving/loading
     string GetFilePath(string fileName)
     {
         string folderPath = Application.persistentDataPath;
 
+        // Different folder for editor and build
         if (!Application.isEditor)
         {
             folderPath = Path.Combine(folderPath, "BuildSaves");
@@ -154,6 +156,8 @@ public class ControlsManager : MonoBehaviour
     {
         keyBindings[actionKey] = newKey;
     }
+
+    // Check for duplicate key bindings
     public bool DupicateInDictionary()
     {
         HashSet<KeyCode> seenKeys = new HashSet<KeyCode>();

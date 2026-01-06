@@ -25,6 +25,7 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    // Data Structures to hold save data
     public SaveData currentSaveData = new SaveData();
     public BestTimeSaveData.BestTimeData currentBestTimeData = new BestTimeSaveData.BestTimeData();
     
@@ -37,10 +38,12 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    // Get the file path for saving/loading
     string GetFilePath(string fileName)
     {
-        string folderPath = Application.persistentDataPath;
+        string folderPath = Application.persistentDataPath; // Default save location
 
+        // Differentiate between Editor and Build saves
         if (!Application.isEditor)
         {
             folderPath = Path.Combine(folderPath, "BuildSaves");
@@ -89,7 +92,8 @@ public class SaveSystem : MonoBehaviour
         string savePath = GetFilePath(fileName);
         
         StartCoroutine(WaitForSync());
-
+        
+        // Read JSON from file and convert back to SaveData object
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);
