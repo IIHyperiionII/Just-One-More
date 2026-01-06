@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 115027775634518622}
   - component: {fileID: 4709684949665243190}
   - component: {fileID: 8708175080519145246}
+  - component: {fileID: 7997017949811256120}
   m_Layer: 5
   m_Name: ButtonToCasino
   m_TagString: Untagged
@@ -383,6 +384,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7997017949811256120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2618741334547006526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 508f3bd8f220548468b931757b82e897, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundHelper
 --- !u!1 &2732835421586065020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,6 +1771,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d12d76e08074d47e4aea19f0f0b603bf, type: 3}
+--- !u!1 &1119100392737488418 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 118990970339897067, guid: d12d76e08074d47e4aea19f0f0b603bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1018211852385554633}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2280788943911530474 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1263144509537304355, guid: d12d76e08074d47e4aea19f0f0b603bf,
@@ -1809,6 +1828,11 @@ PrefabInstance:
       objectReference: {fileID: 3382364071769713722}
     - target: {fileID: 77029781131653991, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
         type: 3}
+      propertyPath: 'background.Array.data[2]'
+      value: 
+      objectReference: {fileID: 3340110018156441387}
+    - target: {fileID: 77029781131653991, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
+        type: 3}
       propertyPath: 'backgroundOpen.Array.data[0]'
       value: 
       objectReference: {fileID: 7546928187145571138}
@@ -1817,6 +1841,11 @@ PrefabInstance:
       propertyPath: 'backgroundOpen.Array.data[1]'
       value: 
       objectReference: {fileID: 1770831850879035380}
+    - target: {fileID: 77029781131653991, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
+        type: 3}
+      propertyPath: 'backgroundOpen.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1119100392737488418}
     - target: {fileID: 144895765840026659, guid: b9480c6b2e2e1427f9fc7c46e4e6aa0f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2130,6 +2159,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 3698987198407460865, guid: 905a26feeaa2642338fab26f30b7b38d,
+        type: 3}
+      propertyPath: gunSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: df8e89cd7624a564d86a1fb0d8a37651, type: 3}
+    - target: {fileID: 3698987198407460865, guid: 905a26feeaa2642338fab26f30b7b38d,
+        type: 3}
+      propertyPath: swordSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: 74812af3cdfad5849b49b708fbd5b2aa, type: 3}
+    - target: {fileID: 3698987198407460865, guid: 905a26feeaa2642338fab26f30b7b38d,
+        type: 3}
+      propertyPath: shotgunSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: 02f63637cb5b7314ea2d5820805edce8, type: 3}
     - target: {fileID: 3719900208929839630, guid: 905a26feeaa2642338fab26f30b7b38d,
         type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x
@@ -2360,6 +2404,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cea3e3dbc58549fa823b787beabfab3, type: 3}
+--- !u!1 &3340110018156441387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5558711367320229470, guid: 4cea3e3dbc58549fa823b787beabfab3,
+    type: 3}
+  m_PrefabInstance: {fileID: 7169439051189877109}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4234663104317626527 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6465618190074536426, guid: 4cea3e3dbc58549fa823b787beabfab3,
