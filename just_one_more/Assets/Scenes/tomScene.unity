@@ -137,7 +137,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 8765870411673907830}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324414374}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -788,24 +788,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c6a85ff060f4b89a94d76836a31403, type: 3}
---- !u!1 &1324414374 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2618741334547006526, guid: 960b2659088734727b6d3cb1e6173d3a,
-    type: 3}
-  m_PrefabInstance: {fileID: 8765870411673907830}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1324414382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324414374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 508f3bd8f220548468b931757b82e897, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundHelper
 --- !u!114 &1422805903 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3165728561002198203, guid: f099fe7660cac46428c83be730c980ef,
@@ -2211,39 +2193,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8952958251102237636, guid: 960b2659088734727b6d3cb1e6173d3a,
-        type: 3}
-      propertyPath: gunSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: df8e89cd7624a564d86a1fb0d8a37651, type: 3}
-    - target: {fileID: 8952958251102237636, guid: 960b2659088734727b6d3cb1e6173d3a,
-        type: 3}
-      propertyPath: swordSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: 74812af3cdfad5849b49b708fbd5b2aa, type: 3}
-    - target: {fileID: 8952958251102237636, guid: 960b2659088734727b6d3cb1e6173d3a,
-        type: 3}
-      propertyPath: shotgunSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: 02f63637cb5b7314ea2d5820805edce8, type: 3}
     - target: {fileID: 9217901710463783150, guid: 960b2659088734727b6d3cb1e6173d3a,
         type: 3}
       propertyPath: m_Name
       value: Battleground
       objectReference: {fileID: 0}
-    - target: {fileID: 9217901710463783150, guid: 960b2659088734727b6d3cb1e6173d3a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2618741334547006526, guid: 960b2659088734727b6d3cb1e6173d3a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1324414382}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 960b2659088734727b6d3cb1e6173d3a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
