@@ -119,6 +119,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &144213 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1119100392737488418, guid: 960b2659088734727b6d3cb1e6173d3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8765870411673907830}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &146315722 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3340110018156441387, guid: 960b2659088734727b6d3cb1e6173d3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8765870411673907830}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &170834942 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8708175080519145246, guid: 960b2659088734727b6d3cb1e6173d3a,
@@ -2109,6 +2121,36 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: map
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: wave
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: isOpen
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: mapCompleted
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: 'background.Array.data[2]'
+      value: 
+      objectReference: {fileID: 146315722}
+    - target: {fileID: 1151844791619602654, guid: 960b2659088734727b6d3cb1e6173d3a,
+        type: 3}
+      propertyPath: 'backgroundOpen.Array.data[2]'
+      value: 
+      objectReference: {fileID: 144213}
     - target: {fileID: 1803379668181971472, guid: 960b2659088734727b6d3cb1e6173d3a,
         type: 3}
       propertyPath: m_Camera

@@ -99,12 +99,16 @@ public class GameManager : MonoBehaviour
         {
             for (int i = 0; i < background.Length; i++)
             {
+                Debug.Log("Setting background for map " + map + ", isOpen: " + isOpen);
                 if (i == map)
                 {
                     if (isOpen){
                         backgroundOpen[i].SetActive(true);
                         background[i].SetActive(false);
                     } else {
+                        if (map == 2 && backgroundOpen[i] != null){
+                            Debug.Log("Disabling backgroundOpen for map 2 at start");
+                        }
                         background[i].SetActive(true);
                         backgroundOpen[i].SetActive(false);
                     }
