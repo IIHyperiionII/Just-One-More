@@ -1,4 +1,4 @@
-![School](https://img.shields.io/badge/School-CTU_FEL-blue?style=flat-square&logo=academia)
+![School](https://img.shields.io/badge/School-CTU_FEE-blue?style=flat-square&logo=academia)
 ![Engine](https://img.shields.io/badge/Made_with-Unity-black?style=flat-square&logo=unity)
 
 *Semestral project within the subject B4B39HRY na FEE CTU*
