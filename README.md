@@ -1,7 +1,7 @@
-*Semestral project within the subject B4B39HRY na FEE CTU*
 ![School](https://img.shields.io/badge/School-CTU_FEL-blue?style=flat-square&logo=academia)
 ![Engine](https://img.shields.io/badge/Made_with-Unity-black?style=flat-square&logo=unity)
 
+*Semestral project within the subject B4B39HRY na FEE CTU*
 # Just one more
 
 You play as a burnt-out businessman who gambled away his entire fortune. With nothing left,
